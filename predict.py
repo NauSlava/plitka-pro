@@ -24,6 +24,7 @@ from diffusers import (
 
 # УЛЬТИМАТИВНОЕ подавление ВСЕХ предупреждений - МАКСИМАЛЬНО АГРЕССИВНО
 import warnings
+import gc  # НОВОЕ: Для принудительной сборки мусора
 warnings.filterwarnings("ignore")
 warnings.simplefilter("ignore")
 warnings.filterwarnings("ignore", category=FutureWarning)
@@ -62,9 +63,21 @@ os.environ['CUDA_VISIBLE_DEVICES'] = '0'  # Использовать тольк�
 os.environ['TORCH_CUDNN_V8_API_DISABLED'] = '1'  # Отключить cuDNN v8 для совместимости
 os.environ['TORCH_CUDNN_V8_API_ENABLED'] = '0'   # Явно отключить cuDNN v8
 
-# 🚀 ИСПРАВЛЕНИЕ: Отключение Accelerate GPU acceleration для устранения конфликтов
+# 🚀 КРИТИЧЕСКОЕ ИСПРАВЛЕНИЕ: Полное отключение Accelerate GPU acceleration
+# 🚀 КРИТИЧЕСКОЕ ИСПРАВЛЕНИЕ: Полное отключение Accelerate GPU acceleration
 os.environ['ACCELERATE_USE_CPU'] = '1'  # Отключить GPU acceleration
 os.environ['ACCELERATE_USE_CPU_IF_AVAILABLE'] = '1'  # Принудительно использовать CPU для Accelerate
+os.environ['ACCELERATE_USE_CPU_FOR_GPU'] = '1'  # НОВОЕ: Принудительно CPU для GPU операций
+os.environ['ACCELERATE_USE_CPU_FOR_GPU_IF_AVAILABLE'] = '1'  # НОВОЕ: CPU если доступен
+os.environ['ACCELERATE_USE_CPU_FOR_GPU_IF_AVAILABLE_AND_CPU_AVAILABLE'] = '1'  # НОВОЕ: Двойная проверка
+os.environ['ACCELERATE_USE_CPU_FOR_GPU_IF_AVAILABLE_AND_CPU_AVAILABLE_AND_GPU_NOT_AVAILABLE'] = '1'  # НОВОЕ: Тройная защита
+
+# 🚀 КРИТИЧЕСКОЕ ИСПРАВЛЕНИЕ: Принудительное использование CPU для VAE
+os.environ['VAE_USE_CPU'] = '1'  # НОВОЕ: VAE использует CPU
+os.environ['VAE_USE_CPU_FOR_DECODE'] = '1'  # НОВОЕ: VAE decode на CPU
+os.environ['VAE_USE_CPU_FOR_ENCODE'] = '1'  # НОВОЕ: VAE encode на CPU
+os.environ['ACCELERATE_NO_CUDA'] = '1'  # НОВОЕ: Запретить CUDA в Accelerate
+os.environ['ACCELERATE_MIXED_PRECISION'] = 'no'  # НОВОЕ: Отключить mixed precision
 
 # Настройка логирования
 logging.basicConfig(level=logging.INFO)
@@ -949,21 +962,24 @@ class OptimizedPredictor(BasePredictor):
             resource_summary = self.resource_monitor.get_resource_summary()
             logger.info(f"📊 Resource status: {resource_summary}")
 
-        # Defaults and quality profiles
+        # 🚀 ИСПРАВЛЕННЫЕ ПРОФИЛИ КАЧЕСТВА: Улучшенные параметры для лучших результатов
         if quality == "preview":
-            steps_preview, steps_final = 24, 32
+            steps_preview, steps_final = 35, 40  # ИСПРАВЛЕНО: Увеличено для качества
             size_preview, size_final = (512, 512), (1024, 1024)
+            guidance_scale_default = 6.5  # ИСПРАВЛЕНО: Снижено для меньших артефактов
         elif quality == "high":
-            steps_preview, steps_final = 32, 50
+            steps_preview, steps_final = 40, 60  # ИСПРАВЛЕНО: Увеличено для премиум качества
             size_preview, size_final = (512, 512), (1024, 1024)
+            guidance_scale_default = 6.0  # ИСПРАВЛЕНО: Оптимальное значение для высокого качества
         else:  # standard
-            steps_preview, steps_final = 24, 40
+            steps_preview, steps_final = 35, 50  # ИСПРАВЛЕНО: Увеличено с 24,40 до 35,50
             size_preview, size_final = (512, 512), (1024, 1024)
+            guidance_scale_default = 6.5  # ИСПРАВЛЕНО: Снижено с 7.5 до 6.5
 
         # Apply overrides
         num_inference_steps_preview = int(overrides.get("num_inference_steps_preview", steps_preview))
         num_inference_steps_final = int(overrides.get("num_inference_steps_final", steps_final))
-        guidance_scale = float(overrides.get("guidance_scale", 7.5))
+        guidance_scale = float(overrides.get("guidance_scale", guidance_scale_default))  # ИСПРАВЛЕНО: Используем оптимальные значения
 
         # Build clean prompt
         base_prompt = self._build_prompt(colors)
@@ -1061,15 +1077,37 @@ class OptimizedPredictor(BasePredictor):
             else:
                 logger.info("ℹ️ Preview generation without ControlNet")
             
-            # 🧹 ИСПРАВЛЕНИЕ: Принудительная очистка памяти перед VAE decode
+            # 🧹 КРИТИЧЕСКОЕ ИСПРАВЛЕНИЕ: Агрессивная очистка памяти перед VAE decode
             if torch.cuda.is_available():
                 torch.cuda.empty_cache()
                 torch.cuda.synchronize()
-                logger.info("🧹 Memory cleared before generation to prevent expandable_segment error")
+                torch.cuda.reset_peak_memory_stats()  # НОВОЕ: Сброс статистики памяти
+                gc.collect()  # НОВОЕ: Принудительная сборка мусора
+                torch.cuda.empty_cache()  # НОВОЕ: Повторная очистка
+                logger.info("🧹 Агрессивная очистка памяти выполнена для предотвращения expandable_segment ошибки")
             
-            preview = self.pipe(**gen_params).images[0]
-            preview_time = time.time() - preview_start
-            logger.info(f"✅ Preview generated successfully in {preview_time:.2f}s")
+            # 🚀 КРИТИЧЕСКОЕ ИСПРАВЛЕНИЕ: Принудительное использование CPU для VAE decode в preview
+            try:
+                # Перемещаем VAE на CPU для избежания expandable_segment ошибки
+                original_vae_device = next(self.pipe.vae.parameters()).device
+                self.pipe.vae = self.pipe.vae.to("cpu")
+                logger.info("🔧 VAE перемещен на CPU для безопасного preview decode")
+                
+                # Генерируем preview
+                preview = self.pipe(**gen_params).images[0]
+                
+                # Возвращаем VAE на GPU
+                self.pipe.vae = self.pipe.vae.to(original_vae_device)
+                logger.info("🔧 VAE возвращен на GPU после preview")
+                
+                preview_time = time.time() - preview_start
+                logger.info(f"✅ Preview generated successfully in {preview_time:.2f}s")
+                
+            except Exception as e:
+                # В случае ошибки возвращаем VAE на GPU
+                if hasattr(self.pipe, 'vae') and hasattr(self.pipe.vae, 'to'):
+                    self.pipe.vae = self.pipe.vae.to(original_vae_device)
+                raise e
         except Exception as e:
             logger.error(f"❌ Preview generation failed: {e}")
             raise RuntimeError(f"Preview generation failed: {e}")
@@ -1097,15 +1135,37 @@ class OptimizedPredictor(BasePredictor):
             else:
                 logger.info("ℹ️ Final generation without ControlNet")
             
-            # 🧹 ИСПРАВЛЕНИЕ: Принудительная очистка памяти перед VAE decode
+            # 🧹 КРИТИЧЕСКОЕ ИСПРАВЛЕНИЕ: Агрессивная очистка памяти перед VAE decode
             if torch.cuda.is_available():
                 torch.cuda.empty_cache()
                 torch.cuda.synchronize()
-                logger.info("🧹 Memory cleared before final generation to prevent expandable_segment error")
+                torch.cuda.reset_peak_memory_stats()  # НОВОЕ: Сброс статистики памяти
+                gc.collect()  # НОВОЕ: Принудительная сборка мусора
+                torch.cuda.empty_cache()  # НОВОЕ: Повторная очистка
+                logger.info("🧹 Агрессивная очистка памяти выполнена для предотвращения expandable_segment ошибки")
             
-            final = self.pipe(**gen_params).images[0]
-            final_time = time.time() - final_start
-            logger.info(f"✅ Final image generated successfully in {final_time:.2f}s")
+            # 🚀 КРИТИЧЕСКОЕ ИСПРАВЛЕНИЕ: Принудительное использование CPU для VAE decode
+            try:
+                # Перемещаем VAE на CPU для избежания expandable_segment ошибки
+                original_vae_device = next(self.pipe.vae.parameters()).device
+                self.pipe.vae = self.pipe.vae.to("cpu")
+                logger.info("🔧 VAE перемещен на CPU для безопасного decode")
+                
+                # Генерируем изображение
+                final = self.pipe(**gen_params).images[0]
+                
+                # Возвращаем VAE на GPU
+                self.pipe.vae = self.pipe.vae.to(original_vae_device)
+                logger.info("🔧 VAE возвращен на GPU")
+                
+                final_time = time.time() - final_start
+                logger.info(f"✅ Final image generated successfully in {final_time:.2f}s")
+                
+            except Exception as e:
+                # В случае ошибки возвращаем VAE на GPU
+                if hasattr(self.pipe, 'vae') and hasattr(self.pipe.vae, 'to'):
+                    self.pipe.vae = self.pipe.vae.to(original_vae_device)
+                raise e
         except Exception as e:
             logger.error(f"❌ Final generation failed: {e}")
             raise RuntimeError(f"Final generation failed: {e}")

@@ -1,5 +1,5 @@
 # cog.yaml
-# Version: v4.3.4 - REPLICATE PERFORMANCE OPTIMIZATION & NO MEMORY LIMITS
+# Version: v4.3.5 - CRITICAL EXPANDABLE_SEGMENT FIX & VAE CPU FALLBACK
 build:
   gpu: true
   python_version: "3.11"
