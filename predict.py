@@ -7,6 +7,8 @@ import random
 import time
 import logging
 import warnings
+import psutil
+import threading
 
 import numpy as np
 from PIL import Image
@@ -48,9 +50,126 @@ os.environ['PYTHONWARNINGS'] = 'ignore'
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 os.environ['TOKENIZERS_PARALLELISM'] = 'false'
 
+# 🚀 НОВЫЕ ПЕРЕМЕННЫЕ ОКРУЖЕНИЯ ДЛЯ УПРАВЛЕНИЯ GPU/NPU
+os.environ['CUDA_MEMORY_FRACTION'] = '0.7'  # Использовать максимум 70% памяти GPU
+os.environ['CUDA_LAUNCH_BLOCKING'] = '1'    # Синхронное выполнение для лучшего контроля
+os.environ['CUDA_CACHE_DISABLE'] = '0'      # Включить кэш CUDA для оптимизации
+
 # Настройка логирования
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+# 🚀 НОВАЯ ФУНКЦИЯ: Мониторинг ресурсов в реальном времени
+class ResourceMonitor:
+    """Мониторинг использования GPU/NPU ресурсов в реальном времени."""
+    
+    def __init__(self, device_info: Dict[str, Any]):
+        self.device_info = device_info
+        self.monitoring = False
+        self.monitor_thread = None
+        self.max_memory_usage = 0.0
+        self.max_gpu_utilization = 0.0
+        
+    def start_monitoring(self):
+        """Запуск мониторинга ресурсов."""
+        if self.monitoring:
+            return
+            
+        self.monitoring = True
+        self.monitor_thread = threading.Thread(target=self._monitor_loop, daemon=True)
+        self.monitor_thread.start()
+        logger.info("🚀 Resource monitoring started")
+    
+    def stop_monitoring(self):
+        """Остановка мониторинга ресурсов."""
+        self.monitoring = False
+        if self.monitor_thread:
+            self.monitor_thread.join(timeout=1.0)
+        logger.info("⏹️ Resource monitoring stopped")
+    
+    def _monitor_loop(self):
+        """Основной цикл мониторинга ресурсов."""
+        while self.monitoring:
+            try:
+                if self.device_info['type'] == 'cuda':
+                    self._monitor_gpu()
+                elif self.device_info['type'] == 'npu':
+                    self._monitor_npu()
+                
+                time.sleep(2.0)  # Проверка каждые 2 секунды
+            except Exception as e:
+                logger.warning(f"Resource monitoring error: {e}")
+                time.sleep(5.0)
+    
+    def _monitor_gpu(self):
+        """Мониторинг GPU ресурсов."""
+        try:
+            if torch.cuda.is_available():
+                # Мониторинг памяти GPU
+                allocated = torch.cuda.memory_allocated(self.device_info['id']) / (1024**3)
+                reserved = torch.cuda.memory_reserved(self.device_info['id']) / (1024**3)
+                total = self.device_info['memory']
+                
+                # Обновление максимальных значений
+                self.max_memory_usage = max(self.max_memory_usage, allocated)
+                
+                # Проверка лимитов (50-80%)
+                memory_usage_percent = (allocated / total) * 100
+                if memory_usage_percent > 80:
+                    logger.warning(f"⚠️ GPU memory usage: {memory_usage_percent:.1f}% (allocated: {allocated:.2f}GB, reserved: {reserved:.2f}GB)")
+                    # Принудительная очистка кэша при превышении лимита
+                    torch.cuda.empty_cache()
+                elif memory_usage_percent > 70:
+                    logger.info(f"ℹ️ GPU memory usage: {memory_usage_percent:.1f}% (allocated: {allocated:.2f}GB)")
+                
+                # Мониторинг загрузки GPU (через nvidia-smi если доступно)
+                try:
+                    import subprocess
+                    result = subprocess.run(['nvidia-smi', '--query-gpu=utilization.gpu', '--format=csv,noheader,nounits'], 
+                                         capture_output=True, text=True, timeout=5)
+                    if result.returncode == 0:
+                        gpu_util = float(result.stdout.strip())
+                        self.max_gpu_utilization = max(self.max_gpu_utilization, gpu_util)
+                        
+                        if gpu_util > 80:
+                            logger.warning(f"⚠️ GPU utilization: {gpu_util:.1f}%")
+                        elif gpu_util > 70:
+                            logger.info(f"ℹ️ GPU utilization: {gpu_util:.1f}%")
+                except:
+                    pass  # nvidia-smi недоступен
+                    
+        except Exception as e:
+            logger.debug(f"GPU monitoring error: {e}")
+    
+    def _monitor_npu(self):
+        """Мониторинг NPU ресурсов."""
+        try:
+            # Для NPU используем системные ресурсы как приближение
+            cpu_percent = psutil.cpu_percent(interval=1)
+            memory_percent = psutil.virtual_memory().percent
+            
+            if cpu_percent > 80:
+                logger.warning(f"⚠️ NPU system CPU usage: {cpu_percent:.1f}%")
+            elif cpu_percent > 70:
+                logger.info(f"ℹ️ NPU system CPU usage: {cpu_percent:.1f}%")
+                
+            if memory_percent > 80:
+                logger.warning(f"⚠️ NPU system memory usage: {memory_percent:.1f}%")
+            elif memory_percent > 70:
+                logger.info(f"ℹ️ NPU system memory usage: {memory_percent:.1f}%")
+                
+        except Exception as e:
+            logger.debug(f"NPU monitoring error: {e}")
+    
+    def get_resource_summary(self) -> Dict[str, Any]:
+        """Получение сводки по использованию ресурсов."""
+        return {
+            'device_type': self.device_info['type'],
+            'device_name': self.device_info['name'],
+            'max_memory_usage_gb': self.max_memory_usage,
+            'max_gpu_utilization_percent': self.max_gpu_utilization,
+            'monitoring_active': self.monitoring
+        }
 
 # 🚀 ОПТИМИЗАЦИЯ ДЛЯ MULTI-GPU И NPU
 def select_best_device():
@@ -123,33 +242,101 @@ def select_best_device():
     
     return device_info
 
-def optimize_for_device(device_info):
-    """Оптимизация настроек для конкретного устройства."""
+def optimize_for_device(device_info: Dict[str, Any]) -> None:
+    """Оптимизация настроек для конкретного устройства с ограничениями ресурсов."""
     if device_info['type'] == 'cuda':
+        # 🚀 НОВЫЕ ОГРАНИЧЕНИЯ РЕСУРСОВ GPU (50-80%)
+        total_memory_gb = device_info['memory']
+        max_usable_memory_gb = total_memory_gb * 0.8  # Максимум 80%
+        min_usable_memory_gb = total_memory_gb * 0.5  # Минимум 50%
+        
+        # Установка переменных окружения для контроля памяти
+        memory_fraction = 0.8  # Использовать максимум 80%
+        os.environ['CUDA_MEMORY_FRACTION'] = str(memory_fraction)
+        
         # CUDA оптимизации
         torch.backends.cudnn.benchmark = True
         torch.backends.cuda.matmul.allow_tf32 = True
         torch.backends.cudnn.allow_tf32 = True
         
-        # Оптимизация памяти
-        if device_info['memory'] >= 24:  # 24GB+ GPU
+        # 🚀 НОВОЕ: Ограничение размера тензоров для контроля памяти
+        if total_memory_gb >= 24:  # 24GB+ GPU
             torch.backends.cuda.matmul.allow_tf32 = True
             torch.backends.cudnn.allow_tf32 = True
-            logger.info("🚀 High-memory GPU optimizations enabled")
-        elif device_info['memory'] >= 12:  # 12-24GB GPU
+            # Ограничение: максимум 80% памяти
+            max_tensor_size = int(max_usable_memory_gb * 0.8 * (1024**3))
+            torch.cuda.set_per_process_memory_fraction(memory_fraction)
+            logger.info(f"🚀 High-memory GPU optimizations enabled (max: {max_usable_memory_gb:.1f}GB, {memory_fraction*100:.0f}%)")
+            
+        elif total_memory_gb >= 12:  # 12-24GB GPU
             torch.backends.cudnn.benchmark = True
-            logger.info("⚡ Medium-memory GPU optimizations enabled")
+            # Ограничение: максимум 75% памяти
+            memory_fraction = 0.75
+            os.environ['CUDA_MEMORY_FRACTION'] = str(memory_fraction)
+            torch.cuda.set_per_process_memory_fraction(memory_fraction)
+            logger.info(f"⚡ Medium-memory GPU optimizations enabled (max: {max_usable_memory_gb:.1f}GB, {memory_fraction*100:.0f}%)")
+            
         else:  # <12GB GPU
             torch.backends.cudnn.benchmark = False
-            logger.info("🔧 Low-memory GPU optimizations enabled")
+            # Ограничение: максимум 70% памяти
+            memory_fraction = 0.7
+            os.environ['CUDA_MEMORY_FRACTION'] = str(memory_fraction)
+            torch.cuda.set_per_process_memory_fraction(memory_fraction)
+            logger.info(f"🔧 Low-memory GPU optimizations enabled (max: {max_usable_memory_gb:.1f}GB, {memory_fraction*100:.0f}%)")
+        
+        # 🚀 НОВОЕ: Принудительная очистка кэша CUDA
+        torch.cuda.empty_cache()
+        logger.info(f"🧹 CUDA cache cleared, memory fraction set to {memory_fraction*100:.0f}%")
     
     elif device_info['type'] == 'npu':
-        # NPU оптимизации
+        # 🚀 НОВЫЕ ОГРАНИЧЕНИЯ NPU (50-80%)
         os.environ['INTEL_NPU_DEVICE'] = f"npu{device_info['id']}"
-        logger.info("🚀 NPU optimizations enabled")
+        
+        # Ограничение системных ресурсов для NPU
+        max_cpu_percent = 80
+        max_memory_percent = 80
+        
+        # Установка переменных окружения для контроля NPU
+        os.environ['INTEL_NPU_MAX_CPU_USAGE'] = str(max_cpu_percent)
+        os.environ['INTEL_NPU_MAX_MEMORY_USAGE'] = str(max_memory_percent)
+        
+        logger.info(f"🚀 NPU optimizations enabled (max CPU: {max_cpu_percent}%, max memory: {max_memory_percent}%)")
     
     # Общие оптимизации
     torch.set_num_threads(min(8, os.cpu_count()))
+    
+    logger.info(f"✅ Device optimization completed for {device_info['type']} ({device_info['name']})")
+
+def manage_gpu_memory(device_info: Dict[str, Any], operation: str = "check") -> None:
+    """Управление памятью GPU с ограничениями 50-80%."""
+    if device_info['type'] != 'cuda':
+        return
+        
+    try:
+        if operation == "clear":
+            # Принудительная очистка кэша CUDA
+            torch.cuda.empty_cache()
+            logger.info("🧹 GPU memory cache cleared")
+            
+        elif operation == "check":
+            # Проверка использования памяти
+            allocated = torch.cuda.memory_allocated(device_info['id']) / (1024**3)
+            reserved = torch.cuda.memory_reserved(device_info['id']) / (1024**3)
+            total = device_info['memory']
+            
+            usage_percent = (allocated / total) * 100
+            
+            if usage_percent > 80:
+                logger.warning(f"⚠️ GPU memory usage: {usage_percent:.1f}% > 80% limit")
+                torch.cuda.empty_cache()
+                logger.info("🧹 GPU memory cache cleared due to high usage")
+            elif usage_percent > 70:
+                logger.info(f"ℹ️ GPU memory usage: {usage_percent:.1f}% (approaching 80% limit)")
+            else:
+                logger.info(f"✅ GPU memory usage: {usage_percent:.1f}% (within limits)")
+                
+    except Exception as e:
+        logger.warning(f"GPU memory management error: {e}")
 
 # Absolute cache paths inside the container
 # Fixed paths for proper model loading in cog runtime
@@ -289,6 +476,10 @@ class OptimizedPredictor(BasePredictor):
         self.device_info = select_best_device()
         optimize_for_device(self.device_info)
         
+        # 🚀 НОВОЕ: Инициализация мониторинга ресурсов
+        self.resource_monitor = ResourceMonitor(self.device_info)
+        self.resource_monitor.start_monitoring()
+        
         # Определение устройства для PyTorch
         if self.device_info['type'] == 'cuda':
             self.device = f"cuda:{self.device_info['id']}"
@@ -298,6 +489,9 @@ class OptimizedPredictor(BasePredictor):
             self.device = "cpu"
         
         logger.info(f"🎯 Using device: {self.device} ({self.device_info['name']})")
+        
+        # 🚀 НОВОЕ: Проверка и управление памятью GPU
+        manage_gpu_memory(self.device_info, "check")
 
         # Load ControlNet models
         logger.info("Loading ControlNet models...")
@@ -357,12 +551,12 @@ class OptimizedPredictor(BasePredictor):
         if initial_controlnet is not None:
             try:
                 logger.info("Attempting to initialize SDXL ControlNet pipeline...")
-        self.pipe = StableDiffusionXLControlNetPipeline.from_pretrained(
+                self.pipe = StableDiffusionXLControlNetPipeline.from_pretrained(
                     SDXL_REPO_ID,
                     controlnet=initial_controlnet,
-            torch_dtype=torch.float16,
+                    torch_dtype=torch.float16,
                     use_safetensors=True,
-            variant="fp16",
+                    variant="fp16",
                     safety_checker=None,
                     requires_safety_checker=False,
                 ).to(self.device)
@@ -381,7 +575,7 @@ class OptimizedPredictor(BasePredictor):
                 self.pipe = StableDiffusionXLPipeline.from_pretrained(
                     SDXL_REPO_ID,
                     torch_dtype=torch.float16,
-            use_safetensors=True,
+                    use_safetensors=True,
                     variant="fp16",
                     safety_checker=None,
                     requires_safety_checker=False,
@@ -402,10 +596,10 @@ class OptimizedPredictor(BasePredictor):
         # Загрузка LoRA с улучшенной обработкой ошибок
         if os.path.exists(lora_path):
             try:
-            logger.info("Loading LoRA weights...")
-            self.pipe.load_lora_weights(lora_path)
-            # Fuse for runtime speed
-            self.pipe.fuse_lora()
+                logger.info("Loading LoRA weights...")
+                self.pipe.load_lora_weights(lora_path)
+                # Fuse for runtime speed
+                self.pipe.fuse_lora()
                 logger.info("✅ LoRA weights loaded successfully")
             except Exception as e:
                 logger.error(f"❌ Failed to load LoRA weights: {e}")
@@ -417,7 +611,7 @@ class OptimizedPredictor(BasePredictor):
         # Загрузка Textual Inversion с улучшенной обработкой ошибок
         if os.path.exists(ti_path):
             try:
-            logger.info("Loading Textual Inversion embeddings...")
+                logger.info("Loading Textual Inversion embeddings...")
                 # Try standard loader first (may fail for SDXL dual-encoder TI formats)
                 try:
                     self.pipe.load_textual_inversion(ti_path, token="<s0>")
@@ -435,18 +629,18 @@ class OptimizedPredictor(BasePredictor):
 
         # Scheduler с улучшенной обработкой ошибок
         try:
-        self.pipe.scheduler = EulerDiscreteScheduler.from_config(self.pipe.scheduler.config)
+            self.pipe.scheduler = EulerDiscreteScheduler.from_config(self.pipe.scheduler.config)
             logger.info("✅ Scheduler configured successfully")
         except Exception as e:
             logger.warning(f"⚠️ Scheduler configuration failed: {e}")
 
         # Basic runtime opts с улучшенной обработкой ошибок
         try:
-        if hasattr(self.pipe, "enable_vae_slicing"):
-            self.pipe.enable_vae_slicing()
+            if hasattr(self.pipe, "enable_vae_slicing"):
+                self.pipe.enable_vae_slicing()
                 logger.info("✅ VAE slicing enabled")
-        if hasattr(self.pipe, "enable_vae_tiling"):
-            self.pipe.enable_vae_tiling()
+            if hasattr(self.pipe, "enable_vae_tiling"):
+                self.pipe.enable_vae_tiling()
                 logger.info("✅ VAE tiling enabled")
         except Exception as e:
             logger.warning(f"⚠️ VAE optimization failed: {e}")
@@ -468,7 +662,7 @@ class OptimizedPredictor(BasePredictor):
                 logger.info("✅ NPU optimizations applied")
             else:
                 logger.info("✅ CPU optimizations applied")
-            except Exception as e:
+        except Exception as e:
             logger.warning(f"⚠️ Device optimization failed: {e}")
 
         setup_time = time.time() - start_time
@@ -688,6 +882,10 @@ class OptimizedPredictor(BasePredictor):
         """
         start_time = time.time()
         
+        # 🚀 НОВОЕ: Проверка ресурсов перед генерацией
+        logger.info("🔍 Checking device resources before generation...")
+        manage_gpu_memory(self.device_info, "check")
+        
         # Parse and validate input parameters
         try:
             params = self._parse_params_json(params_json)
@@ -701,6 +899,11 @@ class OptimizedPredictor(BasePredictor):
         overrides: Dict[str, Any] = params.get("overrides", {}) or {}
 
         logger.info(f"Generating with params: colors={len(colors)}, angle={angle}, quality={quality}, seed={seed}")
+        
+        # 🚀 НОВОЕ: Логирование текущего состояния ресурсов
+        if hasattr(self, 'resource_monitor'):
+            resource_summary = self.resource_monitor.get_resource_summary()
+            logger.info(f"📊 Resource status: {resource_summary}")
 
         # Defaults and quality profiles
         if quality == "preview":
@@ -768,13 +971,13 @@ class OptimizedPredictor(BasePredictor):
                 if selected_cn is not None:
                     # Безопасно устанавливаем ControlNet
                     if hasattr(self.pipe, 'controlnet'):
-        self.pipe.controlnet = selected_cn
+                        self.pipe.controlnet = selected_cn
                         logger.info(f"✅ ControlNet set for angle {angle}")
 
-        # Prepare edge maps for preview/final
+                        # Prepare edge maps for preview/final
                         logger.info("Generating edge maps...")
-        control_preview = canny_edge_from_image(colormap_img.resize(size_preview, Image.NEAREST), 80, 160)
-        control_final = canny_edge_from_image(colormap_img.resize(size_final, Image.NEAREST), 100, 200)
+                        control_preview = canny_edge_from_image(colormap_img.resize(size_preview, Image.NEAREST), 80, 160)
+                        control_final = canny_edge_from_image(colormap_img.resize(size_final, Image.NEAREST), 100, 200)
                         logger.info("✅ Edge maps generated successfully")
                     else:
                         logger.warning("⚠️ Pipeline does not support ControlNet")
@@ -815,7 +1018,7 @@ class OptimizedPredictor(BasePredictor):
                 logger.info("ℹ️ Preview generation without ControlNet")
             
             preview = self.pipe(**gen_params).images[0]
-        preview_time = time.time() - preview_start
+            preview_time = time.time() - preview_start
             logger.info(f"✅ Preview generated successfully in {preview_time:.2f}s")
         except Exception as e:
             logger.error(f"❌ Preview generation failed: {e}")
@@ -845,7 +1048,7 @@ class OptimizedPredictor(BasePredictor):
                 logger.info("ℹ️ Final generation without ControlNet")
             
             final = self.pipe(**gen_params).images[0]
-        final_time = time.time() - final_start
+            final_time = time.time() - final_start
             logger.info(f"✅ Final image generated successfully in {final_time:.2f}s")
         except Exception as e:
             logger.error(f"❌ Final generation failed: {e}")
@@ -853,10 +1056,10 @@ class OptimizedPredictor(BasePredictor):
 
         # Save outputs with improved error handling
         try:
-        preview_path = "/tmp/preview.png"
-        final_path = "/tmp/final.png"
-        preview.save(preview_path)
-        final.save(final_path)
+            preview_path = "/tmp/preview.png"
+            final_path = "/tmp/final.png"
+            preview.save(preview_path)
+            final.save(final_path)
             logger.info("✅ Images saved successfully")
         except Exception as e:
             logger.error(f"❌ Failed to save images: {e}")
@@ -866,6 +1069,15 @@ class OptimizedPredictor(BasePredictor):
         logger.info(f"🎉 Generation completed successfully in {total_time:.2f}s")
         logger.info(f"📁 Outputs: preview={preview_path}, final={final_path}, colormap={colormap_path}")
         logger.info(f"📊 Final stats: ControlNet={use_controlnet}, Steps={num_inference_steps_final}, Quality={quality}")
+        
+        # 🚀 НОВОЕ: Очистка ресурсов после генерации
+        logger.info("🧹 Cleaning up device resources after generation...")
+        manage_gpu_memory(self.device_info, "clear")
+        
+        # 🚀 НОВОЕ: Финальная сводка по ресурсам
+        if hasattr(self, 'resource_monitor'):
+            final_resource_summary = self.resource_monitor.get_resource_summary()
+            logger.info(f"📊 Final resource summary: {final_resource_summary}")
 
         return [Path(preview_path), Path(final_path), Path(colormap_path)]
 
@@ -949,3 +1161,9 @@ class OptimizedPredictor(BasePredictor):
                 emb_layer_l.weight[token_id_l] = emb_l_token
 
         logger.info(f"SDXL textual inversion installed manually for {num_tokens} token(s): {tokens_g}")
+    
+    def __del__(self):
+        """Деструктор для корректной остановки мониторинга ресурсов."""
+        if hasattr(self, 'resource_monitor'):
+            self.resource_monitor.stop_monitoring()
+            logger.info("🛑 Resource monitoring stopped in destructor")

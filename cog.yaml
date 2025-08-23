@@ -1,10 +1,11 @@
 # cog.yaml
+# Version: v4.3.1 - GPU/NPU Resource Management & Monitoring
 build:
   gpu: true
   python_version: "3.11"
   python_requirements: "requirements.txt"
   cog_runtime: true
   run:
-    - mkdir -p /weights
+    - mkdir -p /src/model_files
+    - mkdir -p /src/refs
 predict: "predict.py:OptimizedPredictor"
-# Version: v4.2.9 - Lazy Loading Memory Optimization
