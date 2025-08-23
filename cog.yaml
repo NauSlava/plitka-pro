@@ -1,0 +1,10 @@
+# cog.yaml
+build:
+  gpu: true
+  python_version: "3.11"
+  python_requirements: "requirements.txt"
+  cog_runtime: true
+  run:
+    - mkdir -p /weights
+predict: "predict.py:OptimizedPredictor"
+# Version: v4.2.9 - Lazy Loading Memory Optimization

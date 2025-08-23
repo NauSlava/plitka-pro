@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plitka Pro - Примеры запросов</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .example {
+            background: white;
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .example h3 {
+            color: #333;
+            margin-top: 0;
+        }
+        .color-preview {
+            display: flex;
+            gap: 10px;
+            margin: 10px 0;
+            flex-wrap: wrap;
+        }
+        .color-block {
+            width: 30px;
+            height: 30px;
+            border-radius: 5px;
+            border: 2px solid #ddd;
+        }
+        textarea {
+            width: 100%;
+            height: 120px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            resize: vertical;
+        }
+        .copy-btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .copy-btn:hover {
+            background: #0056b3;
+        }
+        .success {
+            background: #28a745;
+        }
+        .warning {
+            background: #ffc107;
+            color: #212529;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🧱 Plitka Pro - Примеры запросов</h1>
+        <p>Генерация резиновой плитки из цветной крошки</p>
+        <p><strong>Модель:</strong> <a href="https://replicate.com/nauslava/plitka-pro" target="_blank">nauslava/plitka-pro</a></p>
+    </div>
+
+    <div class="example">
+        <h3>1. Черно-красная плитка (70% черного, 30% красного)</h3>
+        <div class="color-preview">
+            <div class="color-block" style="background: #141414;"></div>
+            <div class="color-block" style="background: #b42828;"></div>
+        </div>
+        <textarea id="example1">{
+  "params_json": "{\"colors\":[{\"name\":\"BLACK\",\"proportion\":0.7},{\"name\":\"RED\",\"proportion\":0.3}],\"angle\":0,\"quality\":\"standard\",\"seed\":123456}"
+}</textarea>
+        <button class="copy-btn" onclick="copyToClipboard('example1')">Копировать JSON</button>
+    </div>
+
+    <div class="example">
+        <h3>2. Зелено-желтая плитка (60% зеленого, 40% желтого)</h3>
+        <div class="color-preview">
+            <div class="color-block" style="background: #28a050;"></div>
+            <div class="color-block" style="background: #e6c200;"></div>
+        </div>
+        <textarea id="example2">{
+  "params_json": "{\"colors\":[{\"name\":\"GREEN\",\"proportion\":0.6},{\"name\":\"YELLOW\",\"proportion\":0.4}],\"angle\":45,\"quality\":\"high\",\"seed\":42}"
+}</textarea>
+        <button class="copy-btn" onclick="copyToClipboard('example2')">Копировать JSON</button>
+    </div>
+
+    <div class="example">
+        <h3>3. Синяя плитка (100% синего)</h3>
+        <div class="color-preview">
+            <div class="color-block" style="background: #2850b4;"></div>
+        </div>
+        <textarea id="example3">{
+  "params_json": "{\"colors\":[{\"name\":\"BLUE\",\"proportion\":1.0}],\"angle\":90,\"quality\":\"standard\",\"seed\":999}"
+}</textarea>
+        <button class="copy-btn" onclick="copyToClipboard('example3')">Копировать JSON</button>
+    </div>
+
+    <div class="example">
+        <h3>4. Трехцветная плитка (40% белого, 35% серого, 25% коричневого)</h3>
+        <div class="color-preview">
+            <div class="color-block" style="background: #ebebeb;"></div>
+            <div class="color-block" style="background: #808080;"></div>
+            <div class="color-block" style="background: #785032;"></div>
+        </div>
+        <textarea id="example4">{
+  "params_json": "{\"colors\":[{\"name\":\"WHITE\",\"proportion\":0.4},{\"name\":\"GRAY\",\"proportion\":0.35},{\"name\":\"BROWN\",\"proportion\":0.25}],\"angle\":30,\"quality\":\"high\",\"seed\":777}"
+}</textarea>
+        <button class="copy-btn" onclick="copyToClipboard('example4')">Копировать JSON</button>
+    </div>
+
+    <div class="example">
+        <h3>5. Черно-белая плитка (15% черного, 85% белого) - как в референсе</h3>
+        <div class="color-preview">
+            <div class="color-block" style="background: #141414;"></div>
+            <div class="color-block" style="background: #ebebeb;"></div>
+        </div>
+        <textarea id="example5">{
+  "params_json": "{\"colors\":[{\"name\":\"BLACK\",\"proportion\":0.15},{\"name\":\"WHITE\",\"proportion\":0.85}],\"angle\":0,\"quality\":\"standard\",\"seed\":123456}"
+}</textarea>
+        <button class="copy-btn" onclick="copyToClipboard('example5')">Копировать JSON</button>
+    </div>
+
+    <div class="example">
+        <h3>6. Красная плитка с высоким качеством</h3>
+        <div class="color-preview">
+            <div class="color-block" style="background: #b42828;"></div>
+        </div>
+        <textarea id="example6">{
+  "params_json": "{\"colors\":[{\"name\":\"RED\",\"proportion\":1.0}],\"angle\":0,\"quality\":\"high\",\"seed\":42,\"overrides\":{\"guidance_scale\":8.0}}"
+}</textarea>
+        <button class="copy-btn" onclick="copyToClipboard('example6')">Копировать JSON</button>
+    </div>
+
+    <div class="example">
+        <h3>7. Быстрый предпросмотр (preview quality)</h3>
+        <div class="color-preview">
+            <div class="color-block" style="background: #2850b4;"></div>
+            <div class="color-block" style="background: #e6c200;"></div>
+        </div>
+        <textarea id="example7">{
+  "params_json": "{\"colors\":[{\"name\":\"BLUE\",\"proportion\":0.6},{\"name\":\"YELLOW\",\"proportion\":0.4}],\"angle\":45,\"quality\":\"preview\",\"seed\":42}"
+}</textarea>
+        <button class="copy-btn" onclick="copyToClipboard('example7')">Копировать JSON</button>
+    </div>
+
+    <script>
+        function copyToClipboard(elementId) {
+            const textarea = document.getElementById(elementId);
+            textarea.select();
+            document.execCommand('copy');
+            
+            const button = textarea.nextElementSibling;
+            const originalText = button.textContent;
+            button.textContent = 'Скопировано!';
+            button.classList.add('success');
+            
+            setTimeout(() => {
+                button.textContent = originalText;
+                button.classList.remove('success');
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
