@@ -55,6 +55,13 @@ os.environ['CUDA_MEMORY_FRACTION'] = '0.7'  # Использовать макс�
 os.environ['CUDA_LAUNCH_BLOCKING'] = '1'    # Синхронное выполнение для лучшего контроля
 os.environ['CUDA_CACHE_DISABLE'] = '0'      # Включить кэш CUDA для оптимизации
 
+# 🚀 КРИТИЧЕСКИЕ ИСПРАВЛЕНИЯ: Переменные для решения CUDA out of memory
+os.environ['PYTORCH_CUDA_ALLOC_CONF'] = 'expandable_segments:True,max_split_size_mb:128'
+os.environ['CUDA_DEVICE_ORDER'] = 'PCI_BUS_ID'
+os.environ['CUDA_VISIBLE_DEVICES'] = '0'  # Использовать только GPU 0
+os.environ['TORCH_CUDNN_V8_API_DISABLED'] = '1'  # Отключить cuDNN v8 для совместимости
+os.environ['TORCH_CUDNN_V8_API_ENABLED'] = '0'   # Явно отключить cuDNN v8
+
 # Настройка логирования
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -245,48 +252,50 @@ def select_best_device():
 def optimize_for_device(device_info: Dict[str, Any]) -> None:
     """Оптимизация настроек для конкретного устройства с ограничениями ресурсов."""
     if device_info['type'] == 'cuda':
-        # 🚀 НОВЫЕ ОГРАНИЧЕНИЯ РЕСУРСОВ GPU (50-80%)
+        # 🚀 КРИТИЧЕСКИЕ ИСПРАВЛЕНИЯ: Правильное ограничение памяти ДО загрузки моделей
         total_memory_gb = device_info['memory']
-        max_usable_memory_gb = total_memory_gb * 0.8  # Максимум 80%
-        min_usable_memory_gb = total_memory_gb * 0.5  # Минимум 50%
         
-        # Установка переменных окружения для контроля памяти
-        memory_fraction = 0.8  # Использовать максимум 80%
+        # Для Tesla T4 (14.6GB) используем консервативные настройки
+        if total_memory_gb <= 16:  # Low-memory GPU (Tesla T4, RTX 3060, etc.)
+            memory_fraction = 0.65  # Использовать максимум 65% памяти
+            max_usable_memory_gb = total_memory_gb * 0.65
+            logger.info(f"🔧 Low-memory GPU detected ({total_memory_gb:.1f}GB), using conservative settings")
+            
+        elif total_memory_gb <= 24:  # Medium-memory GPU (RTX 3080, RTX 4070, etc.)
+            memory_fraction = 0.75  # Использовать максимум 75% памяти
+            max_usable_memory_gb = total_memory_gb * 0.75
+            logger.info(f"⚡ Medium-memory GPU detected ({total_memory_gb:.1f}GB)")
+            
+        else:  # High-memory GPU (RTX 4090, A100, etc.)
+            memory_fraction = 0.80  # Использовать максимум 80% памяти
+            max_usable_memory_gb = total_memory_gb * 0.80
+            logger.info(f"🚀 High-memory GPU detected ({total_memory_gb:.1f}GB)")
+        
+        # 🚀 КРИТИЧНО: Установка ограничений ДО загрузки моделей
         os.environ['CUDA_MEMORY_FRACTION'] = str(memory_fraction)
         
-        # CUDA оптимизации
-        torch.backends.cudnn.benchmark = True
-        torch.backends.cuda.matmul.allow_tf32 = True
-        torch.backends.cudnn.allow_tf32 = True
+        # Принудительная очистка CUDA кэша ПЕРЕД установкой ограничений
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
+            torch.cuda.synchronize()
         
-        # 🚀 НОВОЕ: Ограничение размера тензоров для контроля памяти
-        if total_memory_gb >= 24:  # 24GB+ GPU
-            torch.backends.cuda.matmul.allow_tf32 = True
-            torch.backends.cudnn.allow_tf32 = True
-            # Ограничение: максимум 80% памяти
-            max_tensor_size = int(max_usable_memory_gb * 0.8 * (1024**3))
+        # Установка ограничения памяти PyTorch
+        try:
             torch.cuda.set_per_process_memory_fraction(memory_fraction)
-            logger.info(f"🚀 High-memory GPU optimizations enabled (max: {max_usable_memory_gb:.1f}GB, {memory_fraction*100:.0f}%)")
-            
-        elif total_memory_gb >= 12:  # 12-24GB GPU
-            torch.backends.cudnn.benchmark = True
-            # Ограничение: максимум 75% памяти
-            memory_fraction = 0.75
-            os.environ['CUDA_MEMORY_FRACTION'] = str(memory_fraction)
-            torch.cuda.set_per_process_memory_fraction(memory_fraction)
-            logger.info(f"⚡ Medium-memory GPU optimizations enabled (max: {max_usable_memory_gb:.1f}GB, {memory_fraction*100:.0f}%)")
-            
-        else:  # <12GB GPU
-            torch.backends.cudnn.benchmark = False
-            # Ограничение: максимум 70% памяти
-            memory_fraction = 0.7
-            os.environ['CUDA_MEMORY_FRACTION'] = str(memory_fraction)
-            torch.cuda.set_per_process_memory_fraction(memory_fraction)
-            logger.info(f"🔧 Low-memory GPU optimizations enabled (max: {max_usable_memory_gb:.1f}GB, {memory_fraction*100:.0f}%)")
+            logger.info(f"✅ Memory fraction set to {memory_fraction*100:.0f}% ({max_usable_memory_gb:.1f}GB)")
+        except Exception as e:
+            logger.warning(f"⚠️ Failed to set memory fraction: {e}")
         
-        # 🚀 НОВОЕ: Принудительная очистка кэша CUDA
-        torch.cuda.empty_cache()
-        logger.info(f"🧹 CUDA cache cleared, memory fraction set to {memory_fraction*100:.0f}%")
+        # CUDA оптимизации с учетом ограничений памяти
+        torch.backends.cudnn.benchmark = False  # Отключить для экономии памяти
+        torch.backends.cuda.matmul.allow_tf32 = False  # Отключить TF32 для экономии памяти
+        torch.backends.cudnn.allow_tf32 = False
+        
+        # Дополнительные оптимизации для экономии памяти
+        torch.backends.cudnn.deterministic = True
+        torch.backends.cudnn.enabled = True
+        
+        logger.info(f"🧹 CUDA cache cleared, conservative memory settings applied")
     
     elif device_info['type'] == 'npu':
         # 🚀 НОВЫЕ ОГРАНИЧЕНИЯ NPU (50-80%)
@@ -493,98 +502,100 @@ class OptimizedPredictor(BasePredictor):
         # 🚀 НОВОЕ: Проверка и управление памятью GPU
         manage_gpu_memory(self.device_info, "check")
 
-        # Load ControlNet models
-        logger.info("Loading ControlNet models...")
+        # 🚀 НОВАЯ АРХИТЕКТУРА: Lazy Loading для ControlNet моделей
+        logger.info("🚀 Initializing Lazy Loading Architecture for ControlNet models...")
         
-        # Try to load ControlNet models from local cache first
+        # Инициализация переменных для Lazy Loading
         self.controlnet_canny = None
         self.controlnet_softedge = None
         self.controlnet_lineart = None
+        self.controlnet_models_loaded = False
         
-        try:
-            if os.path.exists(CONTROLNET_CANNY_DIR):
-                self.controlnet_canny = ControlNetModel.from_pretrained(CONTROLNET_CANNY_DIR)
-                logger.info("Loaded Canny ControlNet from local cache")
+        # 🚀 КРИТИЧНО: Проверка доступной памяти перед загрузкой
+        if torch.cuda.is_available():
+            available_memory = torch.cuda.get_device_properties(0).total_memory / (1024**3)
+            allocated_memory = torch.cuda.memory_allocated(0) / (1024**3)
+            free_memory = available_memory - allocated_memory
+            
+            logger.info(f"📊 Memory status before ControlNet loading:")
+            logger.info(f"   Total: {available_memory:.1f}GB")
+            logger.info(f"   Allocated: {allocated_memory:.1f}GB")
+            logger.info(f"   Free: {free_memory:.1f}GB")
+            
+            # Если свободной памяти меньше 3GB, откладываем загрузку ControlNet
+            if free_memory < 3.0:
+                logger.warning(f"⚠️ Insufficient memory ({free_memory:.1f}GB free), ControlNet will be loaded on-demand")
+                self.controlnet_models_loaded = False
             else:
-                logger.info("Canny ControlNet not found in local cache, will download from HF")
-                self.controlnet_canny = ControlNetModel.from_pretrained(CONTROLNET_CANNY_REPO_ID)
-        except Exception as e:
-            logger.warning(f"Failed to load Canny ControlNet: {e}")
-            self.controlnet_canny = None
+                logger.info(f"✅ Sufficient memory available, proceeding with ControlNet pre-loading")
+                self.controlnet_models_loaded = True
+        else:
+            self.controlnet_models_loaded = False
+        
+        # 🚀 Lazy Loading: ControlNet модели будут загружены по требованию
+        logger.info("🚀 ControlNet models will be loaded on-demand to save memory")
 
+        # 🚀 Lazy Loading: ControlNet модели будут загружены по требованию
+        # Это экономит память при инициализации
+
+        # 🚀 КРИТИЧЕСКИЕ ИСПРАВЛЕНИЯ: Правильная инициализация SDXL с управлением памятью
+        logger.info("🚀 Initializing SDXL pipeline with memory management...")
+        
+        # 🚀 КРИТИЧНО: Проверка доступной памяти перед загрузкой SDXL
+        if torch.cuda.is_available():
+            available_memory = torch.cuda.get_device_properties(0).total_memory / (1024**3)
+            allocated_memory = torch.cuda.memory_allocated(0) / (1024**3)
+            free_memory = available_memory - allocated_memory
+            
+            logger.info(f"📊 Memory status before SDXL loading:")
+            logger.info(f"   Total: {available_memory:.1f}GB")
+            logger.info(f"   Allocated: {allocated_memory:.1f}GB")
+            logger.info(f"   Free: {free_memory:.1f}GB")
+            
+            # Если свободной памяти меньше 4GB, очищаем кэш
+            if free_memory < 4.0:
+                logger.warning(f"⚠️ Low memory ({free_memory:.1f}GB), clearing cache before SDXL loading")
+                torch.cuda.empty_cache()
+                torch.cuda.synchronize()
+        
+        # 🚀 СТРАТЕГИЯ: Начинаем с базового SDXL для экономии памяти
         try:
-            if os.path.exists(CONTROLNET_HED_DIR):
-                self.controlnet_softedge = ControlNetModel.from_pretrained(CONTROLNET_HED_DIR)
-                logger.info("Loaded HED/Softedge ControlNet from local cache")
-            elif os.path.exists(CONTROLNET_SOFTEDGE_DIR):
-                self.controlnet_softedge = ControlNetModel.from_pretrained(CONTROLNET_SOFTEDGE_DIR)
-                logger.info("Loaded Softedge ControlNet from local cache")
+            logger.info("🚀 Loading basic SDXL pipeline first...")
+            from diffusers import StableDiffusionXLPipeline
+            
+            # 🚀 КРИТИЧНО: Загружаем SDXL с минимальными требованиями к памяти
+            self.pipe = StableDiffusionXLPipeline.from_pretrained(
+                SDXL_REPO_ID,
+                torch_dtype=torch.float16,
+                use_safetensors=True,
+                variant="fp16",
+                safety_checker=None,
+                requires_safety_checker=False,
+                # 🚀 НОВЫЕ ПАРАМЕТРЫ: Экономия памяти
+                low_cpu_mem_usage=True,
+                device_map="auto" if torch.cuda.is_available() else None,
+            )
+            
+            # 🚀 КРИТИЧНО: Перемещаем на GPU с проверкой памяти
+            if torch.cuda.is_available():
+                # Проверяем доступную память перед перемещением
+                free_memory = torch.cuda.get_device_properties(0).total_memory / (1024**3) - torch.cuda.memory_allocated(0) / (1024**3)
+                if free_memory < 2.0:
+                    logger.warning(f"⚠️ Very low memory ({free_memory:.1f}GB), using CPU fallback")
+                    self.device = "cpu"
+                    self.pipe = self.pipe.to("cpu")
+                else:
+                    self.pipe = self.pipe.to(self.device)
+                    logger.info(f"✅ SDXL pipeline moved to GPU ({self.device})")
             else:
-                logger.info("Softedge ControlNet not found in local cache, will download from HF")
-                self.controlnet_softedge = ControlNetModel.from_pretrained(CONTROLNET_CANNY_REPO_ID)
+                self.pipe = self.pipe.to(self.device)
+            
+            self.has_controlnet = False
+            logger.info("✅ Successfully initialized basic SDXL pipeline")
+            
         except Exception as e:
-            logger.warning(f"Failed to load Softedge ControlNet: {e}")
-            self.controlnet_softedge = None
-
-        try:
-            if os.path.exists(CONTROLNET_LINEART_DIR):
-                self.controlnet_lineart = ControlNetModel.from_pretrained(CONTROLNET_LINEART_DIR)
-                logger.info("Loaded Lineart ControlNet from local cache")
-            else:
-                logger.info("Lineart ControlNet not found in local cache, will download from HF")
-                # ИСПРАВЛЕНО: используем рабочий repo ID - SD 1.5 версия
-                self.controlnet_lineart = ControlNetModel.from_pretrained(CONTROLNET_LINEART_REPO_ID)
-        except Exception as e:
-            logger.warning(f"Failed to load Lineart ControlNet: {e}")
-            self.controlnet_lineart = None
-
-        # Initialize SDXL pipeline with ControlNet
-        logger.info("Initializing SDXL pipeline...")
-        
-        # ИСПРАВЛЕНО: максимально надежная инициализация с полным fallback
-        self.has_controlnet = False
-        self.pipe = None
-        
-        # Попытка 1: Инициализация с ControlNet (если доступен)
-        initial_controlnet = self.controlnet_canny or self.controlnet_softedge or self.controlnet_lineart
-        
-        if initial_controlnet is not None:
-            try:
-                logger.info("Attempting to initialize SDXL ControlNet pipeline...")
-                self.pipe = StableDiffusionXLControlNetPipeline.from_pretrained(
-                    SDXL_REPO_ID,
-                    controlnet=initial_controlnet,
-                    torch_dtype=torch.float16,
-                    use_safetensors=True,
-                    variant="fp16",
-                    safety_checker=None,
-                    requires_safety_checker=False,
-                ).to(self.device)
-                self.has_controlnet = True
-                logger.info("✅ Successfully initialized SDXL ControlNet pipeline")
-            except Exception as e:
-                logger.warning(f"❌ ControlNet pipeline initialization failed: {e}")
-                self.pipe = None
-                self.has_controlnet = False
-        
-        # Попытка 2: Fallback на базовый SDXL
-        if self.pipe is None:
-            try:
-                logger.info("Falling back to basic SDXL pipeline...")
-                from diffusers import StableDiffusionXLPipeline
-                self.pipe = StableDiffusionXLPipeline.from_pretrained(
-                    SDXL_REPO_ID,
-                    torch_dtype=torch.float16,
-                    use_safetensors=True,
-                    variant="fp16",
-                    safety_checker=None,
-                    requires_safety_checker=False,
-                ).to(self.device)
-                self.has_controlnet = False
-                logger.info("✅ Successfully initialized basic SDXL pipeline")
-            except Exception as e:
-                logger.error(f"❌ Basic SDXL pipeline initialization failed: {e}")
-                raise RuntimeError(f"Failed to initialize any pipeline: {e}")
+            logger.error(f"❌ SDXL pipeline initialization failed: {e}")
+            raise RuntimeError(f"Failed to initialize SDXL pipeline: {e}")
         
         if self.pipe is None:
             raise RuntimeError("Pipeline initialization failed completely")
@@ -837,6 +848,61 @@ class OptimizedPredictor(BasePredictor):
         else:
             return True, f"Угол {angle}° требует ControlNet (нестандартный ракурс)"
 
+    def _load_controlnet_models_on_demand(self) -> None:
+        """
+        🚀 Lazy Loading: Загружает ControlNet модели только при необходимости.
+        """
+        if self.controlnet_models_loaded:
+            return
+            
+        logger.info("🚀 Loading ControlNet models on-demand...")
+        
+        # Проверка доступной памяти перед загрузкой
+        if torch.cuda.is_available():
+            available_memory = torch.cuda.get_device_properties(0).total_memory / (1024**3)
+            allocated_memory = torch.cuda.memory_allocated(0) / (1024**3)
+            free_memory = available_memory - allocated_memory
+            
+            logger.info(f"📊 Memory status before ControlNet loading:")
+            logger.info(f"   Total: {available_memory:.1f}GB")
+            logger.info(f"   Allocated: {allocated_memory:.1f}GB")
+            logger.info(f"   Free: {free_memory:.1f}GB")
+            
+            # Если свободной памяти меньше 2GB, очищаем кэш
+            if free_memory < 2.0:
+                logger.warning(f"⚠️ Low memory ({free_memory:.1f}GB), clearing cache before loading")
+                torch.cuda.empty_cache()
+                torch.cuda.synchronize()
+        
+        try:
+            # Загрузка Canny ControlNet
+            if os.path.exists(CONTROLNET_CANNY_DIR):
+                self.controlnet_canny = ControlNetModel.from_pretrained(CONTROLNET_CANNY_DIR)
+                logger.info("✅ Canny ControlNet loaded from local cache")
+            else:
+                logger.info("Canny ControlNet not found in local cache, will download from HF")
+                
+            # Загрузка Softedge ControlNet
+            if os.path.exists(CONTROLNET_SOFTEDGE_DIR):
+                self.controlnet_softedge = ControlNetModel.from_pretrained(CONTROLNET_SOFTEDGE_DIR)
+                logger.info("✅ Softedge ControlNet loaded from local cache")
+            else:
+                logger.info("Softedge ControlNet not found in local cache, will download from HF")
+                
+            # Загрузка Lineart ControlNet
+            if os.path.exists(CONTROLNET_LINEART_DIR):
+                self.controlnet_lineart = ControlNetModel.from_pretrained(CONTROLNET_LINEART_DIR)
+                logger.info("✅ Lineart ControlNet loaded from local cache")
+            else:
+                logger.info("Lineart ControlNet not found in local cache, will download from HF")
+                
+            self.controlnet_models_loaded = True
+            logger.info("✅ All ControlNet models loaded successfully")
+            
+        except Exception as e:
+            logger.error(f"❌ Failed to load ControlNet models: {e}")
+            self.controlnet_models_loaded = False
+
     def _get_controlnet_model(self, angle: int) -> Optional[Any]:
         """
         Выбирает подходящую ControlNet модель для заданного угла.
@@ -847,6 +913,10 @@ class OptimizedPredictor(BasePredictor):
         Returns:
             ControlNet модель или None
         """
+        # 🚀 Lazy Loading: Загружаем модели только при необходимости
+        if not self.controlnet_models_loaded:
+            self._load_controlnet_models_on_demand()
+        
         angle_norm = int(angle) % 180
         
         # Для горизонтальных/вертикальных углов - Canny
