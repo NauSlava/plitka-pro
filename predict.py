@@ -50,8 +50,8 @@ os.environ['PYTHONWARNINGS'] = 'ignore'
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 os.environ['TOKENIZERS_PARALLELISM'] = 'false'
 
-# 🚀 НОВЫЕ ПЕРЕМЕННЫЕ ОКРУЖЕНИЯ ДЛЯ УПРАВЛЕНИЯ GPU/NPU
-os.environ['CUDA_MEMORY_FRACTION'] = '0.7'  # Использовать максимум 70% памяти GPU
+# 🚀 НОВЫЕ ПЕРЕМЕННЫЕ ОКРУЖЕНИЯ ДЛЯ УПРАВЛЕНИЯ GPU/NPU (ТОЛЬКО ДЛЯ ЛОКАЛЬНОЙ РАЗРАБОТКИ)
+# os.environ['CUDA_MEMORY_FRACTION'] = '0.7'  # УБРАНО: Ограничения только для локальной разработки
 os.environ['CUDA_LAUNCH_BLOCKING'] = '1'    # Синхронное выполнение для лучшего контроля
 os.environ['CUDA_CACHE_DISABLE'] = '0'      # Включить кэш CUDA для оптимизации
 
@@ -61,6 +61,10 @@ os.environ['CUDA_DEVICE_ORDER'] = 'PCI_BUS_ID'
 os.environ['CUDA_VISIBLE_DEVICES'] = '0'  # Использовать только GPU 0
 os.environ['TORCH_CUDNN_V8_API_DISABLED'] = '1'  # Отключить cuDNN v8 для совместимости
 os.environ['TORCH_CUDNN_V8_API_ENABLED'] = '0'   # Явно отключить cuDNN v8
+
+# 🚀 ИСПРАВЛЕНИЕ: Отключение Accelerate GPU acceleration для устранения конфликтов
+os.environ['ACCELERATE_USE_CPU'] = '1'  # Отключить GPU acceleration
+os.environ['ACCELERATE_USE_CPU_IF_AVAILABLE'] = '1'  # Принудительно использовать CPU для Accelerate
 
 # Настройка логирования
 logging.basicConfig(level=logging.INFO)
@@ -250,99 +254,68 @@ def select_best_device():
     return device_info
 
 def optimize_for_device(device_info: Dict[str, Any]) -> None:
-    """Оптимизация настроек для конкретного устройства с ограничениями ресурсов."""
+    """Оптимизация настроек для конкретного устройства БЕЗ ОГРАНИЧЕНИЙ ресурсов на Replicate."""
     if device_info['type'] == 'cuda':
-        # 🚀 КРИТИЧЕСКИЕ ИСПРАВЛЕНИЯ: Правильное ограничение памяти ДО загрузки моделей
+        # 🚀 ОПТИМИЗАЦИЯ: Используем ВСЕ доступные ресурсы Replicate без ограничений
         total_memory_gb = device_info['memory']
+        logger.info(f"🚀 GPU detected ({total_memory_gb:.1f}GB) - using ALL available resources")
         
-        # Для Tesla T4 (14.6GB) используем консервативные настройки
-        if total_memory_gb <= 16:  # Low-memory GPU (Tesla T4, RTX 3060, etc.)
-            memory_fraction = 0.65  # Использовать максимум 65% памяти
-            max_usable_memory_gb = total_memory_gb * 0.65
-            logger.info(f"🔧 Low-memory GPU detected ({total_memory_gb:.1f}GB), using conservative settings")
-            
-        elif total_memory_gb <= 24:  # Medium-memory GPU (RTX 3080, RTX 4070, etc.)
-            memory_fraction = 0.75  # Использовать максимум 75% памяти
-            max_usable_memory_gb = total_memory_gb * 0.75
-            logger.info(f"⚡ Medium-memory GPU detected ({total_memory_gb:.1f}GB)")
-            
-        else:  # High-memory GPU (RTX 4090, A100, etc.)
-            memory_fraction = 0.80  # Использовать максимум 80% памяти
-            max_usable_memory_gb = total_memory_gb * 0.80
-            logger.info(f"🚀 High-memory GPU detected ({total_memory_gb:.1f}GB)")
-        
-        # 🚀 КРИТИЧНО: Установка ограничений ДО загрузки моделей
-        os.environ['CUDA_MEMORY_FRACTION'] = str(memory_fraction)
-        
-        # Принудительная очистка CUDA кэша ПЕРЕД установкой ограничений
+        # Принудительная очистка CUDA кэша для оптимальной производительности
         if torch.cuda.is_available():
             torch.cuda.empty_cache()
             torch.cuda.synchronize()
         
-        # Установка ограничения памяти PyTorch
-        try:
-            torch.cuda.set_per_process_memory_fraction(memory_fraction)
-            logger.info(f"✅ Memory fraction set to {memory_fraction*100:.0f}% ({max_usable_memory_gb:.1f}GB)")
-        except Exception as e:
-            logger.warning(f"⚠️ Failed to set memory fraction: {e}")
+        # CUDA оптимизации для максимальной производительности
+        torch.backends.cudnn.benchmark = True  # Включить для максимальной скорости
+        torch.backends.cuda.matmul.allow_tf32 = True  # Включить TF32 для ускорения
+        torch.backends.cudnn.allow_tf32 = True
         
-        # CUDA оптимизации с учетом ограничений памяти
-        torch.backends.cudnn.benchmark = False  # Отключить для экономии памяти
-        torch.backends.cuda.matmul.allow_tf32 = False  # Отключить TF32 для экономии памяти
-        torch.backends.cudnn.allow_tf32 = False
-        
-        # Дополнительные оптимизации для экономии памяти
-        torch.backends.cudnn.deterministic = True
+        # Дополнительные оптимизации для производительности
+        torch.backends.cudnn.deterministic = False  # Отключить для скорости
         torch.backends.cudnn.enabled = True
         
-        logger.info(f"🧹 CUDA cache cleared, conservative memory settings applied")
+        logger.info(f"🧹 CUDA cache cleared, MAXIMUM PERFORMANCE settings applied")
     
     elif device_info['type'] == 'npu':
-        # 🚀 НОВЫЕ ОГРАНИЧЕНИЯ NPU (50-80%)
+        # 🚀 ОПТИМИЗАЦИЯ: Используем ВСЕ доступные ресурсы NPU
         os.environ['INTEL_NPU_DEVICE'] = f"npu{device_info['id']}"
         
-        # Ограничение системных ресурсов для NPU
-        max_cpu_percent = 80
-        max_memory_percent = 80
+        # Используем 100% ресурсов NPU
+        max_cpu_percent = 100
+        max_memory_percent = 100
         
-        # Установка переменных окружения для контроля NPU
+        # Установка переменных окружения для максимальной производительности
         os.environ['INTEL_NPU_MAX_CPU_USAGE'] = str(max_cpu_percent)
         os.environ['INTEL_NPU_MAX_MEMORY_USAGE'] = str(max_memory_percent)
         
         logger.info(f"🚀 NPU optimizations enabled (max CPU: {max_cpu_percent}%, max memory: {max_memory_percent}%)")
     
-    # Общие оптимизации
-    torch.set_num_threads(min(8, os.cpu_count()))
+    # Общие оптимизации для максимальной производительности
+    torch.set_num_threads(os.cpu_count())  # Используем все доступные ядра
     
-    logger.info(f"✅ Device optimization completed for {device_info['type']} ({device_info['name']})")
+    logger.info(f"✅ Device optimization completed for {device_info['type']} ({device_info['name']}) - MAXIMUM PERFORMANCE")
 
 def manage_gpu_memory(device_info: Dict[str, Any], operation: str = "check") -> None:
-    """Управление памятью GPU с ограничениями 50-80%."""
+    """Управление памятью GPU БЕЗ ОГРАНИЧЕНИЙ для максимальной производительности на Replicate."""
     if device_info['type'] != 'cuda':
         return
         
     try:
         if operation == "clear":
-            # Принудительная очистка кэша CUDA
+            # Принудительная очистка кэша CUDA для оптимальной производительности
             torch.cuda.empty_cache()
-            logger.info("🧹 GPU memory cache cleared")
+            logger.info("🧹 GPU memory cache cleared for optimal performance")
             
         elif operation == "check":
-            # Проверка использования памяти
+            # Проверка использования памяти без ограничений
             allocated = torch.cuda.memory_allocated(device_info['id']) / (1024**3)
             reserved = torch.cuda.memory_reserved(device_info['id']) / (1024**3)
             total = device_info['memory']
             
             usage_percent = (allocated / total) * 100
             
-            if usage_percent > 80:
-                logger.warning(f"⚠️ GPU memory usage: {usage_percent:.1f}% > 80% limit")
-                torch.cuda.empty_cache()
-                logger.info("🧹 GPU memory cache cleared due to high usage")
-            elif usage_percent > 70:
-                logger.info(f"ℹ️ GPU memory usage: {usage_percent:.1f}% (approaching 80% limit)")
-            else:
-                logger.info(f"✅ GPU memory usage: {usage_percent:.1f}% (within limits)")
+            # Информационное логирование без предупреждений
+            logger.info(f"📊 GPU memory usage: {usage_percent:.1f}% ({allocated:.1f}GB / {total:.1f}GB)")
                 
     except Exception as e:
         logger.warning(f"GPU memory management error: {e}")
@@ -563,23 +536,7 @@ class OptimizedPredictor(BasePredictor):
             logger.info("🚀 Loading basic SDXL pipeline first...")
             from diffusers import StableDiffusionXLPipeline
             
-            # 🔧 ИСПРАВЛЕНИЕ: Синхронизируем настройки памяти с Accelerate
-            max_memory = None
-            if torch.cuda.is_available():
-                # Используем те же ограничения памяти, что и в optimize_for_device
-                total_memory_gb = torch.cuda.get_device_properties(0).total_memory / (1024**3)
-                if total_memory_gb <= 16:  # Tesla T4
-                    memory_fraction = 0.65
-                elif total_memory_gb <= 24:
-                    memory_fraction = 0.75
-                else:
-                    memory_fraction = 0.80
-                
-                max_usable_memory_gb = total_memory_gb * memory_fraction
-                max_memory = {0: f"{int(max_usable_memory_gb)}GB"}
-                logger.info(f"🔧 Setting max_memory for Accelerate: {max_memory}")
-            
-            # 🚀 КРИТИЧНО: Загружаем SDXL с синхронизированными настройками памяти
+            # 🚀 КРИТИЧНО: Загружаем SDXL БЕЗ ОГРАНИЧЕНИЙ ПАМЯТИ для Replicate
             self.pipe = StableDiffusionXLPipeline.from_pretrained(
                 SDXL_REPO_ID,
                 torch_dtype=torch.float16,
@@ -587,10 +544,10 @@ class OptimizedPredictor(BasePredictor):
                 variant="fp16",
                 safety_checker=None,
                 requires_safety_checker=False,
-                # 🚀 ИСПРАВЛЕНИЯ: Синхронизация памяти + экономия
+                # 🚀 ОПТИМИЗАЦИЯ: Используем все доступные ресурсы Replicate
                 low_cpu_mem_usage=True,
                 device_map="auto" if torch.cuda.is_available() else None,
-                max_memory=max_memory,  # 🔧 КЛЮЧЕВОЕ ИСПРАВЛЕНИЕ
+                # УБРАНО: max_memory - используем все доступные ресурсы
             )
             
             # 🚀 КРИТИЧНО: Перемещаем на GPU с проверкой памяти

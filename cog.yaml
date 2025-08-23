@@ -1,5 +1,5 @@
 # cog.yaml
-# Version: v4.3.3 - CRITICAL VAE DECODE FIXES & Accelerate Memory Sync
+# Version: v4.3.4 - REPLICATE PERFORMANCE OPTIMIZATION & NO MEMORY LIMITS
 build:
   gpu: true
   python_version: "3.11"
