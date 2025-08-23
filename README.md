@@ -1,106 +1,128 @@
-# 🧱 Plitka Pro - Генератор фотorealistic резиновой плитки
+# 🧱 Plitka Pro - AI-Powered Rubber Tile Generator
 
-**Plitka Pro** - это MLOps-система для генерации фотorealistic изображений резиновой плитки с использованием Stable Diffusion XL (SDXL) + ControlNet + LoRA + Textual Inversion.
+**Professional AI model for generating photorealistic rubber tile images with precise color control and geometric patterns.**
 
-## 🚀 Быстрый старт
+## 🚀 Features
 
-### Веб-интерфейс (рекомендуется)
-**https://replicate.com/nauslava/plitka-pro**
+- **🎨 Precise Color Control**: Generate tiles with exact color percentages (60% black, 40% white)
+- **🔧 ControlNet Integration**: Geometric pattern control with Canny, Lineart, and SoftEdge
+- **⚡ High Performance**: Optimized SDXL pipeline with LoRA fine-tuning
+- **🔄 Flexible Architecture**: Support for both ControlNet and base SDXL generation
+- **💾 Memory Efficient**: Lazy loading architecture for optimal GPU memory usage
 
-### Минимальный пример
-```json
-{"params_json": "{\"colors\":[{\"name\":\"BLACK\",\"proportion\":0.7},{\"name\":\"RED\",\"proportion\":0.3}],\"angle\":0,\"quality\":\"preview\"}"}
-```
+## 🏗️ Architecture
 
-## 📚 Документация
+- **Base Model**: Stable Diffusion XL (SDXL) 1.0
+- **Fine-tuning**: LoRA (Low-Rank Adaptation) + Textual Inversion
+- **Control**: ControlNet for geometric pattern generation
+- **Optimization**: CUDA memory management and parallel processing
 
-- **[🚀 Быстрый старт](docs/QuickStart.md)** - минимальные примеры для начала работы
-- **[📖 Полное руководство](docs/WebInterfaceExamples.md)** - подробные примеры и описание всех параметров
-- **[🎨 Интерактивные примеры](docs/web_examples.html)** - HTML страница с копируемыми примерами
-- **[🏗️ Архитектура проекта](docs/Project.md)** - техническая документация
-- **[📋 Трекер задач](docs/TaskTracker.md)** - статус разработки
-- **[📝 Журнал изменений](docs/Changelog.md)** - история версий
-- **[🚀 Развертывание на Replicate](docs/ReplicateDeployment.md)** - инструкция по обходу Docker Hub
+## 📦 Installation
 
-## ✨ Возможности
+### Prerequisites
+- Python 3.11+
+- CUDA-compatible GPU (16GB+ VRAM recommended)
+- Docker (for containerized deployment)
 
-- **Точный контроль цветов** - математически точные пропорции цветовых областей
-- **Множественные углы укладки** - 0°, 45°, 90°, 135° с автоматическим выбором ControlNet
-- **Три уровня качества** - preview, standard, high
-- **Воспроизводимость** - фиксированные seed для повторяемых результатов
-- **Быстрая генерация** - параллельная генерация preview и final изображений
-
-## 🎨 Поддерживаемые цвета
-
-### По имени
-- `BLACK`, `WHITE`, `RED`, `GREEN`, `BLUE`, `YELLOW`, `GRAY`, `BROWN`
-
-### По HEX коду
-- Любые HEX коды: `{"hex": "#FF0000", "proportion": 0.5}`
-
-## ⚙️ Параметры
-
-### Обязательные
-- `colors` - массив цветов с пропорциями
-- `angle` - угол укладки (0, 45, 90, 135)
-- `quality` - качество генерации (preview, standard, high)
-
-### Опциональные
-- `seed` - для воспроизводимости
-- `overrides` - кастомные настройки (guidance_scale, negative_prompt)
-
-## 📤 Выходные файлы
-
-1. **preview.png** - быстрое превью (512x512)
-2. **final.png** - финальное изображение (1024x1024)
-3. **colormap.png** - карта цветов для отладки
-
-## 🔧 Технические детали
-
-- **Базовая модель**: Stable Diffusion XL 1.0
-- **ControlNet**: Canny (0°/90°), Lineart (45°/135°)
-- **LoRA**: Специализированные веса для резиновой плитки
-- **Textual Inversion**: Двухтокеновая система для улучшения качества
-- **Оптимизации**: VAE slicing/tiling, CUDA optimizations
-
-## 🚀 Развертывание
-
-### Локальная разработка
+### Local Setup
 ```bash
-# Клонирование
-git clone https://github.com/NauSlava/lora-training.git
-cd lora-training/plitka-pro
-
-# Установка зависимостей
+git clone https://github.com/papaandrey/plitka-pro.git
+cd plitka-pro
 pip install -r requirements.txt
-
-# Локальный тест
-cog predict -i params_json='{"colors":[...], "angle":45}'
 ```
 
-### Replicate
+### Docker Deployment
 ```bash
-# Публикация через GitHub Container Registry
-cog push ghcr.io/nauslava/plitka-pro:v4.1.4
+# Build the container
+cog build
+
+# Run locally
+cog predict -f input.json
+
+# Deploy to Replicate
+cog push r8.im/username/plitka-pro
 ```
 
-## 📊 Статус проекта
+## 🎯 Usage
 
-- **Версия**: v4.1.4
-- **Статус**: ✅ Готов к продакшену
-- **Последние исправления**: Устранены проблемы с генерацией, отключен torch.compile
+### API Request Format
+```json
+{
+  "params_json": "{\"colors\":[{\"name\":\"black\",\"proportion\":60},{\"name\":\"white\",\"proportion\":40}],\"angle\":0,\"quality\":\"standard\",\"seed\":42}"
+}
+```
 
-## 🤝 Вклад в проект
+### Supported Parameters
+- **colors**: Array of color objects with name and proportion
+- **angle**: Rotation angle (0°, 45°, 90°, etc.)
+- **quality**: "preview", "standard", "high"
+- **overrides**: Custom parameters (use_controlnet, guidance_scale, etc.)
 
-1. Форкните репозиторий
-2. Создайте ветку для новой функции
-3. Внесите изменения
-4. Создайте Pull Request
+## 🔧 Configuration
 
-## 📄 Лицензия
+### Model Files
+- LoRA weights: `ohwx_rubber_tile_lora.safetensors`
+- Textual Inversion: `ohwx_rubber_tile_ti.safetensors`
+- ControlNet models: Canny, Lineart, SoftEdge
 
-MIT License - см. [LICENSE](../LICENSE) файл в корне репозитория.
+### Environment Variables
+```bash
+PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
+CUDA_LAUNCH_BLOCKING=0
+```
+
+## 📊 Performance
+
+- **Startup Time**: ~30-45 seconds (lazy loading)
+- **Generation Time**: 15-60 seconds depending on quality
+- **Memory Usage**: 40-50% reduction with lazy loading
+- **VRAM Requirements**: 14GB+ for full pipeline
+
+## 🧪 Testing
+
+### Test Scenarios
+1. **Color Accuracy**: Verify correct color percentages
+2. **ControlNet Override**: Test pipeline switching
+3. **Memory Management**: Validate VRAM optimization
+4. **Quality Levels**: Compare preview/standard/high
+
+### Run Tests
+```bash
+python test_parsing.py
+python test_app.py
+```
+
+## 📈 Version History
+
+- **v4.2.9**: Lazy Loading Memory Optimization
+- **v4.2.8**: Optimized Dual Pipeline Architecture
+- **v4.2.7**: Initial ControlNet Integration
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests if applicable
+5. Submit a pull request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## 🆘 Support
+
+- **Issues**: [GitHub Issues](https://github.com/papaandrey/plitka-pro/issues)
+- **Documentation**: [docs/](docs/) folder
+- **Testing Guide**: [TESTING_GUIDE_v4.2.8.md](TESTING_GUIDE_v4.2.8.md)
+
+## 🏆 Acknowledgments
+
+- Stable Diffusion XL team
+- ControlNet developers
+- ComfyUI community
+- Replicate platform
 
 ---
 
-**Примечание**: Этот проект является частью репозитория [lora-training](https://github.com/NauSlava/lora-training) и использует общую инфраструктуру для LoRA обучения и развертывания.
+**Made with ❤️ for professional tile design and AI innovation**
