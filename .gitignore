@@ -1,4 +1,7 @@
 # Python
+references/
+.cursor/
+.cursorrules/
 __pycache__/
 *.py[cod]
 *$py.class
