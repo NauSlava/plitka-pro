@@ -563,7 +563,23 @@ class OptimizedPredictor(BasePredictor):
             logger.info("🚀 Loading basic SDXL pipeline first...")
             from diffusers import StableDiffusionXLPipeline
             
-            # 🚀 КРИТИЧНО: Загружаем SDXL с минимальными требованиями к памяти
+            # 🔧 ИСПРАВЛЕНИЕ: Синхронизируем настройки памяти с Accelerate
+            max_memory = None
+            if torch.cuda.is_available():
+                # Используем те же ограничения памяти, что и в optimize_for_device
+                total_memory_gb = torch.cuda.get_device_properties(0).total_memory / (1024**3)
+                if total_memory_gb <= 16:  # Tesla T4
+                    memory_fraction = 0.65
+                elif total_memory_gb <= 24:
+                    memory_fraction = 0.75
+                else:
+                    memory_fraction = 0.80
+                
+                max_usable_memory_gb = total_memory_gb * memory_fraction
+                max_memory = {0: f"{int(max_usable_memory_gb)}GB"}
+                logger.info(f"🔧 Setting max_memory for Accelerate: {max_memory}")
+            
+            # 🚀 КРИТИЧНО: Загружаем SDXL с синхронизированными настройками памяти
             self.pipe = StableDiffusionXLPipeline.from_pretrained(
                 SDXL_REPO_ID,
                 torch_dtype=torch.float16,
@@ -571,9 +587,10 @@ class OptimizedPredictor(BasePredictor):
                 variant="fp16",
                 safety_checker=None,
                 requires_safety_checker=False,
-                # 🚀 НОВЫЕ ПАРАМЕТРЫ: Экономия памяти
+                # 🚀 ИСПРАВЛЕНИЯ: Синхронизация памяти + экономия
                 low_cpu_mem_usage=True,
                 device_map="auto" if torch.cuda.is_available() else None,
+                max_memory=max_memory,  # 🔧 КЛЮЧЕВОЕ ИСПРАВЛЕНИЕ
             )
             
             # 🚀 КРИТИЧНО: Перемещаем на GPU с проверкой памяти
@@ -1087,6 +1104,12 @@ class OptimizedPredictor(BasePredictor):
             else:
                 logger.info("ℹ️ Preview generation without ControlNet")
             
+            # 🧹 ИСПРАВЛЕНИЕ: Принудительная очистка памяти перед VAE decode
+            if torch.cuda.is_available():
+                torch.cuda.empty_cache()
+                torch.cuda.synchronize()
+                logger.info("🧹 Memory cleared before generation to prevent expandable_segment error")
+            
             preview = self.pipe(**gen_params).images[0]
             preview_time = time.time() - preview_start
             logger.info(f"✅ Preview generated successfully in {preview_time:.2f}s")
@@ -1116,6 +1139,12 @@ class OptimizedPredictor(BasePredictor):
                 logger.info("✅ Using ControlNet for final generation")
             else:
                 logger.info("ℹ️ Final generation without ControlNet")
+            
+            # 🧹 ИСПРАВЛЕНИЕ: Принудительная очистка памяти перед VAE decode
+            if torch.cuda.is_available():
+                torch.cuda.empty_cache()
+                torch.cuda.synchronize()
+                logger.info("🧹 Memory cleared before final generation to prevent expandable_segment error")
             
             final = self.pipe(**gen_params).images[0]
             final_time = time.time() - final_start

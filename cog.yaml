@@ -1,5 +1,5 @@
 # cog.yaml
-# Version: v4.3.2 - CRITICAL CUDA OUT OF MEMORY FIXES & Lazy Loading Architecture
+# Version: v4.3.3 - CRITICAL VAE DECODE FIXES & Accelerate Memory Sync
 build:
   gpu: true
   python_version: "3.11"
