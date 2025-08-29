@@ -1,0 +1,10 @@
+[33m736e467[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;33mtag: [m[1;33mv4.3.5[m[33m, [m[1;31morigin/main[m[33m)[m v4.3.5: Critical expandable_segment Fix & VAE CPU Fallback
+[33m63c2192[m[33m ([m[1;33mtag: [m[1;33mv4.3.4[m[33m)[m v4.3.4: Replicate Performance Optimization & No Memory Limits
+[33m07cc27a[m[33m ([m[1;33mtag: [m[1;33mv4.3.3[m[33m)[m v4.3.3: Critical VAE decode fixes & Accelerate memory sync
+[33md80bc12[m[33m ([m[1;33mtag: [m[1;33mv4.3.2[m[33m)[m v4.3.2: CRITICAL CUDA OUT OF MEMORY FIXES - Lazy Loading Architecture & Memory Management
+[33me9a6a81[m v4.3.1: Add comprehensive examples for testing GPU/NPU resource management
+[33m94f2452[m[33m ([m[1;33mtag: [m[1;33mv4.3.1[m[33m)[m v4.3.1: GPU/NPU Resource Management & Monitoring - Complete implementation with 50-80% limits
+[33m0ac85ff[m v4.3.0: Sync local changes - model paths, angle logic, trained model limitations
+[33m61bfdc1[m[33m ([m[1;33mtag: [m[1;33mv4.3.0[m[33m)[m v4.3.0: Critical fixes - model paths, angle logic, trained model limitations
+[33m09b56bd[m[33m ([m[1;33mtag: [m[1;33mv4.2.9[m[33m)[m Update README.md for GitHub repository
+[33m8207f9c[m Initial commit: Plitka Pro v4.2.9 - Lazy Loading Memory Optimization

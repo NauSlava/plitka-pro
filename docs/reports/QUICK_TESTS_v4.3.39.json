@@ -1,0 +1,34 @@
+{
+  "test_1_red": {
+    "description": "Базовый тест - красная плитка",
+    "params_json": "{\"colors\":[{\"name\":\"red\",\"proportion\":100}],\"angle\":0,\"quality\":\"standard\",\"seed\":42}"
+  },
+  "test_2_blue_yellow": {
+    "description": "Тест множественных цветов",
+    "params_json": "{\"colors\":[{\"name\":\"blue\",\"proportion\":60},{\"name\":\"yellow\",\"proportion\":40}],\"angle\":0,\"quality\":\"standard\",\"seed\":123}"
+  },
+  "test_3_complex": {
+    "description": "Тест сложных комбинаций",
+    "params_json": "{\"colors\":[{\"name\":\"red\",\"proportion\":30},{\"name\":\"blue\",\"proportion\":40},{\"name\":\"yellow\",\"proportion\":30}],\"angle\":0,\"quality\":\"standard\",\"seed\":456}"
+  },
+  "test_4_angle": {
+    "description": "Тест угловых видов (ControlNet)",
+    "params_json": "{\"colors\":[{\"name\":\"purple\",\"proportion\":100}],\"angle\":45,\"quality\":\"standard\",\"seed\":789}"
+  },
+  "test_5_high_quality": {
+    "description": "Тест высокого качества",
+    "params_json": "{\"colors\":[{\"name\":\"green\",\"proportion\":70},{\"name\":\"brown\",\"proportion\":30}],\"angle\":0,\"quality\":\"high\",\"seed\":999}"
+  },
+  "test_6_random": {
+    "description": "Тест случайного seed",
+    "params_json": "{\"colors\":[{\"name\":\"orange\",\"proportion\":50},{\"name\":\"gray\",\"proportion\":50}],\"angle\":0,\"quality\":\"standard\",\"seed\":-1}"
+  },
+  "test_7_fallback": {
+    "description": "Тест fallback промпта",
+    "params_json": "{\"colors\":[],\"angle\":0,\"quality\":\"standard\",\"seed\":111}"
+  },
+  "test_8_performance": {
+    "description": "Тест производительности",
+    "params_json": "{\"colors\":[{\"name\":\"pink\",\"proportion\":80},{\"name\":\"white\",\"proportion\":20}],\"angle\":0,\"quality\":\"standard\",\"seed\":222}"
+  }
+}

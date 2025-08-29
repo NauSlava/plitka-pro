@@ -1,0 +1,59 @@
+[
+  {
+    "name": "Красная плитка - Проверка TI загрузки",
+    "input": {
+      "colors": [{"name": "red", "proportion": 100}]
+    }
+  },
+  {
+    "name": "Сине-зеленая плитка - Проверка стабильности",
+    "input": {
+      "colors": [
+        {"name": "blue", "proportion": 60},
+        {"name": "green", "proportion": 40}
+      ]
+    }
+  },
+  {
+    "name": "Желто-оранжево-коричневая плитка - Проверка fallback",
+    "input": {
+      "colors": [
+        {"name": "yellow", "proportion": 50},
+        {"name": "orange", "proportion": 30},
+        {"name": "brown", "proportion": 20}
+      ]
+    }
+  },
+  {
+    "name": "Синяя плитка под углом - Проверка ControlNet",
+    "input": {
+      "colors": [{"name": "blue", "proportion": 100}],
+      "angle": 45
+    }
+  },
+  {
+    "name": "Фиолетовая плитка высокого качества - Проверка производительности",
+    "input": {
+      "colors": [{"name": "purple", "proportion": 100}],
+      "quality": "high"
+    }
+  },
+  {
+    "name": "Розовая плитка с зерном - Проверка воспроизводимости",
+    "input": {
+      "colors": [{"name": "pink", "proportion": 100}],
+      "seed": 42
+    }
+  },
+  {
+    "name": "Fallback (белая плитка) - Проверка базовой функциональности",
+    "input": {}
+  },
+  {
+    "name": "Серая плитка низкого качества - Проверка производительности",
+    "input": {
+      "colors": [{"name": "gray", "proportion": 100}],
+      "quality": "low"
+    }
+  }
+]

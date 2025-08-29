@@ -1,0 +1,42 @@
+[
+  {
+    "name": "Тест 1: Красная плитка (подавление предупреждений)",
+    "description": "Проверка подавления предупреждений pytree",
+    "params_json": "{\"colors\": [{\"name\": \"red\", \"proportion\": 100}], \"angle\": 0, \"quality\": \"standard\", \"seed\": 42}"
+  },
+  {
+    "name": "Тест 2: Сине-желтая плитка (исправление цветов)",
+    "description": "Проверка правильной генерации цветов",
+    "params_json": "{\"colors\": [{\"name\": \"blue\", \"proportion\": 70}, {\"name\": \"yellow\", \"proportion\": 30}], \"angle\": 0, \"quality\": \"standard\", \"seed\": 123}"
+  },
+  {
+    "name": "Тест 3: Зеленая плитка (Textual Inversion)",
+    "description": "Проверка загрузки Textual Inversion",
+    "params_json": "{\"colors\": [{\"name\": \"green\", \"proportion\": 100}], \"angle\": 0, \"quality\": \"high\", \"seed\": 456}"
+  },
+  {
+    "name": "Тест 4: Четырехцветная плитка (сложная комбинация)",
+    "description": "Проверка работы с множественными цветами",
+    "params_json": "{\"colors\": [{\"name\": \"red\", \"proportion\": 40}, {\"name\": \"blue\", \"proportion\": 30}, {\"name\": \"yellow\", \"proportion\": 20}, {\"name\": \"green\", \"proportion\": 10}], \"angle\": 0, \"quality\": \"standard\", \"seed\": 789}"
+  },
+  {
+    "name": "Тест 5: Фиолетовая плитка под углом (ControlNet)",
+    "description": "Проверка работы ControlNet для углов",
+    "params_json": "{\"colors\": [{\"name\": \"purple\", \"proportion\": 100}], \"angle\": 45, \"quality\": \"standard\", \"seed\": 111}"
+  },
+  {
+    "name": "Тест 6: Белая плитка preview (стабильность)",
+    "description": "Проверка стабильности при множественных запросах",
+    "params_json": "{\"colors\": [{\"name\": \"white\", \"proportion\": 100}], \"angle\": 0, \"quality\": \"preview\", \"seed\": -1}"
+  },
+  {
+    "name": "Тест 7: Красно-синяя плитка 95/5 (граничные значения)",
+    "description": "Проверка работы с экстремальными пропорциями",
+    "params_json": "{\"colors\": [{\"name\": \"red\", \"proportion\": 95}, {\"name\": \"blue\", \"proportion\": 5}], \"angle\": 0, \"quality\": \"standard\", \"seed\": 222}"
+  },
+  {
+    "name": "Тест 8: Черная плитка под углом (fallback)",
+    "description": "Проверка fallback механизмов",
+    "params_json": "{\"colors\": [{\"name\": \"black\", \"proportion\": 100}], \"angle\": 135, \"quality\": \"standard\", \"seed\": 333}"
+  }
+]

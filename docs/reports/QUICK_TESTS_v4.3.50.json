@@ -1,0 +1,128 @@
+{
+  "version": "v4.3.50",
+  "model_url": "https://replicate.com/nauslava/plitka-pro-project:v4.3.50",
+  "description": "ARCHITECTURE FIX FROM v4.3.14 - Возврат к рабочей архитектуре",
+  "tests": [
+    {
+      "name": "Белая плитка (TOP)",
+      "input": {
+        "colors": [
+          {"color": "white", "percentage": 100}
+        ],
+        "angle": 0
+      },
+      "expected": "Чисто белая резиновая плитка с рабочим превью"
+    },
+    {
+      "name": "Красная плитка (TOP) - как в v4.3.48",
+      "input": {
+        "colors": [
+          {"color": "red", "percentage": 100}
+        ],
+        "angle": 0
+      },
+      "expected": "Красная резиновая плитка как в рабочей версии v4.3.48"
+    },
+    {
+      "name": "Черная плитка (TOP)",
+      "input": {
+        "colors": [
+          {"color": "black", "percentage": 100}
+        ],
+        "angle": 0
+      },
+      "expected": "Чисто черная резиновая плитка с рабочим превью"
+    },
+    {
+      "name": "Двухцветная плитка (TOP)",
+      "input": {
+        "colors": [
+          {"color": "white", "percentage": 70},
+          {"color": "black", "percentage": 30}
+        ],
+        "angle": 0
+      },
+      "expected": "Плитка с 70% белого и 30% черного с рабочим превью"
+    },
+    {
+      "name": "Трехцветная плитка (TOP)",
+      "input": {
+        "colors": [
+          {"color": "blue", "percentage": 50},
+          {"color": "white", "percentage": 30},
+          {"color": "gray", "percentage": 20}
+        ],
+        "angle": 0
+      },
+      "expected": "Плитка с 50% синего, 30% белого, 20% серого с рабочим превью"
+    },
+    {
+      "name": "Зеленая плитка под углом 45° (TOP)",
+      "input": {
+        "colors": [
+          {"color": "green", "percentage": 100}
+        ],
+        "angle": 45
+      },
+      "expected": "Зеленая плитка под углом 45° с рабочим превью"
+    },
+    {
+      "name": "Желтая плитка под углом 90° (TOP)",
+      "input": {
+        "colors": [
+          {"color": "yellow", "percentage": 100}
+        ],
+        "angle": 90
+      },
+      "expected": "Желтая плитка под углом 90° с рабочим превью"
+    },
+    {
+      "name": "Многоцветная плитка (TOP)",
+      "input": {
+        "colors": [
+          {"color": "purple", "percentage": 40},
+          {"color": "white", "percentage": 35},
+          {"color": "black", "percentage": 25}
+        ],
+        "angle": 0
+      },
+      "expected": "Плитка с 40% фиолетового, 35% белого, 25% черного с рабочим превью"
+    },
+    {
+      "name": "Оранжевая плитка под углом 45° (TOP)",
+      "input": {
+        "colors": [
+          {"color": "orange", "percentage": 100}
+        ],
+        "angle": 45
+      },
+      "expected": "Оранжевая плитка под углом 45° с рабочим превью"
+    },
+    {
+      "name": "Коричневая плитка (TOP)",
+      "input": {
+        "colors": [
+          {"color": "brown", "percentage": 100}
+        ],
+        "angle": 0
+      },
+      "expected": "Коричневая плитка с рабочим превью"
+    }
+  ],
+  "success_criteria": [
+    "Правильная генерация резиновой плитки",
+    "Корректные цвета и пропорции",
+    "Правильные углы обзора",
+    "Рабочее превью (не черное)",
+    "Два отдельных прохода генерации",
+    "Архитектура как в v4.3.14"
+  ],
+  "fixed_issues": [
+    "Возврат к StableDiffusionXLControlNetPipeline",
+    "Исправлено черное превью",
+    "Два отдельных прохода вместо callback",
+    "Правильная обработка результатов",
+    "Архитектура основана на v4.3.14"
+  ],
+  "status": "ARCHITECTURE FIX FROM v4.3.14"
+}

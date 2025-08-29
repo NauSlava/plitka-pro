@@ -1,0 +1,33 @@
+{
+  "version": "v4.3.58",
+  "model_url": "https://replicate.com/nauslava/plitka-pro-project:v4.3.58",
+  "description": "Тестовые запросы для проверки исправления парсинга JSON и обработки seed",
+  "test_cases": [
+    {
+      "name": "Тест 1: Фиксированный seed (белый)",
+      "request": {
+        "params_json": "{\"colors\":[{\"name\":\"white\",\"proportion\":1.0}],\"angle\":0,\"quality\":\"standard\",\"seed\":42}"
+      },
+      "expected": "Seed=42 должен использоваться, воспроизводимый результат"
+    },
+    {
+      "name": "Тест 2: Случайный seed (белый)",
+      "request": {
+        "params_json": "{\"colors\":[{\"name\":\"white\",\"proportion\":1.0}],\"angle\":0,\"quality\":\"standard\",\"seed\":-1}"
+      },
+      "expected": "Случайный seed должен использоваться, уникальный результат"
+    },
+    {
+      "name": "Тест 3: Двойное вложение JSON",
+      "request": {
+        "params_json": "{\"params_json\":\"{\\\"colors\\\":[{\\\"name\\\":\\\"white\\\",\\\"proportion\\\":1.0}],\\\"angle\\\":0,\\\"quality\\\":\\\"standard\\\",\\\"seed\\\":42}\"}"
+      },
+      "expected": "Двойное вложение должно обрабатываться корректно"
+    }
+  ],
+  "critical_checks": [
+    "Seed должен обрабатываться корректно",
+    "JSON должен парситься правильно",
+    "Размер крошки должен быть мелким"
+  ]
+}

@@ -1,0 +1,59 @@
+[
+  {
+    "name": "Красная плитка",
+    "input": {
+      "colors": [{"name": "red", "proportion": 100}]
+    }
+  },
+  {
+    "name": "Сине-зеленая плитка",
+    "input": {
+      "colors": [
+        {"name": "blue", "proportion": 60},
+        {"name": "green", "proportion": 40}
+      ]
+    }
+  },
+  {
+    "name": "Желто-оранжево-коричневая плитка",
+    "input": {
+      "colors": [
+        {"name": "yellow", "proportion": 50},
+        {"name": "orange", "proportion": 30},
+        {"name": "brown", "proportion": 20}
+      ]
+    }
+  },
+  {
+    "name": "Синяя плитка под углом",
+    "input": {
+      "colors": [{"name": "blue", "proportion": 100}],
+      "angle": 45
+    }
+  },
+  {
+    "name": "Фиолетовая плитка высокого качества",
+    "input": {
+      "colors": [{"name": "purple", "proportion": 100}],
+      "quality": "high"
+    }
+  },
+  {
+    "name": "Розовая плитка с зерном",
+    "input": {
+      "colors": [{"name": "pink", "proportion": 100}],
+      "seed": 42
+    }
+  },
+  {
+    "name": "Fallback (белая плитка)",
+    "input": {}
+  },
+  {
+    "name": "Серая плитка низкого качества",
+    "input": {
+      "colors": [{"name": "gray", "proportion": 100}],
+      "quality": "low"
+    }
+  }
+]

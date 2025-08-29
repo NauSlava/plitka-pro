@@ -1,4 +1,7 @@
 # Python
+.cog/
+replicate-prediction-4/
+docs/model_v45/
 references/
 .cursor/
 .cursorrules/

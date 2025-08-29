@@ -1,0 +1,92 @@
+{
+  "version": "v4.3.61",
+  "model_url": "https://replicate.com/nauslava/plitka-pro-project:v4.3.61",
+  "description": "Критические тестовые запросы для проверки исправления установки Textual Inversion с правильными токенами <s0><s1> в версии v4.3.61",
+  "test_cases": [
+    {
+      "name": "Тест 1: Проверка правильной установки токенов <s0><s1> (белый)",
+      "description": "Критический тест для проверки правильной установки токенов <s0><s1> вместо неправильного TOK",
+      "request": {
+        "params_json": "{\"colors\":[{\"name\":\"white\",\"proportion\":1.0}],\"angle\":0,\"quality\":\"standard\",\"seed\":42}"
+      },
+      "expected": "Textual Inversion должен устанавливаться с токенами <s0><s1>, правильный размер крошки, белый цвет"
+    },
+    {
+      "name": "Тест 2: Проверка правильного формата промптов (красный)",
+      "description": "Проверка правильного формата промптов без префикса TOK",
+      "request": {
+        "params_json": "{\"colors\":[{\"name\":\"red\",\"proportion\":1.0}],\"angle\":0,\"quality\":\"standard\",\"seed\":42}"
+      },
+      "expected": "Промпт должен быть 'ohwx_rubber_tile <s0><s1>, 100% red, photorealistic rubber tile, high quality, detailed texture'"
+    },
+    {
+      "name": "Тест 3: Два цвета с правильными токенами",
+      "description": "Проверка сложного случая с правильной установкой токенов <s0><s1>",
+      "request": {
+        "params_json": "{\"colors\":[{\"name\":\"blue\",\"proportion\":0.6},{\"name\":\"green\",\"proportion\":0.4}],\"angle\":0,\"quality\":\"standard\",\"seed\":42}"
+      },
+      "expected": "Textual Inversion должен активироваться через токены <s0><s1>, равномерное распределение, правильный размер крошки"
+    },
+    {
+      "name": "Тест 4: Сравнение с рабочей моделью v4.3.39",
+      "description": "Критический тест для сравнения с рабочей версией v4.3.39",
+      "request": {
+        "params_json": "{\"colors\":[{\"name\":\"white\",\"proportion\":1.0}],\"angle\":0,\"quality\":\"standard\",\"seed\":42}"
+      },
+      "expected": "ТОЧНО такой же результат как в v4.3.39, идентичный размер крошки и качество"
+    },
+    {
+      "name": "Тест 5: Высокое качество с правильными токенами",
+      "description": "Проверка высокого качества с правильной установкой токенов <s0><s1>",
+      "request": {
+        "params_json": "{\"colors\":[{\"name\":\"black\",\"proportion\":1.0}],\"angle\":0,\"quality\":\"high\",\"seed\":42}"
+      },
+      "expected": "Высокое качество, правильный размер крошки, активированный Textual Inversion через <s0><s1>"
+    },
+    {
+      "name": "Тест 6: Случайный seed с правильными токенами",
+      "description": "Проверка случайного seed с правильной установкой токенов <s0><s1>",
+      "request": {
+        "params_json": "{\"colors\":[{\"name\":\"yellow\",\"proportion\":1.0}],\"angle\":0,\"quality\":\"standard\",\"seed\":-1}"
+      },
+      "expected": "Случайный результат, правильный размер крошки, активированный Textual Inversion через <s0><s1>"
+    },
+    {
+      "name": "Тест 7: Три цвета с правильными токенами",
+      "description": "Проверка сложного случая с тремя цветами и правильными токенами <s0><s1>",
+      "request": {
+        "params_json": "{\"colors\":[{\"name\":\"red\",\"proportion\":0.3},{\"name\":\"blue\",\"proportion\":0.4},{\"name\":\"green\",\"proportion\":0.3}],\"angle\":0,\"quality\":\"standard\",\"seed\":42}"
+      },
+      "expected": "Равномерное распределение, правильный размер крошки, активированный Textual Inversion через <s0><s1>"
+    },
+    {
+      "name": "Тест 8: Preview с правильными токенами",
+      "description": "Проверка быстрой генерации с правильной установкой токенов <s0><s1>",
+      "request": {
+        "params_json": "{\"colors\":[{\"name\":\"gray\",\"proportion\":1.0}],\"angle\":0,\"quality\":\"preview\",\"seed\":42}"
+      },
+      "expected": "Быстрая генерация, правильный размер крошки, активированный Textual Inversion через <s0><s1>"
+    }
+  ],
+  "notes": [
+    "Все тесты используют seed=42 для воспроизводимости (кроме теста 6)",
+    "Угол 0° (top view) - единственный надежный ракурс",
+    "Ожидается исправление установки Textual Inversion с правильными токенами <s0><s1>",
+    "Ожидается правильный формат промптов без префикса TOK",
+    "Критический тест: Тест 4 должен дать ТОЧНО такой же результат как v4.3.39",
+    "Промпты включают: 'ohwx_rubber_tile <s0><s1>, [цвета], photorealistic rubber tile, high quality, detailed texture'",
+    "Textual Inversion устанавливается с правильными токенами '<s0>', '<s1>'"
+  ],
+  "critical_checks": [
+    "Textual Inversion должен устанавливаться с правильными токенами <s0><s1>",
+    "Промпты должны использовать правильный формат без префикса TOK",
+    "Размер крошки должен быть правильным",
+    "Все исправления v4.3.59 должны работать (парсинг JSON, seed)",
+    "Результат должен соответствовать рабочей модели v4.3.39",
+    "Textual Inversion должен активироваться через токены <s0><s1>"
+  ],
+  "web_interface_format": {
+    "description": "Для веб-интерфейса Replicate используйте поле params_json",
+    "example": "{\"params_json\": \"{\\\"colors\\\":[{\\\"name\\\":\\\"white\\\",\\\"proportion\\\":1.0}],\\\"angle\\\":0,\\\"quality\\\":\\\"standard\\\",\\\"seed\\\":42}\"}"
+  }
+}

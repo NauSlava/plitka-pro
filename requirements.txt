@@ -1,13 +1,11 @@
-# requirements.txt
-diffusers==0.25.1
-transformers==4.36.2
-accelerate==0.25.0
-peft==0.7.1
-safetensors==0.4.2
-huggingface-hub==0.20.3
-opencv-python-headless==4.10.0.84
+torch==2.4.0
+torchvision==0.19.0
+diffusers==0.27.2
+transformers==4.47.0
+accelerate==0.32.1
+safetensors==0.4.4
+Pillow==11.1.0
+opencv-python==4.10.0.84
+huggingface_hub==0.24.0
+peft==0.12.0
 numpy==1.26.4
-Pillow==10.3.0
-torch>=2.4.0
-torchvision>=0.19.0
-psutil>=5.9.0

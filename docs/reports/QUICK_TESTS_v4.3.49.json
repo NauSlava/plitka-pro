@@ -1,0 +1,129 @@
+{
+  "version": "v4.3.49",
+  "model_url": "https://replicate.com/nauslava/plitka-pro-project:v4.3.49",
+  "description": "CLEAN LOGS FINAL - Полное устранение всех предупреждений",
+  "tests": [
+    {
+      "name": "Белая плитка (TOP)",
+      "input": {
+        "colors": [
+          {"color": "white", "percentage": 100}
+        ],
+        "angle": 0
+      },
+      "expected": "Чисто белая резиновая плитка без предупреждений в логах"
+    },
+    {
+      "name": "Черная плитка (TOP)",
+      "input": {
+        "colors": [
+          {"color": "black", "percentage": 100}
+        ],
+        "angle": 0
+      },
+      "expected": "Чисто черная резиновая плитка без предупреждений в логах"
+    },
+    {
+      "name": "Красная плитка (TOP)",
+      "input": {
+        "colors": [
+          {"color": "red", "percentage": 100}
+        ],
+        "angle": 0
+      },
+      "expected": "Чисто красная резиновая плитка без предупреждений в логах"
+    },
+    {
+      "name": "Двухцветная плитка (TOP)",
+      "input": {
+        "colors": [
+          {"color": "white", "percentage": 70},
+          {"color": "black", "percentage": 30}
+        ],
+        "angle": 0
+      },
+      "expected": "Плитка с 70% белого и 30% черного без предупреждений в логах"
+    },
+    {
+      "name": "Трехцветная плитка (TOP)",
+      "input": {
+        "colors": [
+          {"color": "blue", "percentage": 50},
+          {"color": "white", "percentage": 30},
+          {"color": "gray", "percentage": 20}
+        ],
+        "angle": 0
+      },
+      "expected": "Плитка с 50% синего, 30% белого, 20% серого без предупреждений в логах"
+    },
+    {
+      "name": "Зеленая плитка под углом 45° (TOP)",
+      "input": {
+        "colors": [
+          {"color": "green", "percentage": 100}
+        ],
+        "angle": 45
+      },
+      "expected": "Зеленая плитка под углом 45° без предупреждений в логах"
+    },
+    {
+      "name": "Желтая плитка под углом 90° (TOP)",
+      "input": {
+        "colors": [
+          {"color": "yellow", "percentage": 100}
+        ],
+        "angle": 90
+      },
+      "expected": "Желтая плитка под углом 90° без предупреждений в логах"
+    },
+    {
+      "name": "Многоцветная плитка (TOP)",
+      "input": {
+        "colors": [
+          {"color": "purple", "percentage": 40},
+          {"color": "white", "percentage": 35},
+          {"color": "black", "percentage": 25}
+        ],
+        "angle": 0
+      },
+      "expected": "Плитка с 40% фиолетового, 35% белого, 25% черного без предупреждений в логах"
+    },
+    {
+      "name": "Оранжевая плитка под углом 45° (TOP)",
+      "input": {
+        "colors": [
+          {"color": "orange", "percentage": 100}
+        ],
+        "angle": 45
+      },
+      "expected": "Оранжевая плитка под углом 45° без предупреждений в логах"
+    },
+    {
+      "name": "Коричневая плитка (TOP)",
+      "input": {
+        "colors": [
+          {"color": "brown", "percentage": 100}
+        ],
+        "angle": 0
+      },
+      "expected": "Коричневая плитка без предупреждений в логах"
+    }
+  ],
+  "success_criteria": [
+    "Никаких предупреждений в логах",
+    "Правильная генерация резиновой плитки",
+    "Корректные цвета и пропорции",
+    "Правильные углы обзора",
+    "Оптимизированная генерация (один проход)",
+    "Два результата: preview и final"
+  ],
+  "fixed_warnings": [
+    "Миграция кэша Transformers",
+    "Pytree deprecated API",
+    "Multivariate normal distribution",
+    "Standard TI load warnings",
+    "TRANSFORMERS_CACHE deprecated",
+    "Safety checker parameters"
+  ],
+  "status": "CLEAN LOGS FINAL"
+}

@@ -1,11 +1,23 @@
 # cog.yaml
-# Version: v4.3.5 - CRITICAL EXPANDABLE_SEGMENT FIX & VAE CPU FALLBACK
+# Version: v4.3.65 - RUBBER TILE GENERATION MODEL (TI DEBUGGING)
+# Description: Модель для генерации изображений резиновой плитки с использованием НАШЕЙ обученной модели
+# Changes:
+# - ИСПРАВЛЕНИЕ: Восстановлен полный промпт с качественными дескрипторами (как в рабочей v45)
+# - ИСПРАВЛЕНИЕ: Оптимизированы параметры генерации (20 шагов для стандартного качества)
+# - ИСПРАВЛЕНИЕ: КРИТИЧЕСКОЕ ИСПРАВЛЕНИЕ Textual Inversion - загрузка 2 токенов <s0><s1>
+# - ИСПРАВЛЕНИЕ: Восстановлена логика ControlNet для точного контроля цветов
+# - ДОБАВЛЕНО: Расширенное логирование для отладки Textual Inversion
+# - Полное соответствие рабочей архитектуре v45
 build:
   gpu: true
+  cuda: "12.4"
   python_version: "3.11"
   python_requirements: "requirements.txt"
+  system_packages:
+    - "libgl1-mesa-glx"
+    - "libglib2.0-0"
   cog_runtime: true
-  run:
-    - mkdir -p /src/model_files
-    - mkdir -p /src/refs
-predict: "predict.py:OptimizedPredictor"
+
+predict: "predict.py:Predictor"
+
+image: "r8.im/nauslava/plitka-pro-project:v4.3.65"
