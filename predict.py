@@ -80,23 +80,18 @@ class Predictor(BasePredictor):
         lora_path = "/src/model_files/rubber-tile-lora-v4_sdxl_lora.safetensors"
         try:
             # Загружаем с именем адаптера и устанавливаем вес 0.75 (из профиля)
-            self.pipe.load_lora_weights(lora_path, adapter_name="rt")
-            if hasattr(self.pipe, "set_adapters"):
-                self.pipe.set_adapters(["rt"], adapter_weights=[0.75])
-                try:
+            # Совместимость разных версий diffusers: устанавливаем веса и при наличии выполняем fuse
+            try:
+                self.pipe.load_lora_weights(lora_path, adapter_name="rt")
+            except TypeError:
+                # Старые версии не принимают adapter_name
+                self.pipe.load_lora_weights(lora_path)
+            try:
+                if hasattr(self.pipe, "fuse_lora"):
                     self.pipe.fuse_lora()
-                except Exception:
-                    # В некоторых версиях fuse_lora отсутствует — это не критично
-                    pass
-                logger.info("✅ LoRA адаптеры загружены (weight=0.75)")
-            else:
-                # Совместимость со старыми diffusers: set_adapters отсутствует
-                try:
-                    if hasattr(self.pipe, "fuse_lora"):
-                        self.pipe.fuse_lora()
-                except Exception:
-                    pass
-                logger.info("ℹ️ set_adapters недоступен в этой версии diffusers; используем дефолтный вес LoRA")
+            except Exception:
+                pass
+            logger.info("✅ LoRA адаптеры загружены (вес зададим при инференсе через cross_attention_kwargs)")
         except Exception as e:
             logger.error(f"❌ Ошибка загрузки LoRA: {e}")
             raise e
@@ -460,7 +455,8 @@ class Predictor(BasePredictor):
                 guidance_scale=6.7,
                 width=1024,
                 height=1024,
-                generator=torch.Generator(device=self.device).manual_seed(seed)
+                generator=torch.Generator(device=self.device).manual_seed(seed),
+                cross_attention_kwargs={"scale": 0.75}
             )
             logger.info("✅ Pipeline завершен успешно")
             
