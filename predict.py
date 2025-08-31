@@ -81,13 +81,22 @@ class Predictor(BasePredictor):
         try:
             # Загружаем с именем адаптера и устанавливаем вес 0.75 (из профиля)
             self.pipe.load_lora_weights(lora_path, adapter_name="rt")
-            self.pipe.set_adapters(["rt"], adapter_weights=[0.75])
-            try:
-                self.pipe.fuse_lora()
-            except Exception:
-                # В некоторых версиях fuse_lora отсутствует — это не критично
-                pass
-            logger.info("✅ LoRA адаптеры загружены (weight=0.75)")
+            if hasattr(self.pipe, "set_adapters"):
+                self.pipe.set_adapters(["rt"], adapter_weights=[0.75])
+                try:
+                    self.pipe.fuse_lora()
+                except Exception:
+                    # В некоторых версиях fuse_lora отсутствует — это не критично
+                    pass
+                logger.info("✅ LoRA адаптеры загружены (weight=0.75)")
+            else:
+                # Совместимость со старыми diffusers: set_adapters отсутствует
+                try:
+                    if hasattr(self.pipe, "fuse_lora"):
+                        self.pipe.fuse_lora()
+                except Exception:
+                    pass
+                logger.info("ℹ️ set_adapters недоступен в этой версии diffusers; используем дефолтный вес LoRA")
         except Exception as e:
             logger.error(f"❌ Ошибка загрузки LoRA: {e}")
             raise e
