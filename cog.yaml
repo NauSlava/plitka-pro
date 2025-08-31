@@ -1,5 +1,5 @@
 # cog.yaml
-# Version: v4.4.36 - RUBBER TILE GENERATION MODEL (ИСПРАВЛЕНИЕ ПЕРЕПУТАННЫХ РАЗМЕРОВ TI)
+# Version: v4.4.37-pre - RUBBER TILE GENERATION MODEL (КАЧЕСТВО/АНТИ-МОЗАИКА/LEGEND)
 # Description: Модель для генерации изображений резиновой плитки с использованием НАШЕЙ обученной модели
 # Changes:
 # - ДИАГНОСТИКА: Детальный анализ размеров text_encoder в SDXL pipeline
@@ -36,4 +36,4 @@ build:
 
 predict: "predict.py:Predictor"
 
-image: "r8.im/nauslava/plitka-pro-project:v4.4.36"
+image: "r8.im/nauslava/plitka-pro-project:v4.4.37-pre"

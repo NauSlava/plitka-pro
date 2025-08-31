@@ -8,7 +8,7 @@ import gc
 import json
 import logging
 from typing import Optional, List, Dict, Any
-from PIL import Image
+from PIL import Image, ImageDraw, ImageColor
 import numpy as np
 from pathlib import Path
 
@@ -35,11 +35,10 @@ class Predictor(BasePredictor):
     def __init__(self):
         self.device = None
         self.pipe = None
-        self.setup()
     
     def setup(self):
         """Инициализация модели при запуске сервера."""
-        logger.info("🚀 Инициализация модели v4.4.36 (ИСПРАВЛЕНИЕ ПЕРЕПУТАННЫХ РАЗМЕРОВ)...")
+        logger.info("🚀 Инициализация модели v4.4.37-pre (КАЧЕСТВО/АНТИ-МОЗАИКА/LEGEND)...")
         
         # 1. Определение устройства
         if torch.cuda.is_available():
@@ -66,13 +65,29 @@ class Predictor(BasePredictor):
         
         # 3. Перемещение на GPU
         self.pipe = self.pipe.to(self.device)
+        if self.device == "cuda":
+            try:
+                self.pipe.enable_xformers_memory_efficient_attention()
+            except Exception:
+                pass
+            try:
+                torch.backends.cudnn.benchmark = True
+            except Exception:
+                pass
         
         # 4. Загрузка НАШИХ обученных LoRA (совместимый API)
         logger.info("🔧 Загрузка НАШИХ LoRA адаптеров...")
         lora_path = "/src/model_files/rubber-tile-lora-v4_sdxl_lora.safetensors"
         try:
-            self.pipe.load_lora_weights(lora_path)
-            logger.info("✅ LoRA адаптеры загружены")
+            # Загружаем с именем адаптера и устанавливаем вес 0.75 (из профиля)
+            self.pipe.load_lora_weights(lora_path, adapter_name="rt")
+            self.pipe.set_adapters(["rt"], adapter_weights=[0.75])
+            try:
+                self.pipe.fuse_lora()
+            except Exception:
+                # В некоторых версиях fuse_lora отсутствует — это не критично
+                pass
+            logger.info("✅ LoRA адаптеры загружены (weight=0.75)")
         except Exception as e:
             logger.error(f"❌ Ошибка загрузки LoRA: {e}")
             raise e
@@ -255,7 +270,14 @@ class Predictor(BasePredictor):
         # 8. Оптимизации VAE
         logger.info("🚀 Применение VAE оптимизаций...")
         self.pipe.vae.enable_slicing()
-        self.pipe.vae.enable_tiling()
+        # Отключаем tiling, чтобы избежать "пэчворк"-артефактов
+        # self.pipe.vae.enable_tiling()
+        try:
+            # Формат каналов для ускорения и стабильности
+            self.pipe.unet.to(memory_format=torch.channels_last)
+            self.pipe.vae.to(memory_format=torch.channels_last)
+        except Exception:
+            pass
         
         # 9. Очистка памяти
         if torch.cuda.is_available():
@@ -297,7 +319,54 @@ class Predictor(BasePredictor):
     
     def _build_negative_prompt(self) -> str:
         """Построение негативного промпта."""
-        return "text, watermark, logo, signature, blur, low quality, distorted, object, blurry, worst quality, deformed, 3d render, cartoon, abstract, painting, drawing, sketch, low resolution"
+        return (
+            "text, watermark, logo, signature, blur, low quality, distorted, object,"
+            " blurry, worst quality, deformed, 3d render, cartoon, abstract, painting,"
+            " drawing, sketch, low resolution, mosaic, checkerboard, grid, patchwork,"
+            " tiled, square blocks, seams, borders, rectangles, collage, large blocks"
+        )
+
+    def _parse_percent_colors(self, simple_prompt: str) -> List[Dict[str, Any]]:
+        """Простенький парсер строк вида '60% red, 40% white' → список цветов и долей [0..1]."""
+        parts = [p.strip() for p in simple_prompt.split(',') if p.strip()]
+        result: List[Dict[str, Any]] = []
+        for p in parts:
+            try:
+                percent_str, name = p.split('%', 1)
+                percent = float(percent_str.strip())
+                color_name = name.strip()
+                if color_name.lower().startswith(('of ', ' ')):
+                    color_name = color_name.split()[-1]
+                result.append({"name": color_name, "proportion": max(0.0, min(1.0, percent / 100.0))})
+            except Exception:
+                continue
+        # Нормализация, если сумма не 1.0
+        total = sum(c["proportion"] for c in result) or 1.0
+        for c in result:
+            c["proportion"] = c["proportion"] / total
+        return result
+
+    def _render_legend(self, colors: List[Dict[str, Any]], size: int = 256) -> Image.Image:
+        """Строим простую легенду/colormap из входных пропорций (горизонтальные полосы)."""
+        img = Image.new('RGB', (size, size), color='white')
+        draw = ImageDraw.Draw(img)
+        y = 0
+        for c in colors:
+            h = max(1, int(size * c["proportion"]))
+            try:
+                rgb = ImageColor.getrgb(c["name"])  # распознает стандартные цвета
+            except Exception:
+                rgb = (200, 200, 200)
+            draw.rectangle([0, y, size, min(size, y + h)], fill=rgb)
+            y += h
+        # Подгоняем последнюю полосу до края
+        if y < size and colors:
+            try:
+                rgb_last = ImageColor.getrgb(colors[-1]["name"])
+            except Exception:
+                rgb_last = (200, 200, 200)
+            draw.rectangle([0, y, size, size], fill=rgb_last)
+        return img
     
     def _build_prompt_from_simple(self, simple_prompt: str) -> str:
         """Преобразование простого промпта в полный формат с НАШИМИ токенами (как в v45)."""
@@ -326,7 +395,7 @@ class Predictor(BasePredictor):
         return full_prompt
     
     def predict(self, prompt: str = Input(description="Описание цветов резиновой плитки", default="100% red"), 
-                negative_prompt: Optional[str] = Input(description="Негативный промпт", default="text, watermark, logo, signature, blur, low quality, distorted"), 
+                negative_prompt: Optional[str] = Input(description="Негативный промпт", default=None), 
                 seed: int = Input(description="Сид для воспроизводимости", default=-1)) -> List[Path]:
         """Генерация изображения резиновой плитки с использованием НАШЕЙ обученной модели."""
         
@@ -378,8 +447,8 @@ class Predictor(BasePredictor):
             result = self.pipe(
                 prompt=full_prompt,
                 negative_prompt=negative_prompt,
-                num_inference_steps=20,
-                guidance_scale=7.0,
+                num_inference_steps=35,
+                guidance_scale=6.7,
                 width=1024,
                 height=1024,
                 generator=torch.Generator(device=self.device).manual_seed(seed)
@@ -402,11 +471,18 @@ class Predictor(BasePredictor):
             preview_image.save(preview_path)
             logger.info("✅ Файлы сохранены")
             
-            # Создание colormap (заглушка)
+            # Создание colormap (легенды) из входных пропорций
             colormap_path = "/tmp/colormap.png"
-            colormap_image = Image.new('RGB', (256, 256), color='white')
-            colormap_image.save(colormap_path)
-            logger.info("✅ Colormap создан")
+            try:
+                parsed_colors = self._parse_percent_colors(prompt)
+                if not parsed_colors:
+                    parsed_colors = [{"name": "white", "proportion": 1.0}]
+                colormap_image = self._render_legend(parsed_colors, size=256)
+                colormap_image.save(colormap_path)
+                logger.info("✅ Colormap создан из входных пропорций")
+            except Exception as e:
+                logger.warning(f"⚠️ Не удалось построить colormap: {e}")
+                Image.new('RGB', (256, 256), color='white').save(colormap_path)
             
             # Очистка памяти
             if torch.cuda.is_available():
