@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Plitka Pro - Примеры запросов</title>
+    <title>Plitka Pro v4.4.33 - Примеры запросов</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -72,13 +72,38 @@
             background: #ffc107;
             color: #212529;
         }
+        .version-info {
+            background: #17a2b8;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            text-align: center;
+        }
+        .default-values {
+            background: #e9ecef;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 4px solid #007bff;
+        }
     </style>
 </head>
 <body>
     <div class="header">
-        <h1>🧱 Plitka Pro - Примеры запросов</h1>
+        <h1>🧱 Plitka Pro v4.4.33 - Примеры запросов</h1>
         <p>Генерация резиновой плитки из цветной крошки</p>
         <p><strong>Модель:</strong> <a href="https://replicate.com/nauslava/plitka-pro" target="_blank">nauslava/plitka-pro</a></p>
+        <div class="version-info">
+            <strong>🆕 ВЕРСИЯ v4.4.33:</strong> Исправлены критические ошибки Textual Inversion, улучшено логирование, автозаполнение промптов
+        </div>
+    </div>
+
+    <div class="default-values">
+        <h3>🎯 Значения по умолчанию (автозаполнение):</h3>
+        <p><strong>Prompt:</strong> <code>100% red</code></p>
+        <p><strong>Negative Prompt:</strong> <code>text, watermark, logo, signature, blur, low quality, distorted</code></p>
+        <p><strong>Seed:</strong> <code>-1</code> (случайный)</p>
     </div>
 
     <div class="example">
@@ -88,7 +113,9 @@
             <div class="color-block" style="background: #b42828;"></div>
         </div>
         <textarea id="example1">{
-  "params_json": "{\"colors\":[{\"name\":\"BLACK\",\"proportion\":0.7},{\"name\":\"RED\",\"proportion\":0.3}],\"angle\":0,\"quality\":\"standard\",\"seed\":123456}"
+  "prompt": "70% black, 30% red",
+  "negative_prompt": "text, watermark, logo, signature, blur, low quality, distorted",
+  "seed": 123456
 }</textarea>
         <button class="copy-btn" onclick="copyToClipboard('example1')">Копировать JSON</button>
     </div>
@@ -100,68 +127,64 @@
             <div class="color-block" style="background: #e6c200;"></div>
         </div>
         <textarea id="example2">{
-  "params_json": "{\"colors\":[{\"name\":\"GREEN\",\"proportion\":0.6},{\"name\":\"YELLOW\",\"proportion\":0.4}],\"angle\":45,\"quality\":\"high\",\"seed\":42}"
+  "prompt": "60% green, 40% yellow",
+  "negative_prompt": "text, watermark, logo, signature, blur, low quality, distorted",
+  "seed": 654321
 }</textarea>
         <button class="copy-btn" onclick="copyToClipboard('example2')">Копировать JSON</button>
     </div>
 
     <div class="example">
-        <h3>3. Синяя плитка (100% синего)</h3>
+        <h3>3. Трехцветная плитка (40% синего, 35% белого, 25% красного)</h3>
         <div class="color-preview">
-            <div class="color-block" style="background: #2850b4;"></div>
+            <div class="color-block" style="background: #0066cc;"></div>
+            <div class="color-block" style="background: #ffffff;"></div>
+            <div class="color-block" style="background: #cc0000;"></div>
         </div>
         <textarea id="example3">{
-  "params_json": "{\"colors\":[{\"name\":\"BLUE\",\"proportion\":1.0}],\"angle\":90,\"quality\":\"standard\",\"seed\":999}"
+  "prompt": "40% blue, 35% white, 25% red",
+  "negative_prompt": "text, watermark, logo, signature, blur, low quality, distorted",
+  "seed": 789012
 }</textarea>
         <button class="copy-btn" onclick="copyToClipboard('example3')">Копировать JSON</button>
     </div>
 
     <div class="example">
-        <h3>4. Трехцветная плитка (40% белого, 35% серого, 25% коричневого)</h3>
+        <h3>4. Простой тест (красная плитка)</h3>
         <div class="color-preview">
-            <div class="color-block" style="background: #ebebeb;"></div>
-            <div class="color-block" style="background: #808080;"></div>
-            <div class="color-block" style="background: #785032;"></div>
+            <div class="color-block" style="background: #cc0000;"></div>
         </div>
         <textarea id="example4">{
-  "params_json": "{\"colors\":[{\"name\":\"WHITE\",\"proportion\":0.4},{\"name\":\"GRAY\",\"proportion\":0.35},{\"name\":\"BROWN\",\"proportion\":0.25}],\"angle\":30,\"quality\":\"high\",\"seed\":777}"
+  "prompt": "100% red",
+  "negative_prompt": "text, watermark, logo, signature, blur, low quality, distorted",
+  "seed": 111111
 }</textarea>
         <button class="copy-btn" onclick="copyToClipboard('example4')">Копировать JSON</button>
     </div>
 
     <div class="example">
-        <h3>5. Черно-белая плитка (15% черного, 85% белого) - как в референсе</h3>
+        <h3>5. Многоцветная плитка (25% каждого цвета)</h3>
         <div class="color-preview">
-            <div class="color-block" style="background: #141414;"></div>
-            <div class="color-block" style="background: #ebebeb;"></div>
+            <div class="color-block" style="background: #cc0000;"></div>
+            <div class="color-block" style="background: #0066cc;"></div>
+            <div class="color-block" style="background: #28a050;"></div>
+            <div class="color-block" style="background: #e6c200;"></div>
         </div>
         <textarea id="example5">{
-  "params_json": "{\"colors\":[{\"name\":\"BLACK\",\"proportion\":0.15},{\"name\":\"WHITE\",\"proportion\":0.85}],\"angle\":0,\"quality\":\"standard\",\"seed\":123456}"
+  "prompt": "25% red, 25% blue, 25% green, 25% yellow",
+  "negative_prompt": "text, watermark, logo, signature, blur, low quality, distorted",
+  "seed": 999999
 }</textarea>
         <button class="copy-btn" onclick="copyToClipboard('example5')">Копировать JSON</button>
     </div>
 
     <div class="example">
-        <h3>6. Красная плитка с высоким качеством</h3>
-        <div class="color-preview">
-            <div class="color-block" style="background: #b42828;"></div>
-        </div>
+        <h3>6. Минимальный запрос (использует значения по умолчанию)</h3>
+        <p>Для простого тестирования можно использовать только промпт:</p>
         <textarea id="example6">{
-  "params_json": "{\"colors\":[{\"name\":\"RED\",\"proportion\":1.0}],\"angle\":0,\"quality\":\"high\",\"seed\":42,\"overrides\":{\"guidance_scale\":8.0}}"
+  "prompt": "100% blue"
 }</textarea>
         <button class="copy-btn" onclick="copyToClipboard('example6')">Копировать JSON</button>
-    </div>
-
-    <div class="example">
-        <h3>7. Быстрый предпросмотр (preview quality)</h3>
-        <div class="color-preview">
-            <div class="color-block" style="background: #2850b4;"></div>
-            <div class="color-block" style="background: #e6c200;"></div>
-        </div>
-        <textarea id="example7">{
-  "params_json": "{\"colors\":[{\"name\":\"BLUE\",\"proportion\":0.6},{\"name\":\"YELLOW\",\"proportion\":0.4}],\"angle\":45,\"quality\":\"preview\",\"seed\":42}"
-}</textarea>
-        <button class="copy-btn" onclick="copyToClipboard('example7')">Копировать JSON</button>
     </div>
 
     <script>
@@ -170,15 +193,24 @@
             textarea.select();
             document.execCommand('copy');
             
-            const button = textarea.nextElementSibling;
+            const button = event.target;
             const originalText = button.textContent;
             button.textContent = 'Скопировано!';
-            button.classList.add('success');
+            button.className = 'copy-btn success';
             
             setTimeout(() => {
                 button.textContent = originalText;
-                button.classList.remove('success');
+                button.className = 'copy-btn';
             }, 2000);
+        }
+
+        // Автозаполнение при загрузке страницы
+        window.onload = function() {
+            console.log('🎯 Plitka Pro v4.4.33 - Веб-интерфейс загружен');
+            console.log('📝 Значения по умолчанию:');
+            console.log('   Prompt: 100% red');
+            console.log('   Negative Prompt: text, watermark, logo, signature, blur, low quality, distorted');
+            console.log('   Seed: -1 (случайный)');
         }
     </script>
 </body>

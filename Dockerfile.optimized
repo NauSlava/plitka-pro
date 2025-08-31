@@ -1,0 +1,55 @@
+# ОПТИМИЗИРОВАННЫЙ Dockerfile для Plitka Pro v4.4.16
+# Многоэтапная сборка для минимального размера образа
+
+# Этап 1: Базовый образ с CUDA и Python
+FROM nvidia/cuda:12.1-devel-ubuntu22.04 as base
+
+# Установка системных зависимостей
+RUN apt-get update && apt-get install -y \
+    python3.11 \
+    python3.11-dev \
+    python3-pip \
+    libgl1-mesa-glx \
+    libglib2.0-0 \
+    && rm -rf /var/lib/apt/lists/*
+
+# Создание символических ссылок
+RUN ln -s /usr/bin/python3.11 /usr/bin/python3 && \
+    ln -s /usr/bin/python3.11 /usr/bin/python
+
+# Этап 2: Установка Python зависимостей
+FROM base as dependencies
+
+WORKDIR /app
+
+# Копирование requirements.txt
+COPY requirements.txt .
+
+# Установка зависимостей с оптимизацией
+RUN pip3 install --no-cache-dir --upgrade pip && \
+    pip3 install --no-cache-dir -r requirements.txt
+
+# Этап 3: Финальный образ
+FROM base as final
+
+WORKDIR /src
+
+# Копирование установленных зависимостей
+COPY --from=dependencies /usr/local/lib/python3.11/dist-packages /usr/local/lib/python3.11/dist-packages
+
+# Копирование кода приложения
+COPY predict.py .
+COPY model_files/ ./model_files/
+
+# Установка cog runtime
+RUN pip3 install --no-cache-dir https://github.com/replicate/cog-runtime/releases/download/v0.1.0-beta.1/cog_runtime-0.1.0_beta.1-py3-none-any.whl
+
+# Оптимизация для GPU
+ENV CUDA_VISIBLE_DEVICES=0
+ENV PYTORCH_CUDA_ALLOC_CONF=max_split_size_mb:512
+
+# Очистка кэша
+RUN rm -rf /root/.cache/pip
+
+# Запуск приложения
+CMD ["python3", "predict.py"]

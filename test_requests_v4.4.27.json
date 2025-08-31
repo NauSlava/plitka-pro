@@ -1,0 +1,116 @@
+{
+  "model_version": "v4.4.27",
+  "description": "Примеры запросов для тестирования модели генерации резиновой плитки",
+  "test_cases": [
+    {
+      "name": "Тест 1: Простая белая плитка",
+      "description": "Базовая генерация белой резиновой плитки",
+      "input": {
+        "prompt": "ohwx_rubber_tile <s0><s1>, 100% white",
+        "negative_prompt": "text, watermark, logo, signature, blur, low quality, distorted",
+        "seed": -1
+      },
+      "expected": "Белая резиновая плитка с реалистичной текстурой"
+    },
+    {
+      "name": "Тест 2: Двухцветная плитка",
+      "description": "Генерация плитки с двумя цветами",
+      "input": {
+        "prompt": "ohwx_rubber_tile <s0><s1>, 60% red, 40% blue",
+        "negative_prompt": "text, watermark, logo, signature, blur, low quality, distorted",
+        "seed": 42
+      },
+      "expected": "Красно-синяя плитка с правильными пропорциями цветов"
+    },
+    {
+      "name": "Тест 3: Многоцветная плитка",
+      "description": "Генерация плитки с четырьмя цветами",
+      "input": {
+        "prompt": "ohwx_rubber_tile <s0><s1>, 30% green, 25% yellow, 25% orange, 20% purple",
+        "negative_prompt": "text, watermark, logo, signature, blur, low quality, distorted",
+        "seed": 123
+      },
+      "expected": "Многоцветная плитка с равномерным распределением цветов"
+    },
+    {
+      "name": "Тест 4: Фиксированный seed",
+      "description": "Воспроизводимая генерация с фиксированным seed",
+      "input": {
+        "prompt": "ohwx_rubber_tile <s0><s1>, 50% black, 50% white",
+        "negative_prompt": "text, watermark, logo, signature, blur, low quality, distorted",
+        "seed": 999
+      },
+      "expected": "Черно-белая плитка, воспроизводимая при повторных запусках"
+    },
+    {
+      "name": "Тест 5: Случайный seed",
+      "description": "Генерация с случайным seed для разнообразия",
+      "input": {
+        "prompt": "ohwx_rubber_tile <s0><s1>, 70% blue, 30% white",
+        "negative_prompt": "text, watermark, logo, signature, blur, low quality, distorted",
+        "seed": -1
+      },
+      "expected": "Сине-белая плитка с уникальной текстурой"
+    },
+    {
+      "name": "Тест 6: Одноцветная плитка",
+      "description": "Генерация одноцветной плитки",
+      "input": {
+        "prompt": "ohwx_rubber_tile <s0><s1>, 100% green",
+        "negative_prompt": "text, watermark, logo, signature, blur, low quality, distorted",
+        "seed": 777
+      },
+      "expected": "Зеленая плитка с реалистичной текстурой резины"
+    },
+    {
+      "name": "Тест 7: Трехцветная плитка",
+      "description": "Генерация плитки с тремя цветами",
+      "input": {
+        "prompt": "ohwx_rubber_tile <s0><s1>, 40% red, 35% yellow, 25% blue",
+        "negative_prompt": "text, watermark, logo, signature, blur, low quality, distorted",
+        "seed": 555
+      },
+      "expected": "Красно-желто-синяя плитка с правильными пропорциями"
+    },
+    {
+      "name": "Тест 8: Контрастная плитка",
+      "description": "Генерация контрастной плитки",
+      "input": {
+        "prompt": "ohwx_rubber_tile <s0><s1>, 80% black, 20% white",
+        "negative_prompt": "text, watermark, logo, signature, blur, low quality, distorted",
+        "seed": 888
+      },
+      "expected": "Контрастная черно-белая плитка с четкими границами"
+    }
+  ],
+  "testing_instructions": {
+    "web_interface": "https://replicate.com/nauslava/plitka-pro-project:v4.4.27",
+    "steps": [
+      "1. Откройте web-интерфейс модели",
+      "2. Скопируйте prompt из примера",
+      "3. Скопируйте negative_prompt из примера",
+      "4. Установите seed (или оставьте -1 для случайного)",
+      "5. Нажмите 'Run'",
+      "6. Дождитесь генерации изображения",
+      "7. Проверьте качество и соответствие ожиданиям"
+    ],
+    "quality_criteria": [
+      "Реалистичная текстура резиновой плитки",
+      "Правильные пропорции цветов",
+      "Отсутствие артефактов и искажений",
+      "Четкие границы между цветами",
+      "Естественный размер гранул резины"
+    ]
+  },
+  "model_info": {
+    "version": "v4.4.27",
+    "base_model": "Stable Diffusion XL 1.0",
+    "custom_training": "LoRA + Textual Inversion для резиновой плитки",
+    "special_features": [
+      "Поддержка множественных цветов",
+      "Точный контроль пропорций",
+      "Реалистичная текстура резины",
+      "Воспроизводимость через seed"
+    ]
+  }
+}

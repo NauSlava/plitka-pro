@@ -1,0 +1,202 @@
+{
+  "model_version": "v4.4.10",
+  "model_url": "https://replicate.com/nauslava/plitka-pro-project:v4.4.10",
+  "description": "Тестовые запросы для модели генерации резиновой плитки (ИСПРАВЛЕНА ЗАГРУЗКА Textual Inversion)",
+  "api_parameters": {
+    "prompt": "Описание цветов резиновой плитки (обязательный)",
+    "negative_prompt": "Негативный промпт (опциональный, по умолчанию стандартный)",
+    "seed": "Сид для воспроизводимости (опциональный, по умолчанию случайный)"
+  },
+  "key_improvements": [
+    "✅ Ручная загрузка Textual Inversion для SDXL dual-encoder",
+    "✅ Исправлена обработка JSON-обертки в промптах",
+    "✅ Токены <s0><s1> теперь активируются корректно",
+    "✅ Ожидается значительное улучшение качества генерации"
+  ],
+  "test_cases": [
+    {
+      "name": "Базовый тест - черная плитка (ОСНОВНОЙ ТЕСТ)",
+      "description": "Критический тест для проверки исправления Textual Inversion",
+      "request": {
+        "prompt": "100% black"
+      },
+      "expected_result": "Черная резиновая плитка с характерной гранулированной текстурой (как в BLACK_top.jpg)",
+      "importance": "CRITICAL"
+    },
+    {
+      "name": "Белый цвет для контраста",
+      "description": "Тест светлого цвета для проверки контраста",
+      "request": {
+        "prompt": "100% white"
+      },
+      "expected_result": "Белая резиновая плитка с четкой текстурой гранул",
+      "importance": "HIGH"
+    },
+    {
+      "name": "Двухцветная плитка",
+      "description": "Тест комбинированных цветов",
+      "request": {
+        "prompt": "50% black, 50% white"
+      },
+      "expected_result": "Двухцветная резиновая плитка с черно-белым узором",
+      "importance": "MEDIUM"
+    },
+    {
+      "name": "Многоцветная плитка",
+      "description": "Тест сложного цветового узора",
+      "request": {
+        "prompt": "30% red, 40% blue, 30% yellow"
+      },
+      "expected_result": "Многоцветная резиновая плитка с красно-сине-желтым узором",
+      "importance": "MEDIUM"
+    },
+    {
+      "name": "С фиксированным сидом (воспроизводимость)",
+      "description": "Тест воспроизводимости результатов",
+      "request": {
+        "prompt": "100% blue",
+        "seed": 12345
+      },
+      "expected_result": "Синяя резиновая плитка (воспроизводимый результат)",
+      "importance": "HIGH"
+    },
+    {
+      "name": "С кастомным негативным промптом",
+      "description": "Тест улучшения качества через негативный промпт",
+      "request": {
+        "prompt": "100% green",
+        "negative_prompt": "blurry, low quality, deformed, cartoon"
+      },
+      "expected_result": "Зеленая резиновая плитка с улучшенным качеством",
+      "importance": "MEDIUM"
+    },
+    {
+      "name": "Сложный узор",
+      "description": "Тест сложного цветового узора",
+      "request": {
+        "prompt": "20% black, 30% white, 25% red, 25% blue"
+      },
+      "expected_result": "Сложный узор из четырех цветов с четкой текстурой",
+      "importance": "MEDIUM"
+    },
+    {
+      "name": "Серый цвет",
+      "description": "Тест нейтрального цвета",
+      "request": {
+        "prompt": "100% gray"
+      },
+      "expected_result": "Серая резиновая плитка с реалистичной текстурой",
+      "importance": "LOW"
+    },
+    {
+      "name": "Теплые тона",
+      "description": "Тест теплой цветовой палитры",
+      "request": {
+        "prompt": "40% orange, 35% brown, 25% beige"
+      },
+      "expected_result": "Резиновая плитка в теплых оранжево-коричневых тонах",
+      "importance": "LOW"
+    },
+    {
+      "name": "Яркие цвета",
+      "description": "Тест яркой цветовой палитры",
+      "request": {
+        "prompt": "25% red, 25% green, 25% blue, 25% yellow"
+      },
+      "expected_result": "Яркая многоцветная резиновая плитка",
+      "importance": "LOW"
+    }
+  ],
+  "curl_examples": [
+    {
+      "name": "Критический тест - черная плитка",
+      "description": "Основной тест для проверки исправления Textual Inversion",
+      "command": "curl -s -X POST \\\n  -H \"Authorization: Token YOUR_API_TOKEN\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"version\": \"cf180128deeb2721a24386cd8f01b88f6a04d018fa6ee3abcef3192b3e501830\",\n    \"input\": {\n      \"prompt\": \"100% black\"\n    }\n  }' \\\n  https://api.replicate.com/v1/predictions"
+    },
+    {
+      "name": "Тест с сидом",
+      "description": "Тест воспроизводимости результатов",
+      "command": "curl -s -X POST \\\n  -H \"Authorization: Token YOUR_API_TOKEN\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"version\": \"cf180128deeb2721a24386cd8f01b88f6a04d018fa6ee3abcef3192b3e501830\",\n    \"input\": {\n      \"prompt\": \"50% red, 50% blue\",\n      \"seed\": 12345\n    }\n  }' \\\n  https://api.replicate.com/v1/predictions"
+    },
+    {
+      "name": "Тест с негативным промптом",
+      "description": "Тест улучшения качества",
+      "command": "curl -s -X POST \\\n  -H \"Authorization: Token YOUR_API_TOKEN\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"version\": \"cf180128deeb2721a24386cd8f01b88f6a04d018fa6ee3abcef3192b3e501830\",\n    \"input\": {\n      \"prompt\": \"100% green\",\n      \"negative_prompt\": \"blurry, low quality, deformed\"\n    }\n  }' \\\n  https://api.replicate.com/v1/predictions"
+    }
+  ],
+  "javascript_examples": [
+    {
+      "name": "Критический JavaScript тест",
+      "description": "Основной тест для проверки исправления",
+      "code": "const response = await fetch('https://api.replicate.com/v1/predictions', {\n  method: 'POST',\n  headers: {\n    'Authorization': 'Token YOUR_API_TOKEN',\n    'Content-Type': 'application/json'\n  },\n  body: JSON.stringify({\n    version: 'cf180128deeb2721a24386cd8f01b88f6a04d018fa6ee3abcef3192b3e501830',\n    input: {\n      prompt: '100% black'\n    }\n  })\n});\n\nconst prediction = await response.json();"
+    },
+    {
+      "name": "JavaScript с обработкой результата",
+      "description": "Полный цикл генерации с ожиданием результата",
+      "code": "async function generateRubberTile(prompt, seed = -1) {\n  const response = await fetch('https://api.replicate.com/v1/predictions', {\n    method: 'POST',\n    headers: {\n      'Authorization': 'Token YOUR_API_TOKEN',\n      'Content-Type': 'application/json'\n    },\n    body: JSON.stringify({\n      version: 'cf180128deeb2721a24386cd8f01b88f6a04d018fa6ee3abcef3192b3e501830',\n      input: {\n        prompt: prompt,\n        seed: seed\n      }\n    })\n  });\n\n  const prediction = await response.json();\n  \n  // Ожидание завершения генерации\n  while (prediction.status !== 'succeeded' && prediction.status !== 'failed') {\n    await new Promise(resolve => setTimeout(resolve, 1000));\n    const statusResponse = await fetch(prediction.urls.get, {\n      headers: { 'Authorization': 'Token YOUR_API_TOKEN' }\n    });\n    prediction = await statusResponse.json();\n  }\n  \n  return prediction;\n}\n\n// Использование:\n// const result = await generateRubberTile('100% black');"
+    }
+  ],
+  "python_examples": [
+    {
+      "name": "Критический Python тест",
+      "description": "Основной тест для проверки исправления Textual Inversion",
+      "code": "import replicate\nimport time\n\n# Критический тест - черная плитка\ntry:\n    output = replicate.run(\n        \"nauslava/plitka-pro-project:cf180128deeb2721a24386cd8f01b88f6a04d018fa6ee3abcef3192b3e501830\",\n        input={\n            \"prompt\": \"100% black\"\n        }\n    )\n    \n    print(\"✅ Тест успешен!\")\n    print(f\"Результат: {output}\")\n    \nexcept Exception as e:\n    print(f\"❌ Ошибка теста: {e}\")"
+    },
+    {
+      "name": "Python с обработкой результата",
+      "description": "Полный цикл генерации с сохранением изображения",
+      "code": "import replicate\nimport time\nimport requests\nfrom pathlib import Path\n\n# Создание предсказания\nresponse = replicate.predictions.create(\n    version=\"cf180128deeb2721a24386cd8f01b88f6a04d018fa6ee3abcef3192b3e501830\",\n    input={\n        \"prompt\": \"100% black\"\n    }\n)\n\n# Ожидание завершения\nwhile response.status not in ['succeeded', 'failed']:\n    time.sleep(1)\n    response.reload()\n\nif response.status == 'succeeded':\n    # Сохранение изображений\n    for i, url in enumerate(response.output):\n        img_response = requests.get(url)\n        filename = f\"rubber_tile_v4.4.10_{i}.png\"\n        with open(filename, 'wb') as f:\n            f.write(img_response.content)\n        print(f\"Изображение сохранено: {filename}\")\nelse:\n    print(f\"Ошибка генерации: {response.error}\")"
+    }
+  ],
+  "important_notes": [
+    "Модель v4.4.10 имеет ИСПРАВЛЕННУЮ загрузку Textual Inversion",
+    "Токены <s0><s1> теперь активируются корректно",
+    "Ожидается значительное улучшение качества генерации",
+    "Результаты должны соответствовать референсу BLACK_top.jpg",
+    "Качество изображения: 1024x1024 пикселей",
+    "Количество шагов инференса: 20",
+    "Guidance scale: 7.0",
+    "Модель возвращает 3 изображения: preview (512x512), final (1024x1024), colormap"
+  ],
+  "testing_priority": [
+    {
+      "priority": "CRITICAL",
+      "test": "100% black",
+      "reason": "Проверка исправления Textual Inversion и соответствия референсу"
+    },
+    {
+      "priority": "HIGH", 
+      "test": "100% white",
+      "reason": "Проверка контраста и четкости текстуры"
+    },
+    {
+      "priority": "HIGH",
+      "test": "seed=12345",
+      "reason": "Проверка воспроизводимости результатов"
+    },
+    {
+      "priority": "MEDIUM",
+      "test": "50% black, 50% white", 
+      "reason": "Проверка комбинированных цветов"
+    }
+  ],
+  "error_handling": {
+    "common_errors": [
+      "Invalid prompt format - используйте простые описания цветов",
+      "Model initialization failed - проверьте доступность GPU",
+      "Textual Inversion loading failed - теперь должно работать корректно"
+    ],
+    "recommendations": [
+      "Начните с теста '100% black' для проверки исправления",
+      "Для воспроизводимости используйте фиксированный seed",
+      "При ошибках попробуйте перезапустить запрос"
+    ]
+  },
+  "quality_expectations": {
+    "texture": "Характерная гранулированная текстура резиновой крошки",
+    "detail": "Высокая детализация поверхности с четкими гранулами",
+    "realism": "Фотореалистичный вид материала",
+    "color_accuracy": "Точное соответствие указанным цветам",
+    "reference_match": "Соответствие качеству BLACK_top.jpg"
+  }
+}

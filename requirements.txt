@@ -1,11 +1,26 @@
-torch==2.4.0
-torchvision==0.19.0
-diffusers==0.27.2
-transformers==4.47.0
-accelerate==0.32.1
-safetensors==0.4.4
-Pillow==11.1.0
-opencv-python==4.10.0.84
-huggingface_hub==0.24.0
-peft==0.12.0
+# Python зависимости для модели "nauslava/plitka-pro-project:v4.4.30"
+# ИСПРАВЛЕНИЕ: Версии которые cog точно знает и поддерживает
+
+# Основные ML библиотеки (поддерживаемые cog)
+torch==2.1.0+cu121
+diffusers==0.21.4
+transformers==4.35.2
+accelerate==0.24.1
+huggingface_hub==0.19.4
+
+# Безопасность и производительность
+safetensors==0.4.2
+
+# Обработка изображений
+Pillow==10.4.0
 numpy==1.26.4
+
+# Оптимизации (совместимые с PyTorch 2.1.0)
+optimum==1.19.0
+
+# Дополнительные утилиты
+requests==2.32.5
+tqdm==4.66.5
+
+# PEFT для LoRA
+peft==0.11.0

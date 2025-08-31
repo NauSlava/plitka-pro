@@ -1,0 +1,128 @@
+{
+  "model_version": "v4.4.14",
+  "model_url": "https://replicate.com/nauslava/plitka-pro-project:v4.4.14",
+  "description": "Тестовые запросы для модели генерации резиновой плитки (исправлены конфликты зависимостей)",
+  "api_endpoint": "https://api.replicate.com/v1/predictions",
+  "technical_details": {
+    "cuda_version": "12.1",
+    "torch_version": "2.2.0",
+    "transformers_version": "4.39.3",
+    "diffusers_version": "0.28.2",
+    "fixes": [
+      "Исправлены конфликты зависимостей библиотек",
+      "Корректная загрузка safetensors файлов",
+      "Совместимость optimum и transformers",
+      "CUDA 12.1 + последние стабильные версии"
+    ]
+  },
+  "test_cases": [
+    {
+      "name": "Базовый тест - черная плитка",
+      "description": "Проверка базовой функциональности с простым запросом",
+      "input": {
+        "prompt": "100% black",
+        "seed": -1
+      },
+      "expected": "Черная резиновая плитка с четкой текстурой"
+    },
+    {
+      "name": "Тест качества - красная плитка",
+      "description": "Проверка качества генерации с ярким цветом",
+      "input": {
+        "prompt": "bright red",
+        "seed": 42
+      },
+      "expected": "Яркая красная резиновая плитка высокого качества"
+    },
+    {
+      "name": "Тест детализации - синяя плитка",
+      "description": "Проверка детализации и текстуры",
+      "input": {
+        "prompt": "deep blue with detailed texture",
+        "seed": 123
+      },
+      "expected": "Глубокая синяя плитка с детальной текстурой"
+    },
+    {
+      "name": "Тест стабильности - зеленая плитка",
+      "description": "Проверка стабильности генерации",
+      "input": {
+        "prompt": "forest green",
+        "seed": 999
+      },
+      "expected": "Лесная зеленая резиновая плитка"
+    },
+    {
+      "name": "Критический тест - белая плитка",
+      "description": "Проверка работы с белым цветом (сложный для генерации)",
+      "input": {
+        "prompt": "pure white",
+        "seed": 777
+      },
+      "expected": "Чисто белая резиновая плитка"
+    }
+  ],
+  "curl_examples": [
+    {
+      "name": "Базовый запрос",
+      "command": "curl -s -X POST \\\n  -H \"Authorization: Token $REPLICATE_API_TOKEN\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"version\": \"ada0df4ae85cfc9f0c993ebebea08a9bf416c269dc6c8c4a6654da9a04c14baf\",\n    \"input\": {\n      \"prompt\": \"100% black\",\n      \"seed\": -1\n    }\n  }' \\\n  https://api.replicate.com/v1/predictions"
+    },
+    {
+      "name": "Запрос с фиксированным сидом",
+      "command": "curl -s -X POST \\\n  -H \"Authorization: Token $REPLICATE_API_TOKEN\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"version\": \"ada0df4ae85cfc9f0c993ebebea08a9bf416c269dc6c8c4a6654da9a04c14baf\",\n    \"input\": {\n      \"prompt\": \"bright red\",\n      \"seed\": 42\n    }\n  }' \\\n  https://api.replicate.com/v1/predictions"
+    }
+  ],
+  "javascript_examples": [
+    {
+      "name": "Базовый JavaScript запрос",
+      "code": "const response = await fetch('https://api.replicate.com/v1/predictions', {\n  method: 'POST',\n  headers: {\n    'Authorization': `Token ${process.env.REPLICATE_API_TOKEN}`,\n    'Content-Type': 'application/json',\n  },\n  body: JSON.stringify({\n    version: 'ada0df4ae85cfc9f0c993ebebea08a9bf416c269dc6c8c4a6654da9a04c14baf',\n    input: {\n      prompt: '100% black',\n      seed: -1\n    }\n  })\n});\n\nconst prediction = await response.json();\nconsole.log(prediction);"
+    }
+  ],
+  "python_examples": [
+    {
+      "name": "Базовый Python запрос",
+      "code": "import replicate\nimport os\n\n# Установите переменную окружения\nos.environ['REPLICATE_API_TOKEN'] = 'your_token_here'\n\n# Запуск предсказания\noutput = replicate.run(\n    \"nauslava/plitka-pro-project:v4.4.14\",\n    input={\n        \"prompt\": \"100% black\",\n        \"seed\": -1\n    }\n)\nprint(output)"
+    }
+  ],
+  "web_interface_url": "https://replicate.com/nauslava/plitka-pro-project",
+  "api_parameters": {
+    "prompt": {
+      "type": "string",
+      "description": "Описание цветов резиновой плитки",
+      "required": true,
+      "examples": [
+        "100% black",
+        "bright red", 
+        "deep blue with detailed texture",
+        "forest green",
+        "pure white"
+      ]
+    },
+    "negative_prompt": {
+      "type": "string", 
+      "description": "Негативный промпт (опционально)",
+      "required": false,
+      "default": "blurry, worst quality, low quality, deformed, watermark, 3d render, cartoon, abstract, painting, drawing, text, sketch, low resolution"
+    },
+    "seed": {
+      "type": "integer",
+      "description": "Сид для воспроизводимости",
+      "required": false,
+      "default": -1
+    }
+  },
+  "quality_notes": [
+    "Модель обучена исключительно на виде сверху (угол 0°)",
+    "Использует НАШИ LoRA адаптеры для резиновой плитки",
+    "Корректная загрузка Textual Inversion через safetensors",
+    "Оптимизирована для максимального качества генерации",
+    "Совместимость всех зависимостей исправлена"
+  ],
+  "testing_instructions": [
+    "1. Проверьте базовую функциональность с простыми запросами",
+    "2. Убедитесь в отсутствии ошибок загрузки Textual Inversion",
+    "3. Проверьте качество генерации различных цветов",
+    "4. Убедитесь в стабильности работы с разными сидами",
+    "5. Проверьте соответствие результатов референсным изображениям"
+  ]
+}

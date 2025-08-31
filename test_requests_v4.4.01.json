@@ -1,0 +1,118 @@
+{
+  "version": "v4.4.01",
+  "description": "Тестовые запросы для Plitka Pro v4.4.01 - КАРДИНАЛЬНАЯ ЗАМЕНА НА РАБОЧУЮ v45",
+  "changes": [
+    "КАРДИНАЛЬНАЯ ЗАМЕНА: Полная замена кода на рабочую версию v45",
+    "Использование НАШИХ LoRA адаптеров (rubber-tile-lora-v4_sdxl_lora.safetensors)",
+    "Использование НАШИХ Textual Inversion (rubber-tile-lora-v4_sdxl_embeddings.safetensors)",
+    "Простой API интерфейс для WEB-приложений",
+    "Оптимизированные настройки для максимального качества"
+  ],
+  "architecture": {
+    "base": "Рабочая архитектура v45",
+    "pipeline": "StableDiffusionXLPipeline (без ControlNet)",
+    "lora": "rubber-tile-lora-v4_sdxl_lora.safetensors (strength 0.7)",
+    "textual_inversion": "rubber-tile-lora-v4_sdxl_embeddings.safetensors (token <s0>)",
+    "scheduler": "DPMSolverMultistepScheduler"
+  },
+  "test_cases": [
+    {
+      "name": "Белый цвет (угол 0°) - БАЗОВЫЙ ТЕСТ",
+      "description": "Тест базовой генерации белого цвета на основе рабочей v45",
+      "input": {
+        "params_json": "{\"colors\":[{\"name\":\"white\",\"proportion\":1.0}],\"angle\":0,\"quality\":\"standard\",\"seed\":42}"
+      },
+      "expected_prompt": "ohwx_rubber_tile <s0><s1>, 100% white, photorealistic rubber tile, high quality, detailed texture, professional photography, sharp focus",
+      "expected_steps": 20,
+      "expected_guidance_scale": 7.0,
+      "expected_result": "Качественное изображение резиновой плитки белого цвета"
+    },
+    {
+      "name": "Красный цвет (угол 0°) - ПРОВЕРКА ЦВЕТА",
+      "description": "Тест генерации красного цвета",
+      "input": {
+        "params_json": "{\"colors\":[{\"name\":\"red\",\"proportion\":1.0}],\"angle\":0,\"quality\":\"standard\",\"seed\":123}"
+      },
+      "expected_prompt": "ohwx_rubber_tile <s0><s1>, 100% red, photorealistic rubber tile, high quality, detailed texture, professional photography, sharp focus",
+      "expected_steps": 20,
+      "expected_guidance_scale": 7.0,
+      "expected_result": "Качественное изображение резиновой плитки красного цвета"
+    },
+    {
+      "name": "Два цвета (красный + синий) - ПРОВЕРКА ПРОПОРЦИЙ",
+      "description": "Тест генерации двух цветов с пропорциями",
+      "input": {
+        "params_json": "{\"colors\":[{\"name\":\"red\",\"proportion\":0.7},{\"name\":\"blue\",\"proportion\":0.3}],\"angle\":0,\"quality\":\"standard\",\"seed\":456}"
+      },
+      "expected_prompt": "ohwx_rubber_tile <s0><s1>, 70% red, 30% blue, photorealistic rubber tile, high quality, detailed texture, professional photography, sharp focus",
+      "expected_steps": 20,
+      "expected_guidance_scale": 7.0,
+      "expected_result": "Изображение с 70% красного и 30% синего цвета"
+    },
+    {
+      "name": "Высокое качество (черный цвет) - ПРОВЕРКА КАЧЕСТВА",
+      "description": "Тест генерации с высоким качеством",
+      "input": {
+        "params_json": "{\"colors\":[{\"name\":\"black\",\"proportion\":1.0}],\"angle\":0,\"quality\":\"high\",\"seed\":789}"
+      },
+      "expected_prompt": "ohwx_rubber_tile <s0><s1>, 100% black, photorealistic rubber tile, high quality, detailed texture, professional photography, sharp focus",
+      "expected_steps": 35,
+      "expected_guidance_scale": 7.0,
+      "expected_result": "Высококачественное изображение резиновой плитки черного цвета"
+    },
+    {
+      "name": "Быстрое превью (зеленый цвет) - ПРОВЕРКА СКОРОСТИ",
+      "description": "Тест быстрого превью",
+      "input": {
+        "params_json": "{\"colors\":[{\"name\":\"green\",\"proportion\":1.0}],\"angle\":0,\"quality\":\"preview\",\"seed\":999}"
+      },
+      "expected_prompt": "ohwx_rubber_tile <s0><s1>, 100% green, photorealistic rubber tile, high quality, detailed texture, professional photography, sharp focus",
+      "expected_steps": 20,
+      "expected_guidance_scale": 7.0,
+      "expected_result": "Быстрое превью зеленой резиновой плитки"
+    }
+  ],
+  "api_usage": {
+    "python": {
+      "description": "Использование через Python API",
+      "code": "import replicate\n\noutput = replicate.run(\n    \"nauslava/plitka-pro-project:v4.4.01\",\n    input={\n        \"params_json\": \"{\\\"colors\\\":[{\\\"name\\\":\\\"red\\\",\\\"proportion\\\":0.7},{\\\"name\\\":\\\"blue\\\",\\\"proportion\\\":0.3}],\\\"angle\\\":0,\\\"quality\\\":\\\"standard\\\",\\\"seed\\\":42}\"\n    }\n)"
+    },
+    "curl": {
+      "description": "Использование через cURL",
+      "code": "curl -s -X POST \\\n  -H \"Authorization: Token $REPLICATE_API_TOKEN\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"version\": \"{version_hash}\",\n    \"input\": {\n      \"params_json\": \"{\\\"colors\\\":[{\\\"name\\\":\\\"red\\\",\\\"proportion\\\":0.7},{\\\"name\\\":\\\"blue\\\",\\\"proportion\\\":0.3}],\\\"angle\\\":0,\\\"quality\\\":\\\"standard\\\",\\\"seed\\\":42}\"\n    }\n  }' \\\n  https://api.replicate.com/v1/predictions"
+    }
+  },
+  "technical_details": {
+    "textual_inversion": "Один токен <s0> (как в рабочей v45)",
+    "prompt_structure": "ohwx_rubber_tile <s0><s1>, {colors}, {quality_descriptors}",
+    "quality_descriptors": [
+      "photorealistic rubber tile",
+      "high quality",
+      "detailed texture", 
+      "professional photography",
+      "sharp focus"
+    ],
+    "generation_params": {
+      "standard": "20 steps, guidance_scale=7.0",
+      "high": "35 steps, guidance_scale=7.0",
+      "preview": "20 steps, guidance_scale=7.0"
+    },
+    "lora": {
+      "file": "rubber-tile-lora-v4_sdxl_lora.safetensors",
+      "strength": 0.7,
+      "fused": true
+    },
+    "textual_inversion": {
+      "file": "rubber-tile-lora-v4_sdxl_embeddings.safetensors",
+      "token": "<s0>",
+      "method": "standard loading"
+    }
+  },
+  "expected_results": {
+    "quality": "Высокое качество изображений (как в рабочей v45)",
+    "texture": "Реалистичная текстура резиновой плитки",
+    "colors": "Точные цвета согласно пропорциям",
+    "speed": "Быстрая генерация (20-35 шагов)",
+    "stability": "Стабильные результаты"
+  }
+}
