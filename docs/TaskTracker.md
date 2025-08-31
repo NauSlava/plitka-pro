@@ -1,6 +1,6 @@
 # Task Tracker - Plitka Pro Project
 
-## Текущий статус: ✅ ОПУБЛИКОВАНО - v4.4.36 ДОСТУПНО НА REPLICATE
+## Текущий статус: ✅ ОПУБЛИКОВАНО - v4.4.37-pre ДОСТУПНО НА REPLICATE
 
 ### Последние задачи:
 
@@ -51,6 +51,19 @@
   - ✅ Публикация: Успешно (`cog push`)
   - ✅ Доступность: Репозиторий Replicate обновлен
 - **URL**: https://replicate.com/nauslava/plitka-pro-project:v4.4.36
+
+---
+
+#### ✅ **v4.4.37-pre - QUALITY/ANTI-MOSAIC/LEGEND**
+- **Статус**: ОПУБЛИКОВАНО ✅ PRE-RELEASE
+- **Дата**: 31.08.2025
+- **Описание**: Улучшено качество, убран пэчворк, добавлен colormap‑легенда, устранён двойной холодный старт
+- **Ключевые изменения**:
+  - steps=35, guidance=6.7 (по умолчанию)
+  - LoRA weight=0.75 (+fuse)
+  - отключено VAE tiling, анти‑мозаичный negative_prompt по умолчанию
+  - legend colormap из входных пропорций
+- **URL**: https://replicate.com/nauslava/plitka-pro-project/versions/7aededdaee1d74437a4f55a4671b71835eadd9b67d3f1e3c3682388115c929c6
 
 ---
 
