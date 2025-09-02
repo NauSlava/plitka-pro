@@ -27,7 +27,7 @@
     "description": "Тест 3 цветов - высокая сложность, базовые параметры"
   },
   "basic_four_colors": {
-    "prompt": "25% red, 25% blue, 25% green, 25% yellow",
+    "prompt": "25% red, 25% blue, 25% grsgrn, 25% yellow",
     "seed": 12345,
     "steps": 35,
     "guidance": 8.5,
@@ -63,7 +63,7 @@
     "description": "Тест граничного случая с минимальным количеством одного цвета"
   },
   "basic_edge_case_balanced": {
-    "prompt": "25% red, 25% blue, 25% green, 25% white",
+    "prompt": "25% red, 25% blue, 25% grsgrn, 25% white",
     "seed": 555555,
     "steps": 35,
     "guidance": 8.5,

@@ -17,8 +17,8 @@
     "use_controlnet": false,
     "description": "Один цвет - синий (100%) с улучшенной LoRA загрузкой"
   },
-  "enhanced_single_green": {
-    "prompt": "100% green",
+  "enhanced_single_grsgrn": {
+    "prompt": "100% grsgrn",
     "seed": 34567,
     "steps": 20,
     "guidance": 7.0,
@@ -53,8 +53,8 @@
     "use_controlnet": false,
     "description": "Три цвета - красный (40%) + синий (35%) + белый (25%) с улучшенной LoRA"
   },
-  "enhanced_three_green_yellow_black": {
-    "prompt": "45% green, 35% yellow, 20% black",
+  "enhanced_three_grsgrn_yellow_black": {
+    "prompt": "45% grsgrn, 35% yellow, 20% black",
     "seed": 23456,
     "steps": 30,
     "guidance": 8.0,
@@ -63,7 +63,7 @@
     "description": "Три цвета - зеленый (45%) + желтый (35%) + черный (20%) с улучшенной LoRA"
   },
   "enhanced_four_balanced": {
-    "prompt": "25% red, 25% blue, 25% green, 25% yellow",
+    "prompt": "25% red, 25% blue, 25% grsgrn, 25% yellow",
     "seed": 12345,
     "steps": 35,
     "guidance": 8.5,
@@ -99,7 +99,7 @@
     "description": "Граничный случай с улучшенной LoRA загрузкой"
   },
   "enhanced_edge_case_balanced": {
-    "prompt": "25% red, 25% blue, 25% green, 25% white",
+    "prompt": "25% red, 25% blue, 25% grsgrn, 25% white",
     "seed": 555555,
     "steps": 35,
     "guidance": 8.5,

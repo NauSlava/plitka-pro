@@ -18,6 +18,105 @@ import numpy as np
 from PIL import Image, ImageDraw, ImageFilter
 import random
 
+class ColorManager:
+    """Централизованное управление цветами для устранения рассинхронизации модулей"""
+    
+    def __init__(self):
+        # Таблица соответствий русских и английских названий цветов
+        self.color_table = {
+            "Бежевый": "BEIGE",
+            "Бело-зеленый": "WHTGRN", 
+            "Белый": "WHITE",
+            "Бирюзовый": "TURQSE",
+            "Голубой": "SKYBLUE",
+            "Желтый": "YELLOW",
+            "Жемчужный": "PEARL",
+            "Зеленая трава": "GRSGRN",
+            "Зеленое яблоко": "GRNAPL",
+            "Изумрудный": "EMERALD",
+            "Коричневый": "BROWN",
+            "Красный": "RED",
+            "Лосось": "SALMON",
+            "Оранжевый": "ORANGE",
+            "Песочный": "SAND",
+            "Розовый": "PINK",
+            "Салатовый": "LIMEGRN",
+            "Светло-зеленый": "LTGREEN",
+            "Светло-серый": "LTGRAY",
+            "Серый": "GRAY",
+            "Синий": "BLUE",
+            "Сиреневый": "LILAC",
+            "Темно-зеленый": "DKGREEN",
+            "Темно-серый": "DKGRAY",
+            "Темно-синий": "DKBLUE",
+            "Терракот": "TERCOT",
+            "Фиолетовый": "VIOLET",
+            "Хаки": "KHAKI",
+            "Чёрный": "BLACK"
+        }
+        
+        # Допустимые названия цветов (в нижнем регистре)
+        self.valid_colors = {color.lower() for color in self.color_table.values()}
+        
+        # RGB значения для всех цветов
+        self.color_rgb_map = {
+            "black": (0, 0, 0),
+            "white": (255, 255, 255),
+            "red": (255, 0, 0),
+            "blue": (0, 0, 255),
+            "yellow": (255, 255, 0),
+            "gray": (128, 128, 128),
+            "grey": (128, 128, 128),
+            "brown": (139, 69, 19),
+            "orange": (255, 165, 0),
+            "pink": (255, 192, 203),
+            "beige": (245, 245, 220),
+            "dkblue": (0, 0, 139),
+            "dkgray": (64, 64, 64),
+            "dkgreen": (0, 100, 0),
+            "emerald": (0, 128, 0),
+            "grnapl": (0, 128, 0),
+            "grsgrn": (34, 139, 34),
+            "khaki": (240, 230, 140),
+            "lilac": (200, 162, 200),
+            "limegrn": (50, 205, 50),
+            "ltgray": (192, 192, 192),
+            "ltgreen": (144, 238, 144),
+            "pearl": (240, 248, 255),
+            "salmon": (250, 128, 114),
+            "sand": (244, 164, 96),
+            "skyblue": (135, 206, 235),
+            "tercot": (205, 92, 92),
+            "turqse": (64, 224, 208),
+            "violet": (238, 130, 238),
+            "whtgrn": (240, 255, 240)
+        }
+    
+    def extract_colors_from_prompt(self, prompt: str) -> List[str]:
+        """Единая функция для извлечения цветов из промпта"""
+        colors = []
+        words = prompt.lower().split()
+        
+        for word in words:
+            # Убираем знаки препинания и проценты
+            clean_word = word.strip('%,.!?()[]{}')
+            if clean_word in self.valid_colors:
+                colors.append(clean_word)
+        
+        return colors
+    
+    def get_color_rgb(self, color_name: str) -> tuple:
+        """Получение RGB значения для цвета"""
+        return self.color_rgb_map.get(color_name.lower(), (127, 127, 127))
+    
+    def validate_colors(self, colors: List[str]) -> bool:
+        """Валидация списка цветов"""
+        return all(color in self.valid_colors for color in colors)
+    
+    def get_color_count(self, prompt: str) -> int:
+        """Получение количества цветов в промпте"""
+        return len(self.extract_colors_from_prompt(prompt))
+
 class ColorGridControlNet:
     """Улучшенный Color Grid Adapter для точного контроля цветовых пропорций"""
     
@@ -28,6 +127,9 @@ class ColorGridControlNet:
             "medium": {"size_range": (3, 6), "density": 0.8},
             "large": {"size_range": (5, 8), "density": 0.7}
         }
+        
+        # Инициализация централизованного менеджера цветов
+        self.color_manager = ColorManager()
     
     def create_optimized_colormap(self, colors, size=(1024, 1024), 
                                  pattern_type="granular", granule_size="medium"):
@@ -180,31 +282,16 @@ class ColorGridControlNet:
         return canvas
     
     def _name_to_rgb(self, color_name):
-        """Преобразует название цвета в RGB"""
-        color_map = {
-            "black": (0, 0, 0),
-            "white": (255, 255, 255),
-            "red": (255, 0, 0),
-            "blue": (0, 0, 255),
-            "green": (0, 255, 0),
-            "yellow": (255, 255, 0),
-            "gray": (128, 128, 128),
-            "grey": (128, 128, 128),
-            "brown": (139, 69, 19),
-            "orange": (255, 165, 0),
-            "purple": (128, 0, 128),
-            "pink": (255, 192, 203),
-            "cyan": (0, 255, 255),
-            "magenta": (255, 0, 255)
-        }
-        return color_map.get(color_name.lower(), (127, 127, 127))
+        """Преобразует название цвета в RGB через ColorManager"""
+        # Используем централизованную систему цветов
+        return self.color_manager.get_color_rgb(color_name)
 
 # Настройка логирования
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Единая версия модели для логов
-MODEL_VERSION = "v4.4.56"
+MODEL_VERSION = "v4.4.58"
 
 # Переменные окружения для оптимизации
 os.environ["HF_HOME"] = "/tmp/hf_home"
@@ -236,6 +323,10 @@ class Predictor(BasePredictor):
         # Инициализация Color Grid Adapter
         self.color_grid_adapter = ColorGridControlNet()
         logger.info("🎨 Color Grid Adapter инициализирован")
+        
+        # Инициализация централизованного менеджера цветов
+        self.color_manager = ColorManager()
+        logger.info("🎨 Color Manager инициализирован")
         
         # Статистика использования Color Grid Adapter
         self.color_grid_stats = {
@@ -554,7 +645,14 @@ class Predictor(BasePredictor):
                 color_name = name.strip()
                 if color_name.lower().startswith(('of ', ' ')):
                     color_name = color_name.split()[-1]
-                result.append({"name": color_name, "proportion": max(0.0, min(1.0, percent / 100.0))})
+                
+                # Валидация цвета через ColorManager
+                if self.color_manager.validate_colors([color_name]):
+                    result.append({"name": color_name, "proportion": max(0.0, min(1.0, percent / 100.0))})
+                else:
+                    logger.warning(f"⚠️ Недопустимый цвет в промпте: {color_name}")
+                    # Fallback: заменяем на белый
+                    result.append({"name": "white", "proportion": max(0.0, min(1.0, percent / 100.0))})
             except Exception:
                 continue
         # Нормализация, если сумма не 1.0
@@ -680,7 +778,7 @@ class Predictor(BasePredictor):
                 "100% red",
                 "50% red, 50% white",
                 "50% red, 30% black, 20% white",
-                "25% red, 25% blue, 25% green, 25% yellow"
+                "25% red, 25% blue, 25% grsgrn, 25% yellow"
             ]
         
         test_results = {}
@@ -717,6 +815,64 @@ class Predictor(BasePredictor):
         
         logger.info("🧪 Тестирование Color Grid Adapter завершено")
         return test_results
+    
+    def _validate_colormap_against_prompt(self, colormap: Image, prompt: str) -> bool:
+        """Валидация colormap против промпта"""
+        try:
+            expected_colors = self.color_manager.extract_colors_from_prompt(prompt)
+            if not expected_colors:
+                logger.warning("⚠️ Не удалось извлечь цвета из промпта")
+                return False
+            
+            # Простая проверка: colormap не должен быть полностью серым
+            colormap_array = np.array(colormap)
+            if len(colormap_array.shape) == 3:
+                # RGB изображение
+                gray_pixels = np.all(colormap_array == [127, 127, 127], axis=2)
+                if np.all(gray_pixels):
+                    logger.warning("⚠️ Colormap полностью серый - ошибка распознавания цветов")
+                    return False
+            
+            logger.info(f"✅ Colormap валиден для цветов: {expected_colors}")
+            return True
+            
+        except Exception as e:
+            logger.error(f"❌ Ошибка валидации colormap: {e}")
+            return False
+    
+    def _force_rebuild_colormap(self, prompt: str, size: tuple = (1024, 1024)) -> Image:
+        """Принудительная пересборка colormap при ошибках"""
+        try:
+            logger.info("🔧 Принудительная пересборка colormap...")
+            
+            # Извлекаем цвета через ColorManager
+            colors = self.color_manager.extract_colors_from_prompt(prompt)
+            if not colors:
+                logger.error("❌ Не удалось извлечь цвета для пересборки colormap")
+                # Fallback: простой серый colormap
+                return Image.new('RGB', size, (127, 127, 127))
+            
+            # Создаем простой colormap с правильными цветами
+            colormap = Image.new('RGB', size, (255, 255, 255))
+            pixels = colormap.load()
+            
+            # Размещаем цвета в простом паттерне
+            for i, color in enumerate(colors):
+                rgb = self.color_manager.get_color_rgb(color)
+                # Разделяем изображение на секции по цветам
+                start_x = (i * size[0]) // len(colors)
+                end_x = ((i + 1) * size[0]) // len(colors)
+                for x in range(start_x, end_x):
+                    for y in range(size[1]):
+                        pixels[x, y] = rgb
+            
+            logger.info(f"✅ Colormap пересобран для цветов: {colors}")
+            return colormap
+            
+        except Exception as e:
+            logger.error(f"❌ Критическая ошибка пересборки colormap: {e}")
+            # Fallback: простой серый colormap
+            return Image.new('RGB', size, (127, 127, 127))
     
     def predict(self, prompt: str = Input(description="Описание цветов резиновой плитки", default="100% red"), 
                 negative_prompt: Optional[str] = Input(description="Негативный промпт", default=None), 
@@ -793,8 +949,8 @@ class Predictor(BasePredictor):
             # Адаптивные параметры для различного количества цветов (как в v45)
             logger.info("🎨 Анализ сложности промпта для адаптивных параметров...")
             
-            # Подсчитываем количество цветов в промпте
-            color_count = len([word for word in prompt.lower().split() if any(color in word for color in ['red', 'blue', 'green', 'yellow', 'purple', 'orange', 'pink', 'brown', 'gray', 'grey', 'black', 'white', 'cyan', 'magenta'])])
+            # Подсчитываем количество цветов в промпте через ColorManager
+            color_count = self.color_manager.get_color_count(prompt)
             logger.info(f"🎨 Обнаружено цветов в промпте: {color_count}")
             
             # Адаптивные настройки на основе количества цветов (как в v45)
@@ -876,8 +1032,7 @@ class Predictor(BasePredictor):
             # Автоматическое включение ControlNet для сложных промптов (2+ цветов)
             auto_controlnet = False
             if not use_controlnet:
-                color_count = len([word for word in prompt.lower().split() 
-                                 if any(color in word for color in ['red', 'blue', 'green', 'yellow', 'purple', 'orange', 'pink', 'brown', 'gray', 'grey', 'black', 'white', 'cyan', 'magenta'])])
+                # Используем уже подсчитанное количество цветов
                 if color_count >= 2:
                     auto_controlnet = True
                     logger.info(f"🎯 Автоматически включаем ControlNet для {color_count} цветов")
@@ -920,6 +1075,11 @@ class Predictor(BasePredictor):
                             # Автоматически создаем оптимизированную контрольную карту
                             logger.info("🎨 Создание автоматической контрольной карты для ControlNet")
                             color_control_image = self._create_optimized_colormap(prompt, size=(1024, 1024))
+                            
+                            # Валидация colormap против промпта
+                            if not self._validate_colormap_against_prompt(color_control_image, prompt):
+                                logger.warning("⚠️ Colormap не соответствует промпту, пересоздаем...")
+                                color_control_image = self._force_rebuild_colormap(prompt, size=(1024, 1024))
                             
                             # Преобразуем в grayscale для ControlNet
                             hint = color_control_image.convert('L')
@@ -964,6 +1124,11 @@ class Predictor(BasePredictor):
             try:
                 # Используем наш оптимизированный Color Grid Adapter
                 colormap_image = self._create_optimized_colormap(prompt, size=(1024, 1024))
+                
+                # Валидация colormap против промпта
+                if not self._validate_colormap_against_prompt(colormap_image, prompt):
+                    logger.warning("⚠️ Colormap не соответствует промпту, пересоздаем...")
+                    colormap_image = self._force_rebuild_colormap(prompt, size=(1024, 1024))
                 
                 # Сохраняем в высоком разрешении для лучшего качества
                 colormap_image.save(colormap_path)

@@ -3,13 +3,15 @@ black
 blue
 brown
 dkblue
+dkgray
 dkgreen
 emerald
 gray
 grnapl
-grngrn
+grsgrn
 khaki
 lilac
+limegrn
 ltgray
 ltgreen
 orange
@@ -23,4 +25,5 @@ tercot
 turqse
 violet
 white
+whtgrn
 yellow

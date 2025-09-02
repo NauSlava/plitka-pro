@@ -17,8 +17,8 @@
     "use_controlnet": false,
     "description": "Один цвет - синий (100%)"
   },
-  "single_color_grngrn": {
-    "prompt": "100% grngrn",
+  "single_color_grsgrn": {
+    "prompt": "100% grsgrn",
     "seed": 34567,
     "steps": 20,
     "guidance": 7.0,
@@ -125,8 +125,8 @@
     "use_controlnet": true,
     "description": "Два цвета - синий (70%) + черный (30%)"
   },
-  "two_colors_grngrn_yellow": {
-    "prompt": "60% grngrn, 40% yellow",
+  "two_colors_grsgrn_yellow": {
+    "prompt": "60% grsgrn, 40% yellow",
     "seed": 34567,
     "steps": 25,
     "guidance": 7.5,
@@ -215,8 +215,8 @@
     "use_controlnet": true,
     "description": "Три цвета - красный (40%) + синий (40%) + белый (20%)"
   },
-  "three_colors_grngrn_yellow_black": {
-    "prompt": "50% grngrn, 30% yellow, 20% black",
+  "three_colors_grsgrn_yellow_black": {
+    "prompt": "50% grsgrn, 30% yellow, 20% black",
     "seed": 23456,
     "steps": 30,
     "guidance": 8.0,
@@ -278,8 +278,8 @@
     "use_controlnet": true,
     "description": "Три цвета - зеленое яблоко (40%) + изумрудный (30%) + светло-зеленый (30%)"
   },
-  "four_colors_red_blue_grngrn_yellow": {
-    "prompt": "30% red, 30% blue, 20% grngrn, 20% yellow",
+  "four_colors_red_blue_grsgrn_yellow": {
+    "prompt": "30% red, 30% blue, 20% grsgrn, 20% yellow",
     "seed": 12345,
     "steps": 35,
     "guidance": 8.5,
@@ -323,8 +323,8 @@
     "use_controlnet": true,
     "description": "Четыре цвета - красный (30%) + желтый (30%) + темно-зеленый (20%) + синий (20%)"
   },
-  "four_colors_grngrn_ltgreen_dkgreen_yellow": {
-    "prompt": "30% grngrn, 30% ltgreen, 20% dkgreen, 20% yellow",
+  "four_colors_grsgrn_ltgreen_dkgreen_yellow": {
+    "prompt": "30% grsgrn, 30% ltgreen, 20% dkgreen, 20% yellow",
     "seed": 67890,
     "steps": 35,
     "guidance": 8.5,
@@ -351,7 +351,7 @@
     "description": "Четыре цвета - зеленое яблоко (30%) + изумрудный (30%) + светло-зеленый (20%) + темно-зеленый (20%)"
   },
   "reference_style_1": {
-    "prompt": "40% red, 30% blue, 20% grngrn, 10% white",
+    "prompt": "40% red, 30% blue, 20% grsgrn, 10% white",
     "seed": 11111,
     "steps": 30,
     "guidance": 8.0,
@@ -396,7 +396,7 @@
     "description": "Уникальная комбинация 2 - морская тема с акцентом"
   },
   "unique_combination_3": {
-    "prompt": "40% grngrn, 30% black, 30% yellow",
+    "prompt": "40% grsgrn, 30% black, 30% yellow",
     "seed": 66666,
     "steps": 30,
     "guidance": 8.0,
@@ -432,7 +432,7 @@
     "description": "Граничный случай - минимальное количество одного цвета"
   },
   "edge_case_balanced": {
-    "prompt": "30% red, 30% blue, 20% grngrn, 20% white",
+    "prompt": "30% red, 30% blue, 20% grsgrn, 20% white",
     "seed": 10101,
     "steps": 35,
     "guidance": 8.5,
