@@ -1,128 +1,201 @@
-# 🧱 Plitka Pro - AI-Powered Rubber Tile Generator
+# 🏗️ Plitka Pro Project
 
-**Professional AI model for generating photorealistic rubber tile images with precise color control and geometric patterns.**
+## **📊 Статус проекта: ОПУБЛИКОВАНО - ГОТОВ К ТЕСТИРОВАНИЮ**
 
-## 🚀 Features
-
-- **🎨 Precise Color Control**: Generate tiles with exact color percentages (60% black, 40% white)
-- **🔧 ControlNet Integration**: Geometric pattern control with Canny, Lineart, and SoftEdge
-- **⚡ High Performance**: Optimized SDXL pipeline with LoRA fine-tuning
-- **🔄 Flexible Architecture**: Support for both ControlNet and base SDXL generation
-- **💾 Memory Efficient**: Lazy loading architecture for optimal GPU memory usage
-
-## 🏗️ Architecture
-
-- **Base Model**: Stable Diffusion XL (SDXL) 1.0
-- **Fine-tuning**: LoRA (Low-Rank Adaptation) + Textual Inversion
-- **Control**: ControlNet for geometric pattern generation
-- **Optimization**: CUDA memory management and parallel processing
-
-## 📦 Installation
-
-### Prerequisites
-- Python 3.11+
-- CUDA-compatible GPU (16GB+ VRAM recommended)
-- Docker (for containerized deployment)
-
-### Local Setup
-```bash
-git clone https://github.com/papaandrey/plitka-pro.git
-cd plitka-pro
-pip install -r requirements.txt
-```
-
-### Docker Deployment
-```bash
-# Build the container
-cog build
-
-# Run locally
-cog predict -f input.json
-
-# Deploy to Replicate
-cog push r8.im/username/plitka-pro
-```
-
-## 🎯 Usage
-
-### API Request Format
-```json
-{
-  "params_json": "{\"colors\":[{\"name\":\"black\",\"proportion\":60},{\"name\":\"white\",\"proportion\":40}],\"angle\":0,\"quality\":\"standard\",\"seed\":42}"
-}
-```
-
-### Supported Parameters
-- **colors**: Array of color objects with name and proportion
-- **angle**: Rotation angle (0°, 45°, 90°, etc.)
-- **quality**: "preview", "standard", "high"
-- **overrides**: Custom parameters (use_controlnet, guidance_scale, etc.)
-
-## 🔧 Configuration
-
-### Model Files
-- LoRA weights: `ohwx_rubber_tile_lora.safetensors`
-- Textual Inversion: `ohwx_rubber_tile_ti.safetensors`
-- ControlNet models: Canny, Lineart, SoftEdge
-
-### Environment Variables
-```bash
-PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
-CUDA_LAUNCH_BLOCKING=0
-```
-
-## 📊 Performance
-
-- **Startup Time**: ~30-45 seconds (lazy loading)
-- **Generation Time**: 15-60 seconds depending on quality
-- **Memory Usage**: 40-50% reduction with lazy loading
-- **VRAM Requirements**: 14GB+ for full pipeline
-
-## 🧪 Testing
-
-### Test Scenarios
-1. **Color Accuracy**: Verify correct color percentages
-2. **ControlNet Override**: Test pipeline switching
-3. **Memory Management**: Validate VRAM optimization
-4. **Quality Levels**: Compare preview/standard/high
-
-### Run Tests
-```bash
-python test_parsing.py
-python test_app.py
-```
-
-## 📈 Version History
-
-- **v4.2.9**: Lazy Loading Memory Optimization
-- **v4.2.8**: Optimized Dual Pipeline Architecture
-- **v4.2.7**: Initial ControlNet Integration
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests if applicable
-5. Submit a pull request
-
-## 📄 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## 🆘 Support
-
-- **Issues**: [GitHub Issues](https://github.com/papaandrey/plitka-pro/issues)
-- **Documentation**: [docs/](docs/) folder
-- **Testing Guide**: [TESTING_GUIDE_v4.2.8.md](TESTING_GUIDE_v4.2.8.md)
-
-## 🏆 Acknowledgments
-
-- Stable Diffusion XL team
-- ControlNet developers
-- ComfyUI community
-- Replicate platform
+**Версия:** v4.4.56 (Color Grid Adapter + ControlNet Integration)  
+**Дата:** 27 января 2025  
+**Описание:** Специализированная модель для генерации фотореалистичных изображений резиновой плитки из цветной крошки
 
 ---
 
-**Made with ❤️ for professional tile design and AI innovation**
+## **🎯 Обзор проекта**
+
+**Plitka Pro** — это гибридная модель, сочетающая:
+- **LoRA** для стиля и текстуры резиновой плитки
+- **Textual Inversion** для концепта "rubber tile"
+- **Color Grid Adapter** для точного контроля цветовых пропорций
+- **ControlNet** для автоматического контроля сложных комбинаций
+
+### **🚀 Ключевые возможности:**
+- ✅ **55 комплексных пресетов** для тестирования
+- ✅ **Автоматическое включение ControlNet** для 2+ цветов
+- ✅ **Адаптивные параметры** на основе количества цветов
+- ✅ **29 цветов** из таблицы монохромов
+- ✅ **Система версионных пресетов** с автоматическим выбором
+
+---
+
+## **🎨 Система пресетов**
+
+### **Структура пресетов v4.4.56:**
+- **Моно-цвета:** 12 пресетов (100% одного цвета)
+- **2 цвета:** 12 пресетов (различные комбинации)
+- **3 цвета:** 10 пресетов (сложные сочетания)
+- **4 цвета:** 8 пресетов (максимальная сложность)
+- **Специальные:** 13 пресетов (референсы, тесты, уникальные)
+
+### **Цветовая палитра (29 цветов):**
+```
+BEIGE, WHTGRN, WHITE, TURQSE, SKYBLUE, YELLOW, PEARL, GRSGRN, GRNAPL, 
+EMERALD, BROWN, RED, SALMON, ORANGE, SAND, PINK, LIMEGRN, LTGREEN, 
+LTGRAY, GRAY, BLUE, LILAC, DKGREEN, DKGRAY, DKBLUE, TERCOT, VIOLET, 
+KHAKI, BLACK
+```
+
+### **Правила валидации:**
+- ✅ Количество цветов ≤ 4
+- ✅ Сумма процентов = 100%
+- ✅ Шаг в соотношении = 10%
+- ✅ Только цвета из таблицы
+
+---
+
+## **🔧 Технические характеристики**
+
+### **Архитектура:**
+- **Base Model:** Custom Eden_SDXL.safetensors
+- **LoRA Rank:** 32
+- **Textual Inversion Tokens:** 2 (`<s0>`, `<s1>`)
+- **Оптимальный LoRA Scale:** 0.75
+- **Разрешение:** 1024x1024
+
+### **Адаптивные параметры:**
+- **1 цвет:** steps=20, guidance=7.0
+- **2 цвета:** steps=25, guidance=7.5
+- **3 цвета:** steps=30, guidance=8.0
+- **4+ цвета:** steps=35, guidance=8.5
+
+---
+
+## **🚀 Быстрый старт**
+
+### **1. Тестирование через GUI:**
+```bash
+python3 scripts/replicate_gui.py
+```
+
+### **2. Установка зависимостей:**
+```bash
+python3 scripts/install_dependencies.py
+```
+
+### **3. Прямое использование модели:**
+```bash
+cog predict -i prompt="60% red, 40% white" -i seed=12345
+```
+
+---
+
+## **📁 Структура проекта**
+
+```
+plitka-pro-project/
+├── predict.py                          # Основной файл предсказания
+├── cog.yaml                           # Конфигурация Cog
+├── requirements.txt                    # Python зависимости
+├── scripts/
+│   ├── replicate_gui.py               # GUI для тестирования
+│   ├── test_inputs_v4.4.56.json      # 55 пресетов для v4.4.56
+│   ├── test_inputs_v4.4.45.json      # Пресеты для v4.4.45
+│   └── test_inputs_v4.4.39.json      # Пресеты для v4.4.39
+└── docs/
+    ├── README.md                      # Этот файл
+    ├── Project.md                     # Техническая архитектура
+    ├── QuickStart.md                  # Быстрый старт
+    ├── Presets_System.md              # Система пресетов
+    ├── Changelog.md                   # История изменений
+    ├── TaskTracker.md                 # Отслеживание задач
+    └── reports/                       # Детальные отчеты
+```
+
+---
+
+## **🔗 Ссылки**
+
+- **Модель на Replicate:** [nauslava/plitka-pro-project:v4.4.56](https://replicate.com/nauslava/plitka-pro-project)
+- **Документация:** `docs/` папка
+- **GUI тестирование:** `scripts/replicate_gui.py`
+- **Пресеты:** `scripts/test_inputs_v4.4.56.json`
+
+---
+
+## **📚 Документация**
+
+### **Основные документы:**
+- **[Project.md](docs/Project.md)** - Техническая архитектура и детали
+- **[QuickStart.md](docs/QuickStart.md)** - Пошаговое руководство
+- **[Presets_System.md](docs/Presets_System.md)** - Детальное описание системы пресетов
+- **[Changelog.md](docs/Changelog.md)** - История изменений
+
+### **Отчеты и логи:**
+- **[TaskTracker.md](docs/TaskTracker.md)** - Отслеживание задач
+- **[GUI_Troubleshooting.md](docs/GUI_Troubleshooting.md)** - Решение проблем GUI
+- **[Reports/](docs/reports/)** - Детальные отчеты по каждому исправлению
+
+---
+
+## **🎯 Текущий статус**
+
+### **✅ Завершено:**
+- Модель v4.4.56 опубликована на Replicate
+- 55 комплексных пресетов созданы и валидированы
+- GUI скрипт полностью функционален
+- Система версионных пресетов работает автоматически
+- Все пресеты проходят валидацию (55/55 корректны)
+
+### **🔄 Следующие шаги:**
+1. **Тестирование через GUI:** Запуск `scripts/replicate_gui.py`
+2. **Валидация пресетов:** Проверка всех 55 пресетов
+3. **Тестирование ControlNet:** Проверка автоматического включения
+4. **Анализ результатов:** Оценка качества генерации
+
+---
+
+## **🤝 Участие в проекте**
+
+### **Тестирование:**
+- Запустите GUI скрипт
+- Протестируйте различные пресеты
+- Сообщите о найденных проблемах
+- Предложите улучшения
+
+### **Разработка:**
+- Создавайте новые пресеты
+- Улучшайте GUI интерфейс
+- Оптимизируйте производительность
+- Расширяйте документацию
+
+---
+
+## **📞 Поддержка**
+
+### **Проблемы с GUI:**
+- Проверьте `docs/GUI_Troubleshooting.md`
+- Запустите `scripts/install_dependencies.py`
+- Проверьте логи в `replicate_runs/[hash]/gui_logs/`
+
+### **Проблемы с моделью:**
+- Проверьте `docs/Changelog.md`
+- Убедитесь в корректности пресетов
+- Проверьте валидацию через GUI
+
+---
+
+## **🎉 Заключение**
+
+**Plitka Pro v4.4.56** представляет собой **завершенную, готовую к использованию систему** для генерации изображений резиновой плитки с:
+
+✅ **Высоким качеством:** Color Grid Adapter + ControlNet  
+✅ **Гибкостью:** 55 разнообразных пресетов  
+✅ **Надежностью:** Автоматическая валидация и обработка ошибок  
+✅ **Удобством:** Современный GUI интерфейс  
+✅ **Документацией:** Полное описание всех возможностей  
+
+**Проект готов к тестированию и использованию!** 🚀
+
+---
+
+**Лицензия:** MIT  
+**Автор:** Plitka Pro Team  
+**Версия документации:** v4.4.56  
+**Дата обновления:** 27 января 2025

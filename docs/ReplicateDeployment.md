@@ -27,9 +27,8 @@ git commit -m "Ready for Replicate deployment v4.1.4"
 3. **Видимость**: `Public`
 
 #### Шаг 4: Загрузка кода
-1. **Выберите "GitHub" как источник кода**
-2. **Подключите GitHub репозиторий** (если есть)
-3. **Или загрузите код напрямую** через веб-интерфейс
+1. **Загрузите код напрямую** через веб-интерфейс Replicate (предпочтительно)
+2. GitHub-поток не используется без явного разрешения владельца проекта
 
 #### Шаг 5: Конфигурация модели
 1. **Укажите `predict.py` как основной файл**
@@ -43,34 +42,14 @@ git commit -m "Ready for Replicate deployment v4.1.4"
 3. **LoRA**: `nauslava/plitka-pro-lora`
 4. **Textual Inversion**: `nauslava/plitka-pro-ti`
 
-### Альтернативный план: GitHub Container Registry
-
-Если веб-интерфейс не подходит, можно попробовать GitHub Container Registry:
-
-#### Шаг 1: Создание GitHub токена
-1. **GitHub → Settings → Developer settings → Personal access tokens**
-2. **Создайте токен с правами `write:packages`**
-3. **Экспортируйте**: `export GITHUB_TOKEN=your_token`
-
-#### Шаг 2: Логин в GitHub Container Registry
-```bash
-echo $GITHUB_TOKEN | docker login ghcr.io -u nauslava --password-stdin
-```
-
-#### Шаг 3: Сборка и публикация
-```bash
-# Сборка с тегом GitHub Container Registry
-cog build -t ghcr.io/nauslava/plitka-pro:v4.1.4
-
-# Публикация
-docker push ghcr.io/nauslava/plitka-pro:v4.1.4
-```
+### Примечание о GitHub
+В соответствии с правилами проекта, публикация в GitHub и связанные реестры запрещены без явного разрешения владельца.
 
 ### Проверка развертывания
 
 После успешного развертывания:
 
-1. **Проверьте URL модели**: `r8.im/nauslava/plitka-pro`
+1. **Проверьте URL модели**: `r8.im/nauslava/plitka-pro-project:v4.4.43`
 2. **Протестируйте API** через веб-интерфейс
 3. **Проверьте логи** на предмет ошибок
 4. **Убедитесь в корректности генерации** изображений
@@ -86,3 +65,5 @@ docker push ghcr.io/nauslava/plitka-pro:v4.1.4
 ---
 
 **Примечание**: Этот метод обходит ограничения Docker Hub и позволяет развернуть модель напрямую на Replicate.
+
+**Версия**: v4.4.52

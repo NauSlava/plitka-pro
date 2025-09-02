@@ -1,0 +1,497 @@
+{
+  "single_color_red": {
+    "prompt": "100% red",
+    "seed": 12345,
+    "steps": 20,
+    "guidance": 7.0,
+    "lora_scale": 0.75,
+    "use_controlnet": false,
+    "description": "Один цвет - красный (100%)"
+  },
+  "single_color_blue": {
+    "prompt": "100% blue",
+    "seed": 23456,
+    "steps": 20,
+    "guidance": 7.0,
+    "lora_scale": 0.75,
+    "use_controlnet": false,
+    "description": "Один цвет - синий (100%)"
+  },
+  "single_color_grngrn": {
+    "prompt": "100% grngrn",
+    "seed": 34567,
+    "steps": 20,
+    "guidance": 7.0,
+    "lora_scale": 0.75,
+    "use_controlnet": false,
+    "description": "Один цвет - зеленая трава (100%)"
+  },
+  "single_color_black": {
+    "prompt": "100% black",
+    "seed": 45678,
+    "steps": 20,
+    "guidance": 7.0,
+    "lora_scale": 0.75,
+    "use_controlnet": false,
+    "description": "Один цвет - черный (100%)"
+  },
+  "single_color_white": {
+    "prompt": "100% white",
+    "seed": 56789,
+    "steps": 20,
+    "guidance": 7.0,
+    "lora_scale": 0.75,
+    "use_controlnet": false,
+    "description": "Один цвет - белый (100%)"
+  },
+  "single_color_yellow": {
+    "prompt": "100% yellow",
+    "seed": 67890,
+    "steps": 20,
+    "guidance": 7.0,
+    "lora_scale": 0.75,
+    "use_controlnet": false,
+    "description": "Один цвет - желтый (100%)"
+  },
+  "single_color_brown": {
+    "prompt": "100% brown",
+    "seed": 78901,
+    "steps": 20,
+    "guidance": 7.0,
+    "lora_scale": 0.75,
+    "use_controlnet": false,
+    "description": "Один цвет - коричневый (100%)"
+  },
+  "single_color_gray": {
+    "prompt": "100% gray",
+    "seed": 89012,
+    "steps": 20,
+    "guidance": 7.0,
+    "lora_scale": 0.75,
+    "use_controlnet": false,
+    "description": "Один цвет - серый (100%)"
+  },
+  "single_color_ltgreen": {
+    "prompt": "100% ltgreen",
+    "seed": 90123,
+    "steps": 20,
+    "guidance": 7.0,
+    "lora_scale": 0.75,
+    "use_controlnet": false,
+    "description": "Один цвет - светло-зеленый (100%)"
+  },
+  "single_color_dkgreen": {
+    "prompt": "100% dkgreen",
+    "seed": 12340,
+    "steps": 20,
+    "guidance": 7.0,
+    "lora_scale": 0.75,
+    "use_controlnet": false,
+    "description": "Один цвет - темно-зеленый (100%)"
+  },
+  "single_color_pearl": {
+    "prompt": "100% pearl",
+    "seed": 12340,
+    "steps": 20,
+    "guidance": 7.0,
+    "lora_scale": 0.75,
+    "use_controlnet": false,
+    "description": "Один цвет - жемчужный (100%)"
+  },
+  "single_color_salmon": {
+    "prompt": "100% salmon",
+    "seed": 23450,
+    "steps": 20,
+    "guidance": 7.0,
+    "lora_scale": 0.75,
+    "use_controlnet": false,
+    "description": "Один цвет - лосось (100%)"
+  },
+  "two_colors_red_white": {
+    "prompt": "60% red, 40% white",
+    "seed": 12345,
+    "steps": 25,
+    "guidance": 7.5,
+    "lora_scale": 0.75,
+    "use_controlnet": true,
+    "description": "Два цвета - красный (60%) + белый (40%)"
+  },
+  "two_colors_blue_black": {
+    "prompt": "70% blue, 30% black",
+    "seed": 23456,
+    "steps": 25,
+    "guidance": 7.5,
+    "lora_scale": 0.75,
+    "use_controlnet": true,
+    "description": "Два цвета - синий (70%) + черный (30%)"
+  },
+  "two_colors_grngrn_yellow": {
+    "prompt": "60% grngrn, 40% yellow",
+    "seed": 34567,
+    "steps": 25,
+    "guidance": 7.5,
+    "lora_scale": 0.75,
+    "use_controlnet": true,
+    "description": "Два цвета - зеленая трава (60%) + желтый (40%)"
+  },
+  "two_colors_red_blue": {
+    "prompt": "60% red, 40% blue",
+    "seed": 45678,
+    "steps": 25,
+    "guidance": 7.5,
+    "lora_scale": 0.75,
+    "use_controlnet": true,
+    "description": "Два цвета - красный (60%) + синий (40%)"
+  },
+  "two_colors_black_white": {
+    "prompt": "50% black, 50% white",
+    "seed": 56789,
+    "steps": 25,
+    "guidance": 7.5,
+    "lora_scale": 0.75,
+    "use_controlnet": true,
+    "description": "Два цвета - черный (50%) + белый (50%)"
+  },
+  "two_colors_brown_gray": {
+    "prompt": "70% brown, 30% gray",
+    "seed": 67890,
+    "steps": 25,
+    "guidance": 7.5,
+    "lora_scale": 0.75,
+    "use_controlnet": true,
+    "description": "Два цвета - коричневый (70%) + серый (30%)"
+  },
+  "two_colors_ltgreen_blue": {
+    "prompt": "60% ltgreen, 40% blue",
+    "seed": 78901,
+    "steps": 25,
+    "guidance": 7.5,
+    "lora_scale": 0.75,
+    "use_controlnet": true,
+    "description": "Два цвета - светло-зеленый (60%) + синий (40%)"
+  },
+  "two_colors_red_yellow": {
+    "prompt": "70% red, 30% yellow",
+    "seed": 89012,
+    "steps": 25,
+    "guidance": 7.5,
+    "lora_scale": 0.75,
+    "use_controlnet": true,
+    "description": "Два цвета - красный (70%) + желтый (30%)"
+  },
+  "two_colors_dkgreen_ltgreen": {
+    "prompt": "60% dkgreen, 40% ltgreen",
+    "seed": 90123,
+    "steps": 25,
+    "guidance": 7.5,
+    "lora_scale": 0.75,
+    "use_controlnet": true,
+    "description": "Два цвета - темно-зеленый (60%) + светло-зеленый (40%)"
+  },
+  "two_colors_pearl_salmon": {
+    "prompt": "80% pearl, 20% salmon",
+    "seed": 12340,
+    "steps": 25,
+    "guidance": 7.5,
+    "lora_scale": 0.75,
+    "use_controlnet": true,
+    "description": "Два цвета - жемчужный (80%) + лосось (20%)"
+  },
+  "two_colors_grnapl_emerald": {
+    "prompt": "50% grnapl, 50% emerald",
+    "seed": 12340,
+    "steps": 25,
+    "guidance": 7.5,
+    "lora_scale": 0.75,
+    "use_controlnet": true,
+    "description": "Два цвета - зеленое яблоко (50%) + изумрудный (50%)"
+  },
+  "three_colors_red_blue_white": {
+    "prompt": "40% red, 40% blue, 20% white",
+    "seed": 12345,
+    "steps": 30,
+    "guidance": 8.0,
+    "lora_scale": 0.75,
+    "use_controlnet": true,
+    "description": "Три цвета - красный (40%) + синий (40%) + белый (20%)"
+  },
+  "three_colors_grngrn_yellow_black": {
+    "prompt": "50% grngrn, 30% yellow, 20% black",
+    "seed": 23456,
+    "steps": 30,
+    "guidance": 8.0,
+    "lora_scale": 0.75,
+    "use_controlnet": true,
+    "description": "Три цвета - зеленая трава (50%) + желтый (30%) + черный (20%)"
+  },
+  "three_colors_red_black_white": {
+    "prompt": "50% red, 30% black, 20% white",
+    "seed": 34567,
+    "steps": 30,
+    "guidance": 8.0,
+    "lora_scale": 0.75,
+    "use_controlnet": true,
+    "description": "Три цвета - красный (50%) + черный (30%) + белый (20%)"
+  },
+  "three_colors_blue_ltgreen_yellow": {
+    "prompt": "40% blue, 30% ltgreen, 30% yellow",
+    "seed": 45678,
+    "steps": 30,
+    "guidance": 8.0,
+    "lora_scale": 0.75,
+    "use_controlnet": true,
+    "description": "Три цвета - синий (40%) + светло-зеленый (30%) + желтый (30%)"
+  },
+  "three_colors_brown_gray_white": {
+    "prompt": "50% brown, 30% gray, 20% white",
+    "seed": 56789,
+    "steps": 30,
+    "guidance": 8.0,
+    "lora_scale": 0.75,
+    "use_controlnet": true,
+    "description": "Три цвета - коричневый (50%) + серый (30%) + белый (20%)"
+  },
+  "three_colors_red_dkgreen_blue": {
+    "prompt": "40% red, 30% dkgreen, 30% blue",
+    "seed": 67890,
+    "steps": 30,
+    "guidance": 8.0,
+    "lora_scale": 0.75,
+    "use_controlnet": true,
+    "description": "Три цвета - красный (40%) + темно-зеленый (30%) + синий (30%)"
+  },
+  "three_colors_pearl_salmon_ltgray": {
+    "prompt": "50% pearl, 30% salmon, 20% ltgray",
+    "seed": 78901,
+    "steps": 30,
+    "guidance": 8.0,
+    "lora_scale": 0.75,
+    "use_controlnet": true,
+    "description": "Три цвета - жемчужный (50%) + лосось (30%) + светло-серый (20%)"
+  },
+  "three_colors_grnapl_emerald_ltgreen": {
+    "prompt": "40% grnapl, 30% emerald, 30% ltgreen",
+    "seed": 89012,
+    "steps": 30,
+    "guidance": 8.0,
+    "lora_scale": 0.75,
+    "use_controlnet": true,
+    "description": "Три цвета - зеленое яблоко (40%) + изумрудный (30%) + светло-зеленый (30%)"
+  },
+  "four_colors_red_blue_grngrn_yellow": {
+    "prompt": "30% red, 30% blue, 20% grngrn, 20% yellow",
+    "seed": 12345,
+    "steps": 35,
+    "guidance": 8.5,
+    "lora_scale": 0.75,
+    "use_controlnet": true,
+    "description": "Четыре цвета - красный (30%) + синий (30%) + зеленая трава (20%) + желтый (20%)"
+  },
+  "four_colors_red_blue_black_white": {
+    "prompt": "30% red, 30% blue, 20% black, 20% white",
+    "seed": 23456,
+    "steps": 35,
+    "guidance": 8.5,
+    "lora_scale": 0.75,
+    "use_controlnet": true,
+    "description": "Четыре цвета - красный (30%) + синий (30%) + черный (20%) + белый (20%)"
+  },
+  "four_colors_ltgreen_yellow_black_white": {
+    "prompt": "30% ltgreen, 30% yellow, 20% black, 20% white",
+    "seed": 34567,
+    "steps": 35,
+    "guidance": 8.5,
+    "lora_scale": 0.75,
+    "use_controlnet": true,
+    "description": "Четыре цвета - светло-зеленый (30%) + желтый (30%) + черный (20%) + белый (20%)"
+  },
+  "four_colors_brown_gray_red_blue": {
+    "prompt": "30% brown, 30% gray, 20% red, 20% blue",
+    "seed": 45678,
+    "steps": 35,
+    "guidance": 8.5,
+    "lora_scale": 0.75,
+    "use_controlnet": true,
+    "description": "Четыре цвета - коричневый (30%) + серый (30%) + красный (20%) + синий (20%)"
+  },
+  "four_colors_red_yellow_dkgreen_blue": {
+    "prompt": "30% red, 30% yellow, 20% dkgreen, 20% blue",
+    "seed": 56789,
+    "steps": 35,
+    "guidance": 8.5,
+    "lora_scale": 0.75,
+    "use_controlnet": true,
+    "description": "Четыре цвета - красный (30%) + желтый (30%) + темно-зеленый (20%) + синий (20%)"
+  },
+  "four_colors_grngrn_ltgreen_dkgreen_yellow": {
+    "prompt": "30% grngrn, 30% ltgreen, 20% dkgreen, 20% yellow",
+    "seed": 67890,
+    "steps": 35,
+    "guidance": 8.5,
+    "lora_scale": 0.75,
+    "use_controlnet": true,
+    "description": "Четыре цвета - зеленая трава (30%) + светло-зеленый (30%) + темно-зеленый (20%) + желтый (20%)"
+  },
+  "four_colors_pearl_salmon_ltgray_white": {
+    "prompt": "30% pearl, 30% salmon, 20% ltgray, 20% white",
+    "seed": 78901,
+    "steps": 35,
+    "guidance": 8.5,
+    "lora_scale": 0.75,
+    "use_controlnet": true,
+    "description": "Четыре цвета - жемчужный (30%) + лосось (30%) + светло-серый (20%) + белый (20%)"
+  },
+  "four_colors_grnapl_emerald_ltgreen_dkgreen": {
+    "prompt": "30% grnapl, 30% emerald, 20% ltgreen, 20% dkgreen",
+    "seed": 89012,
+    "steps": 35,
+    "guidance": 8.5,
+    "lora_scale": 0.75,
+    "use_controlnet": true,
+    "description": "Четыре цвета - зеленое яблоко (30%) + изумрудный (30%) + светло-зеленый (20%) + темно-зеленый (20%)"
+  },
+  "reference_style_1": {
+    "prompt": "40% red, 30% blue, 20% grngrn, 10% white",
+    "seed": 11111,
+    "steps": 30,
+    "guidance": 8.0,
+    "lora_scale": 0.75,
+    "use_controlnet": true,
+    "description": "Референсный стиль 1 - классическая комбинация с доминированием красного"
+  },
+  "reference_style_2": {
+    "prompt": "40% blue, 30% ltgreen, 20% yellow, 10% black",
+    "seed": 22222,
+    "steps": 30,
+    "guidance": 8.0,
+    "lora_scale": 0.75,
+    "use_controlnet": true,
+    "description": "Референсный стиль 2 - холодные тона с акцентом на синий"
+  },
+  "reference_style_3": {
+    "prompt": "50% dkgreen, 30% yellow, 10% blue, 10% white",
+    "seed": 33333,
+    "steps": 30,
+    "guidance": 8.0,
+    "lora_scale": 0.75,
+    "use_controlnet": true,
+    "description": "Референсный стиль 3 - природные тона с доминированием темно-зеленого"
+  },
+  "unique_combination_1": {
+    "prompt": "60% red, 20% black, 20% white",
+    "seed": 44444,
+    "steps": 30,
+    "guidance": 8.0,
+    "lora_scale": 0.75,
+    "use_controlnet": true,
+    "description": "Уникальная комбинация 1 - драматичный красный с контрастом"
+  },
+  "unique_combination_2": {
+    "prompt": "50% blue, 30% white, 20% yellow",
+    "seed": 55555,
+    "steps": 30,
+    "guidance": 8.0,
+    "lora_scale": 0.75,
+    "use_controlnet": true,
+    "description": "Уникальная комбинация 2 - морская тема с акцентом"
+  },
+  "unique_combination_3": {
+    "prompt": "40% grngrn, 30% black, 30% yellow",
+    "seed": 66666,
+    "steps": 30,
+    "guidance": 8.0,
+    "lora_scale": 0.75,
+    "use_controlnet": true,
+    "description": "Уникальная комбинация 3 - лесная тема с контрастом"
+  },
+  "unique_combination_4": {
+    "prompt": "50% black, 30% red, 20% white",
+    "seed": 77777,
+    "steps": 30,
+    "guidance": 8.0,
+    "lora_scale": 0.75,
+    "use_controlnet": true,
+    "description": "Уникальная комбинация 4 - элегантный черный с акцентами"
+  },
+  "unique_combination_5": {
+    "prompt": "50% white, 30% blue, 20% ltgreen",
+    "seed": 88888,
+    "steps": 30,
+    "guidance": 8.0,
+    "lora_scale": 0.75,
+    "use_controlnet": true,
+    "description": "Уникальная комбинация 5 - светлая тема с прохладными тонами"
+  },
+  "edge_case_minimal": {
+    "prompt": "10% red, 90% white",
+    "seed": 99999,
+    "steps": 25,
+    "guidance": 7.5,
+    "lora_scale": 0.75,
+    "use_controlnet": true,
+    "description": "Граничный случай - минимальное количество одного цвета"
+  },
+  "edge_case_balanced": {
+    "prompt": "30% red, 30% blue, 20% grngrn, 20% white",
+    "seed": 10101,
+    "steps": 35,
+    "guidance": 8.5,
+    "lora_scale": 0.75,
+    "use_controlnet": true,
+    "description": "Граничный случай - 4 цвета (максимальный лимит) для проверки валидации"
+  },
+  "quality_test_high": {
+    "prompt": "50% red, 30% black, 20% white",
+    "seed": 12345,
+    "steps": 35,
+    "guidance": 8.5,
+    "lora_scale": 0.75,
+    "use_controlnet": true,
+    "description": "Тест высокого качества с увеличенными steps и guidance"
+  },
+  "legacy_compatibility": {
+    "prompt": "60% red, 40% white",
+    "seed": 12345,
+    "steps": 35,
+    "guidance": 8.0,
+    "lora_scale": 0.75,
+    "use_controlnet": false,
+    "description": "Тест совместимости со старыми параметрами (без ControlNet)"
+  },
+  "test_rare_colors": {
+    "prompt": "40% beige, 30% turqse, 20% skyblue, 10% pearl",
+    "seed": 11111,
+    "steps": 30,
+    "guidance": 8.0,
+    "lora_scale": 0.75,
+    "use_controlnet": true,
+    "description": "Тест редких цветов - бежевый, бирюзовый, голубой, жемчужный"
+  },
+  "test_warm_colors": {
+    "prompt": "50% salmon, 30% orange, 20% pink",
+    "seed": 22222,
+    "steps": 30,
+    "guidance": 8.0,
+    "lora_scale": 0.75,
+    "use_controlnet": true,
+    "description": "Тест теплых цветов - лосось, оранжевый, розовый"
+  },
+  "test_earth_colors": {
+    "prompt": "40% sand, 30% tercot, 20% khaki, 10% brown",
+    "seed": 33333,
+    "steps": 30,
+    "guidance": 8.0,
+    "lora_scale": 0.75,
+    "use_controlnet": true,
+    "description": "Тест земляных цветов - песочный, терракот, хаки, коричневый"
+  },
+  "test_cool_colors": {
+    "prompt": "40% violet, 30% lilac, 20% dkblue, 10% ltgray",
+    "seed": 44444,
+    "steps": 30,
+    "guidance": 8.0,
+    "lora_scale": 0.75,
+    "use_controlnet": true,
+    "description": "Тест холодных цветов - фиолетовый, сиреневый, темно-синий, светло-серый"
+  }
+}

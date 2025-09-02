@@ -1,0 +1,76 @@
+{
+  "basic_single_color": {
+    "prompt": "100% red",
+    "seed": 12345,
+    "steps": 20,
+    "guidance": 7.0,
+    "lora_scale": 0.7,
+    "use_controlnet": false,
+    "description": "Тест 1 цвета - простой случай, базовые параметры"
+  },
+  "basic_two_colors": {
+    "prompt": "60% red, 40% white",
+    "seed": 12345,
+    "steps": 25,
+    "guidance": 7.5,
+    "lora_scale": 0.7,
+    "use_controlnet": false,
+    "description": "Тест 2 цветов - средняя сложность, базовые параметры"
+  },
+  "basic_three_colors": {
+    "prompt": "50% red, 30% black, 20% white",
+    "seed": 12345,
+    "steps": 30,
+    "guidance": 8.0,
+    "lora_scale": 0.7,
+    "use_controlnet": false,
+    "description": "Тест 3 цветов - высокая сложность, базовые параметры"
+  },
+  "basic_four_colors": {
+    "prompt": "25% red, 25% blue, 25% green, 25% yellow",
+    "seed": 12345,
+    "steps": 35,
+    "guidance": 8.5,
+    "lora_scale": 0.7,
+    "use_controlnet": false,
+    "description": "Тест 4 цветов - максимальная сложность, базовые параметры"
+  },
+  "basic_quality_test": {
+    "prompt": "50% red, 50% white",
+    "seed": 246810,
+    "steps": 25,
+    "guidance": 7.5,
+    "lora_scale": 0.7,
+    "use_controlnet": false,
+    "description": "Тест качества с базовыми параметрами"
+  },
+  "basic_legacy_compatibility": {
+    "prompt": "60% red, 40% white",
+    "seed": 12345,
+    "steps": 35,
+    "guidance": 8.0,
+    "lora_scale": 0.75,
+    "use_controlnet": false,
+    "description": "Тест совместимости со старыми параметрами"
+  },
+  "basic_edge_case_minimal": {
+    "prompt": "1% red, 99% white",
+    "seed": 444444,
+    "steps": 25,
+    "guidance": 7.5,
+    "lora_scale": 0.7,
+    "use_controlnet": false,
+    "description": "Тест граничного случая с минимальным количеством одного цвета"
+  },
+  "basic_edge_case_balanced": {
+    "prompt": "25% red, 25% blue, 25% green, 25% white",
+    "seed": 555555,
+    "steps": 35,
+    "guidance": 8.5,
+    "lora_scale": 0.7,
+    "use_controlnet": false,
+    "description": "Тест граничного случая с 4 цветами (максимальный лимит) - для проверки валидации"
+  }
+}
+
+

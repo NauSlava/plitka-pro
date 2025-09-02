@@ -21,6 +21,7 @@ optimum==1.19.0
 # Дополнительные утилиты
 requests==2.32.5
 tqdm==4.66.5
+pyyaml==6.0.1
 
 # PEFT для LoRA
 peft==0.11.0

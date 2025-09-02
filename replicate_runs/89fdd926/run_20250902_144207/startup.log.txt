@@ -1,0 +1,16 @@
+INFO:predict:🚀 STARTUP_SNAPSHOT_START
+INFO:predict:🧭 MODEL_START v4.4.55 | device=cuda | diffusers=0.21.4 | torch=2.1.0+cu121
+INFO:predict:📊 GPU: Tesla T4
+INFO:predict:💾 GPU Memory: 14.6 GB
+INFO:predict:🔧 SDXL Base: unknown
+INFO:predict:🎨 LoRA: unknown (rank: 32)
+INFO:predict:🔤 TI: unknown (tokens: <s0><s1>)
+INFO:predict:⚙️ Scheduler: DPMSolverMultistepScheduler
+INFO:predict:🎭 VAE: AutoencoderKL
+INFO:predict:🎯 Prompt: 50% white, 50% black
+INFO:predict:🚫 Negative Prompt: None
+INFO:predict:🎲 Seed: 12345
+INFO:predict:📊 Steps: 60
+INFO:predict:🎚️ Guidance: 8.0
+INFO:predict:🔧 LoRA Scale: 0.75
+INFO:predict:🚀 STARTUP_SNAPSHOT_END
