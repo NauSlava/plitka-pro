@@ -1,0 +1,155 @@
+{
+  "critical_fix_test_1": {
+    "prompt": "100% grsgrn",
+    "seed": 12345,
+    "steps": 20,
+    "guidance": 7.0,
+    "lora_scale": 0.75,
+    "use_controlnet": false,
+    "description": "КРИТИЧЕСКИЙ ТЕСТ 1: Проверка распознавания grsgrn (зеленая трава) - должно быть 1 цвет, 20 steps"
+  },
+  "critical_fix_test_2": {
+    "prompt": "60% grsgrn, 40% yellow",
+    "seed": 23456,
+    "steps": 25,
+    "guidance": 7.5,
+    "lora_scale": 0.75,
+    "use_controlnet": false,
+    "description": "КРИТИЧЕСКИЙ ТЕСТ 2: Проверка распознавания grsgrn + yellow - должно быть 2 цвета, 25 steps"
+  },
+  "critical_fix_test_3": {
+    "prompt": "60% ltgreen, 40% blue",
+    "seed": 34567,
+    "steps": 25,
+    "guidance": 7.5,
+    "lora_scale": 0.75,
+    "use_controlnet": false,
+    "description": "КРИТИЧЕСКИЙ ТЕСТ 3: Проверка распознавания ltgreen + blue - должно быть 2 цвета, 25 steps"
+  },
+  "critical_fix_test_4": {
+    "prompt": "100% brown",
+    "seed": 45678,
+    "steps": 20,
+    "guidance": 7.0,
+    "lora_scale": 0.75,
+    "use_controlnet": false,
+    "description": "КРИТИЧЕСКИЙ ТЕСТ 4: Проверка базового цвета brown - должно быть 1 цвет, 20 steps"
+  },
+  "special_colors_test_1": {
+    "prompt": "100% whtgrn",
+    "seed": 56789,
+    "steps": 20,
+    "guidance": 7.0,
+    "lora_scale": 0.75,
+    "use_controlnet": false,
+    "description": "ТЕСТ СПЕЦИАЛЬНЫХ ЦВЕТОВ 1: whtgrn (бело-зеленый) - должно быть 1 цвет, 20 steps"
+  },
+  "special_colors_test_2": {
+    "prompt": "100% dkblue",
+    "seed": 67890,
+    "steps": 20,
+    "guidance": 7.0,
+    "lora_scale": 0.75,
+    "use_controlnet": false,
+    "description": "ТЕСТ СПЕЦИАЛЬНЫХ ЦВЕТОВ 2: dkblue (темно-синий) - должно быть 1 цвет, 20 steps"
+  },
+  "special_colors_test_3": {
+    "prompt": "100% emerald",
+    "seed": 78901,
+    "steps": 20,
+    "guidance": 7.0,
+    "lora_scale": 0.75,
+    "use_controlnet": false,
+    "description": "ТЕСТ СПЕЦИАЛЬНЫХ ЦВЕТОВ 3: emerald (изумрудный) - должно быть 1 цвет, 20 steps"
+  },
+  "three_colors_test_1": {
+    "prompt": "40% red, 40% blue, 20% grsgrn",
+    "seed": 89012,
+    "steps": 30,
+    "guidance": 8.0,
+    "lora_scale": 0.75,
+    "use_controlnet": false,
+    "description": "ТЕСТ 3 ЦВЕТОВ 1: red + blue + grsgrn - должно быть 3 цвета, 30 steps"
+  },
+  "three_colors_test_2": {
+    "prompt": "50% ltgreen, 30% yellow, 20% black",
+    "seed": 90123,
+    "steps": 30,
+    "guidance": 8.0,
+    "lora_scale": 0.75,
+    "use_controlnet": false,
+    "description": "ТЕСТ 3 ЦВЕТОВ 2: ltgreen + yellow + black - должно быть 3 цвета, 30 steps"
+  },
+  "four_colors_test_1": {
+    "prompt": "30% red, 30% blue, 20% grsgrn, 20% white",
+    "seed": 12340,
+    "steps": 35,
+    "guidance": 8.5,
+    "lora_scale": 0.75,
+    "use_controlnet": false,
+    "description": "ТЕСТ 4 ЦВЕТОВ 1: red + blue + grsgrn + white - должно быть 4 цвета, 35 steps"
+  },
+  "four_colors_test_2": {
+    "prompt": "30% ltgreen, 30% dkgreen, 20% yellow, 20% black",
+    "seed": 23450,
+    "steps": 35,
+    "guidance": 8.5,
+    "lora_scale": 0.75,
+    "use_controlnet": false,
+    "description": "ТЕСТ 4 ЦВЕТОВ 2: ltgreen + dkgreen + yellow + black - должно быть 4 цвета, 35 steps"
+  },
+  "complex_patterns_test_1": {
+    "prompt": "40% beige, 30% turqse, 20% skyblue, 10% pearl",
+    "seed": 34560,
+    "steps": 35,
+    "guidance": 8.5,
+    "lora_scale": 0.75,
+    "use_controlnet": false,
+    "description": "ТЕСТ СЛОЖНЫХ ПАТТЕРНОВ 1: beige + turqse + skyblue + pearl - должно быть 4 цвета, 35 steps"
+  },
+  "complex_patterns_test_2": {
+    "prompt": "50% salmon, 30% orange, 20% pink",
+    "seed": 45670,
+    "steps": 30,
+    "guidance": 8.0,
+    "lora_scale": 0.75,
+    "use_controlnet": false,
+    "description": "ТЕСТ СЛОЖНЫХ ПАТТЕРНОВ 2: salmon + orange + pink - должно быть 3 цвета, 30 steps"
+  },
+  "edge_case_test_1": {
+    "prompt": "10% red, 90% white",
+    "seed": 56780,
+    "steps": 25,
+    "guidance": 7.5,
+    "lora_scale": 0.75,
+    "use_controlnet": false,
+    "description": "ТЕСТ ГРАНИЧНЫХ СЛУЧАЕВ 1: 10% red + 90% white - должно быть 2 цвета, 25 steps"
+  },
+  "edge_case_test_2": {
+    "prompt": "10% grsgrn, 90% white",
+    "seed": 67890,
+    "steps": 25,
+    "guidance": 7.5,
+    "lora_scale": 0.75,
+    "use_controlnet": false,
+    "description": "ТЕСТ ГРАНИЧНЫХ СЛУЧАЕВ 2: 10% grsgrn + 90% white - должно быть 2 цвета, 25 steps"
+  },
+  "validation_test_1": {
+    "prompt": "100% invalid_color",
+    "seed": 78900,
+    "steps": 20,
+    "guidance": 7.0,
+    "lora_scale": 0.75,
+    "use_controlnet": false,
+    "description": "ТЕСТ ВАЛИДАЦИИ 1: Недопустимый цвет - должен быть заменен на white, 1 цвет, 20 steps"
+  },
+  "validation_test_2": {
+    "prompt": "50% grsgrn, 50% invalid_color",
+    "seed": 89010,
+    "steps": 25,
+    "guidance": 7.5,
+    "lora_scale": 0.75,
+    "use_controlnet": false,
+    "description": "ТЕСТ ВАЛИДАЦИИ 2: grsgrn + недопустимый цвет - должно быть 2 цвета (grsgrn + white), 25 steps"
+  }
+}

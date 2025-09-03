@@ -1,0 +1,560 @@
+{
+  "🧪 COLORMAP PATTERN FIX TESTS v4.4.60": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 50% red, 50% blue rubber tile, grid pattern, point distribution, high quality",
+    "negative_prompt": "missing red, missing blue, blurry, low quality, vertical stripes",
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "seed": 42,
+    "colormap": "grid",
+    "granule_size": "medium"
+  },
+  "🔴🔵 GRID PATTERN FIXED": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 50% red, 50% blue rubber tile, grid pattern, scattered dots, realistic texture",
+    "negative_prompt": "missing red, missing blue, blurry, low quality, vertical stripes, solid bands",
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "seed": 123,
+    "colormap": "grid",
+    "granule_size": "medium"
+  },
+  "🔴🔵 RADIAL PATTERN FIXED": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 50% red, 50% blue rubber tile, radial pattern, scattered dots, natural distribution",
+    "negative_prompt": "missing red, missing blue, blurry, low quality, circular bands, solid rings",
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "seed": 456,
+    "colormap": "radial",
+    "granule_size": "medium"
+  },
+  "🔴🔵 RANDOM PATTERN VERIFICATION": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 50% red, 50% blue rubber tile, random pattern, scattered dots, organic texture",
+    "negative_prompt": "missing red, missing blue, blurry, low quality, organized patterns",
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "seed": 789,
+    "colormap": "random",
+    "granule_size": "medium"
+  },
+  "🔴🔵 GRANULAR PATTERN VERIFICATION": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 50% red, 50% blue rubber tile, granular pattern, scattered dots, realistic granules",
+    "negative_prompt": "missing red, missing blue, blurry, low quality, solid areas",
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "seed": 101,
+    "colormap": "granular",
+    "granule_size": "medium"
+  },
+  "🧪 REFERENCE COLOR COMBINATIONS v4.4.60": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 25% blue, 25% dkgreen, 25% red, 25% yellow rubber tile, reference pattern, realistic texture",
+    "negative_prompt": "missing blue, missing dkgreen, missing red, missing yellow, blurry, low quality",
+    "num_inference_steps": 35,
+    "guidance_scale": 8.5,
+    "seed": 1001,
+    "colormap": "grid",
+    "granule_size": "medium"
+  },
+  "🔵🟢🔴🟡 REFERENCE QUAD": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 25% blue, 25% dkgreen, 25% red, 25% yellow rubber tile, reference pattern, scattered dots",
+    "negative_prompt": "missing blue, missing dkgreen, missing red, missing yellow, blurry, low quality",
+    "num_inference_steps": 35,
+    "guidance_scale": 8.5,
+    "seed": 1002,
+    "colormap": "grid",
+    "granule_size": "medium"
+  },
+  "🔵🟢🔴 REFERENCE TRIO": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 33% blue, 33% dkgreen, 34% red rubber tile, reference pattern, realistic texture",
+    "negative_prompt": "missing blue, missing dkgreen, missing red, blurry, low quality",
+    "num_inference_steps": 30,
+    "guidance_scale": 8.0,
+    "seed": 1003,
+    "colormap": "grid",
+    "granule_size": "medium"
+  },
+  "🔵🟢🔴🟡 REFERENCE COMPLEX": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 20% blue, 20% dkgreen, 30% red, 30% yellow rubber tile, reference pattern, scattered dots",
+    "negative_prompt": "missing blue, missing dkgreen, missing red, missing yellow, blurry, low quality",
+    "num_inference_steps": 35,
+    "guidance_scale": 8.5,
+    "seed": 1004,
+    "colormap": "grid",
+    "granule_size": "medium"
+  },
+  "🔵🟢 REFERENCE DUO": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 50% blue, 50% dkgreen rubber tile, reference pattern, realistic texture",
+    "negative_prompt": "missing blue, missing dkgreen, blurry, low quality",
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "seed": 1005,
+    "colormap": "grid",
+    "granule_size": "medium"
+  },
+  "🔴🔵 REFERENCE RED-BLUE": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 50% red, 50% blue rubber tile, reference pattern, realistic texture",
+    "negative_prompt": "missing red, missing blue, blurry, low quality",
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "seed": 1006,
+    "colormap": "grid",
+    "granule_size": "medium"
+  },
+  "⚫⚪ REFERENCE BLACK-WHITE": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 50% black, 50% white rubber tile, reference pattern, realistic texture",
+    "negative_prompt": "missing black, missing white, blurry, low quality",
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "seed": 1007,
+    "colormap": "grid",
+    "granule_size": "medium"
+  },
+  "🔵🟡 REFERENCE BLUE-YELLOW": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 50% blue, 50% yellow rubber tile, reference pattern, realistic texture",
+    "negative_prompt": "missing blue, missing yellow, blurry, low quality",
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "seed": 1008,
+    "colormap": "grid",
+    "granule_size": "medium"
+  },
+  "🔴🟡 REFERENCE RED-YELLOW": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 50% red, 50% yellow rubber tile, reference pattern, realistic texture",
+    "negative_prompt": "missing red, missing yellow, blurry, low quality",
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "seed": 1009,
+    "colormap": "grid",
+    "granule_size": "medium"
+  },
+  "🟢🔴 REFERENCE GREEN-RED": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 50% grsgrn, 50% red rubber tile, reference pattern, realistic texture",
+    "negative_prompt": "missing grsgrn, missing red, blurry, low quality",
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "seed": 1010,
+    "colormap": "grid",
+    "granule_size": "medium"
+  },
+  "🧪 NEW COLOR COMBINATIONS v4.4.60": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 25% violet, 25% orange, 25% emerald, 25% khaki rubber tile, new combination, realistic texture",
+    "negative_prompt": "missing violet, missing orange, missing emerald, missing khaki, blurry, low quality",
+    "num_inference_steps": 35,
+    "guidance_scale": 8.5,
+    "seed": 2001,
+    "colormap": "grid",
+    "granule_size": "medium"
+  },
+  "🟣🟠🟢🟤 NEW VIOLET-ORANGE-EMERALD-KHAKI": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 25% violet, 25% orange, 25% emerald, 25% khaki rubber tile, new combination, scattered dots",
+    "negative_prompt": "missing violet, missing orange, missing emerald, missing khaki, blurry, low quality",
+    "num_inference_steps": 35,
+    "guidance_scale": 8.5,
+    "seed": 2002,
+    "colormap": "grid",
+    "granule_size": "medium"
+  },
+  "🟣🟠🟢 NEW TRIO": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 33% violet, 33% orange, 34% emerald rubber tile, new combination, realistic texture",
+    "negative_prompt": "missing violet, missing orange, missing emerald, blurry, low quality",
+    "num_inference_steps": 30,
+    "guidance_scale": 8.0,
+    "seed": 2003,
+    "colormap": "grid",
+    "granule_size": "medium"
+  },
+  "🟣🟠 NEW DUO": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 50% violet, 50% orange rubber tile, new combination, realistic texture",
+    "negative_prompt": "missing violet, missing orange, blurry, low quality",
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "seed": 2004,
+    "colormap": "grid",
+    "granule_size": "medium"
+  },
+  "🟢🟤 NEW GREEN-BROWN": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 50% grsgrn, 50% brown rubber tile, new combination, realistic texture",
+    "negative_prompt": "missing grsgrn, missing brown, blurry, low quality",
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "seed": 2005,
+    "colormap": "grid",
+    "granule_size": "medium"
+  },
+  "🟡🟤 NEW YELLOW-BROWN": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 50% yellow, 50% brown rubber tile, new combination, realistic texture",
+    "negative_prompt": "missing yellow, missing brown, blurry, low quality",
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "seed": 2006,
+    "colormap": "grid",
+    "granule_size": "medium"
+  },
+  "🟠🟤 NEW ORANGE-BROWN": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 50% orange, 50% brown rubber tile, new combination, realistic texture",
+    "negative_prompt": "missing orange, missing brown, blurry, low quality",
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "seed": 2007,
+    "colormap": "grid",
+    "granule_size": "medium"
+  },
+  "🟣🟤 NEW VIOLET-BROWN": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 50% violet, 50% brown rubber tile, new combination, realistic texture",
+    "negative_prompt": "missing violet, missing brown, blurry, low quality",
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "seed": 2008,
+    "colormap": "grid",
+    "granule_size": "medium"
+  },
+  "🧪 OPTIMAL TESTING COMBINATIONS v4.4.60": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 20% beige, 20% skyblue, 30% salmon, 30% limegrn rubber tile, optimal testing, realistic texture",
+    "negative_prompt": "missing beige, missing skyblue, missing salmon, missing limegrn, blurry, low quality",
+    "num_inference_steps": 35,
+    "guidance_scale": 8.5,
+    "seed": 3001,
+    "colormap": "grid",
+    "granule_size": "medium"
+  },
+  "🟨🟦🟠🟢 OPTIMAL BEIGE-SKYBLUE-SALMON-LIMEGRN": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 20% beige, 20% skyblue, 30% salmon, 30% limegrn rubber tile, optimal testing, scattered dots",
+    "negative_prompt": "missing beige, missing skyblue, missing salmon, missing limegrn, blurry, low quality",
+    "num_inference_steps": 35,
+    "guidance_scale": 8.5,
+    "seed": 3002,
+    "colormap": "grid",
+    "granule_size": "medium"
+  },
+  "🟨🟦🟠 OPTIMAL TRIO": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 33% beige, 33% skyblue, 34% salmon rubber tile, optimal testing, realistic texture",
+    "negative_prompt": "missing beige, missing skyblue, missing salmon, blurry, low quality",
+    "num_inference_steps": 30,
+    "guidance_scale": 8.0,
+    "seed": 3003,
+    "colormap": "grid",
+    "granule_size": "medium"
+  },
+  "🟨🟦 OPTIMAL DUO": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 50% beige, 50% skyblue rubber tile, optimal testing, realistic texture",
+    "negative_prompt": "missing beige, missing skyblue, blurry, low quality",
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "seed": 3004,
+    "colormap": "grid",
+    "granule_size": "medium"
+  },
+  "🟠🟢 OPTIMAL SALMON-LIMEGRN": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 50% salmon, 50% limegrn rubber tile, optimal testing, realistic texture",
+    "negative_prompt": "missing salmon, missing limegrn, blurry, low quality",
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "seed": 3005,
+    "colormap": "grid",
+    "granule_size": "medium"
+  },
+  "🧪 ADVANCED COLOR COMBINATIONS v4.4.60": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 15% pearl, 15% turqse, 20% sand, 25% pink, 25% dkblue rubber tile, advanced testing, realistic texture",
+    "negative_prompt": "missing pearl, missing turqse, missing sand, missing pink, missing dkblue, blurry, low quality",
+    "num_inference_steps": 40,
+    "guidance_scale": 9.0,
+    "seed": 4001,
+    "colormap": "grid",
+    "granule_size": "medium"
+  },
+  "⚪🟦🟨🩷🔵 ADVANCED FIVE COLORS": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 15% pearl, 15% turqse, 20% sand, 25% pink, 25% dkblue rubber tile, advanced testing, scattered dots",
+    "negative_prompt": "missing pearl, missing turqse, missing sand, missing pink, missing dkblue, blurry, low quality",
+    "num_inference_steps": 40,
+    "guidance_scale": 9.0,
+    "seed": 4002,
+    "colormap": "grid",
+    "granule_size": "medium"
+  },
+  "⚪🟦🟨 ADVANCED TRIO": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 33% pearl, 33% turqse, 34% sand rubber tile, advanced testing, realistic texture",
+    "negative_prompt": "missing pearl, missing turqse, missing sand, blurry, low quality",
+    "num_inference_steps": 30,
+    "guidance_scale": 8.0,
+    "seed": 4003,
+    "colormap": "grid",
+    "granule_size": "medium"
+  },
+  "🩷🔵 ADVANCED DUO": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 50% pink, 50% dkblue rubber tile, advanced testing, realistic texture",
+    "negative_prompt": "missing pink, missing dkblue, blurry, low quality",
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "seed": 4004,
+    "colormap": "grid",
+    "granule_size": "medium"
+  },
+  "🧪 SPECIALIZED TESTING COMBINATIONS v4.4.60": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 10% whtgrn, 15% grnapl, 20% emerald, 25% ltgreen, 30% dkgray rubber tile, specialized testing, realistic texture",
+    "negative_prompt": "missing whtgrn, missing grnapl, missing emerald, missing ltgreen, missing dkgray, blurry, low quality",
+    "num_inference_steps": 45,
+    "guidance_scale": 9.5,
+    "seed": 5001,
+    "colormap": "grid",
+    "granule_size": "medium"
+  },
+  "🟢🟢🟢🟢⚫ SPECIALIZED FIVE GREENS": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 10% whtgrn, 15% grnapl, 20% emerald, 25% ltgreen, 30% dkgray rubber tile, specialized testing, scattered dots",
+    "negative_prompt": "missing whtgrn, missing grnapl, missing emerald, missing ltgreen, missing dkgray, blurry, low quality",
+    "num_inference_steps": 45,
+    "guidance_scale": 9.5,
+    "seed": 5002,
+    "colormap": "grid",
+    "granule_size": "medium"
+  },
+  "🟢🟢🟢 SPECIALIZED THREE GREENS": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 33% emerald, 33% ltgreen, 34% dkgray rubber tile, specialized testing, realistic texture",
+    "negative_prompt": "missing emerald, missing ltgreen, missing dkgray, blurry, low quality",
+    "num_inference_steps": 30,
+    "guidance_scale": 8.0,
+    "seed": 5003,
+    "colormap": "grid",
+    "granule_size": "medium"
+  },
+  "🟢⚫ SPECIALIZED GREEN-GRAY": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 50% emerald, 50% dkgray rubber tile, specialized testing, realistic texture",
+    "negative_prompt": "missing emerald, missing dkgray, blurry, low quality",
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "seed": 5004,
+    "colormap": "grid",
+    "granule_size": "medium"
+  },
+  "🧪 MONO-COLOR PATTERN VERIFICATION v4.4.60": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 100% red rubber tile, grid pattern, scattered dots, realistic texture",
+    "negative_prompt": "missing red, blurry, low quality, solid color, uniform",
+    "num_inference_steps": 20,
+    "guidance_scale": 7.0,
+    "seed": 6001,
+    "colormap": "grid",
+    "granule_size": "medium"
+  },
+  "🔴 RED MONO GRID": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 100% red rubber tile, grid pattern, scattered dots, professional finish",
+    "negative_prompt": "missing red, blurry, low quality, solid color, uniform, vertical stripes",
+    "num_inference_steps": 20,
+    "guidance_scale": 7.0,
+    "seed": 6002,
+    "colormap": "grid",
+    "granule_size": "medium"
+  },
+  "🔵 BLUE MONO GRID": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 100% blue rubber tile, grid pattern, scattered dots, architectural finish",
+    "negative_prompt": "missing blue, blurry, low quality, solid color, uniform, vertical stripes",
+    "num_inference_steps": 20,
+    "guidance_scale": 7.0,
+    "seed": 6003,
+    "colormap": "grid",
+    "granule_size": "medium"
+  },
+  "🟡 YELLOW MONO GRID": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 100% yellow rubber tile, grid pattern, scattered dots, safety finish",
+    "negative_prompt": "missing yellow, blurry, low quality, solid color, uniform, vertical stripes",
+    "num_inference_steps": 20,
+    "guidance_scale": 7.0,
+    "seed": 6004,
+    "colormap": "grid",
+    "granule_size": "medium"
+  },
+  "🟢 GREEN MONO GRID": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 100% grsgrn rubber tile, grid pattern, scattered dots, natural finish",
+    "negative_prompt": "missing grsgrn, blurry, low quality, solid color, uniform, vertical stripes",
+    "num_inference_steps": 20,
+    "guidance_scale": 7.0,
+    "seed": 6005,
+    "colormap": "grid",
+    "granule_size": "medium"
+  },
+  "⚫ BLACK MONO GRID": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 100% black rubber tile, grid pattern, scattered dots, dramatic finish",
+    "negative_prompt": "missing black, blurry, low quality, solid color, uniform, vertical stripes",
+    "num_inference_steps": 20,
+    "guidance_scale": 7.0,
+    "seed": 6006,
+    "colormap": "grid",
+    "granule_size": "medium"
+  },
+  "⚪ WHITE MONO GRID": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 100% white rubber tile, grid pattern, scattered dots, pure finish",
+    "negative_prompt": "missing white, blurry, low quality, solid color, uniform, vertical stripes",
+    "num_inference_steps": 20,
+    "guidance_scale": 7.0,
+    "seed": 6007,
+    "colormap": "grid",
+    "granule_size": "medium"
+  },
+  "🧪 GRANULE SIZE PATTERN TESTS v4.4.60": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 50% red, 50% blue rubber tile, grid pattern, small granules, fine texture",
+    "negative_prompt": "missing red, missing blue, blurry, low quality, vertical stripes, solid bands",
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "seed": 7001,
+    "colormap": "grid",
+    "granule_size": "small"
+  },
+  "🔴🔵 SMALL GRANULES GRID": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 50% red, 50% blue rubber tile, grid pattern, small granules, fine texture",
+    "negative_prompt": "missing red, missing blue, blurry, low quality, vertical stripes, solid bands",
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "seed": 7002,
+    "colormap": "grid",
+    "granule_size": "small"
+  },
+  "🔴🔵 MEDIUM GRANULES GRID": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 50% red, 50% blue rubber tile, grid pattern, medium granules, balanced texture",
+    "negative_prompt": "missing red, missing blue, blurry, low quality, vertical stripes, solid bands",
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "seed": 7003,
+    "colormap": "grid",
+    "granule_size": "medium"
+  },
+  "🔴🔵 LARGE GRANULES GRID": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 50% red, 50% blue rubber tile, grid pattern, large granules, coarse texture",
+    "negative_prompt": "missing red, missing blue, blurry, low quality, vertical stripes, solid bands",
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "seed": 7004,
+    "colormap": "grid",
+    "granule_size": "large"
+  },
+  "🧪 CONTROLNET INTEGRATION PATTERN TESTS v4.4.60": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 30% red, 30% blue, 40% yellow rubber tile, grid pattern, scattered dots, ControlNet",
+    "negative_prompt": "missing red, missing blue, missing yellow, blurry, low quality, vertical stripes, solid bands",
+    "num_inference_steps": 30,
+    "guidance_scale": 8.0,
+    "seed": 8001,
+    "colormap": "grid",
+    "granule_size": "medium"
+  },
+  "🔴🔵🟡 CONTROLNET GRID": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 30% red, 30% blue, 40% yellow rubber tile, grid pattern, scattered dots, ControlNet precision",
+    "negative_prompt": "missing red, missing blue, missing yellow, blurry, low quality, vertical stripes, solid bands",
+    "num_inference_steps": 30,
+    "guidance_scale": 8.0,
+    "seed": 8002,
+    "colormap": "grid",
+    "granule_size": "medium"
+  },
+  "🔴🔵🟡🟢 CONTROLNET QUAD": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 25% red, 25% blue, 25% yellow, 25% grsgrn rubber tile, grid pattern, scattered dots, ControlNet",
+    "negative_prompt": "missing red, missing blue, missing yellow, missing grsgrn, blurry, low quality, vertical stripes",
+    "num_inference_steps": 35,
+    "guidance_scale": 8.5,
+    "seed": 8003,
+    "colormap": "grid",
+    "granule_size": "medium"
+  },
+  "🧪 PRODUCTION READY PATTERN TESTS v4.4.60": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 100% red rubber tile, grid pattern, scattered dots, production quality, commercial finish",
+    "negative_prompt": "missing red, blurry, low quality, solid color, vertical stripes, amateur",
+    "num_inference_steps": 20,
+    "guidance_scale": 7.0,
+    "seed": 9001,
+    "colormap": "grid",
+    "granule_size": "medium"
+  },
+  "🔴 PRODUCTION GRID": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 100% red rubber tile, grid pattern, scattered dots, production quality, professional finish",
+    "negative_prompt": "missing red, blurry, low quality, solid color, vertical stripes, amateur",
+    "num_inference_steps": 20,
+    "guidance_scale": 7.0,
+    "seed": 9002,
+    "colormap": "grid",
+    "granule_size": "medium"
+  },
+  "🔵 PRODUCTION GRID BLUE": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 100% blue rubber tile, grid pattern, scattered dots, production quality, architectural finish",
+    "negative_prompt": "missing blue, blurry, low quality, solid color, vertical stripes, amateur",
+    "num_inference_steps": 20,
+    "guidance_scale": 7.0,
+    "seed": 9003,
+    "colormap": "grid",
+    "granule_size": "medium"
+  },
+  "🟡 PRODUCTION GRID YELLOW": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 100% yellow rubber tile, grid pattern, scattered dots, production quality, safety finish",
+    "negative_prompt": "missing yellow, blurry, low quality, solid color, vertical stripes, amateur",
+    "num_inference_steps": 20,
+    "guidance_scale": 7.0,
+    "seed": 9004,
+    "colormap": "grid",
+    "granule_size": "medium"
+  },
+  "🧪 PATTERN COMPARISON TESTS v4.4.60": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 50% red, 50% blue rubber tile, random pattern, scattered dots, organic texture",
+    "negative_prompt": "missing red, missing blue, blurry, low quality, organized patterns, vertical stripes",
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "seed": 10001,
+    "colormap": "random",
+    "granule_size": "medium"
+  },
+  "🔴🔵 RANDOM VS GRID": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 50% red, 50% blue rubber tile, random pattern, scattered dots, natural distribution",
+    "negative_prompt": "missing red, missing blue, blurry, low quality, organized patterns, vertical stripes",
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "seed": 10002,
+    "colormap": "random",
+    "granule_size": "medium"
+  },
+  "🔴🔵 GRID VS RADIAL": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 50% red, 50% blue rubber tile, grid pattern, scattered dots, geometric distribution",
+    "negative_prompt": "missing red, missing blue, blurry, low quality, circular patterns, vertical stripes",
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "seed": 10003,
+    "colormap": "grid",
+    "granule_size": "medium"
+  },
+  "🔴🔵 RADIAL VS GRANULAR": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 50% red, 50% blue rubber tile, radial pattern, scattered dots, natural distribution",
+    "negative_prompt": "missing red, missing blue, blurry, low quality, granular patterns, vertical stripes",
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "seed": 10004,
+    "colormap": "radial",
+    "granule_size": "medium"
+  },
+  "🧪 QUALITY VERIFICATION TESTS v4.4.60": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 50% red, 50% blue rubber tile, grid pattern, scattered dots, high quality, realistic texture",
+    "negative_prompt": "missing red, missing blue, blurry, low quality, vertical stripes, solid bands, artificial",
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "seed": 11001,
+    "colormap": "grid",
+    "granule_size": "medium"
+  },
+  "🔴🔵 HIGH QUALITY GRID": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 50% red, 50% blue rubber tile, grid pattern, scattered dots, high quality, professional finish",
+    "negative_prompt": "missing red, missing blue, blurry, low quality, vertical stripes, solid bands, artificial",
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "seed": 11002,
+    "colormap": "grid",
+    "granule_size": "medium"
+  },
+  "🔴🔵 REALISTIC TEXTURE": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 50% red, 50% blue rubber tile, grid pattern, scattered dots, realistic texture, natural finish",
+    "negative_prompt": "missing red, missing blue, blurry, low quality, vertical stripes, solid bands, artificial",
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "seed": 11003,
+    "colormap": "grid",
+    "granule_size": "medium"
+  },
+  "🔴🔵 PROFESSIONAL FINISH": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 50% red, 50% blue rubber tile, grid pattern, scattered dots, professional finish, commercial quality",
+    "negative_prompt": "missing red, missing blue, blurry, low quality, vertical stripes, solid bands, amateur",
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "seed": 11004,
+    "colormap": "grid",
+    "granule_size": "medium"
+  }
+}

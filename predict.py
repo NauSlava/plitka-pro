@@ -8,6 +8,7 @@ import gc
 import json
 import logging
 import time
+import math
 from typing import Optional, List, Dict, Any, Iterator
 from PIL import Image, ImageDraw, ImageColor
 import numpy as np
@@ -149,7 +150,7 @@ class ColorGridControlNet:
     def _create_granular_pattern(self, colors, size, granule_size="medium"):
         """Создает паттерн, имитирующий резиновую крошку"""
         width, height = size
-        canvas = Image.new('RGB', size, (255, 255, 255))
+        canvas = Image.new('RGBA', size, (255, 255, 255, 0))  # Прозрачный фон
         pixels = canvas.load()
         
         # Параметры гранул
@@ -192,7 +193,7 @@ class ColorGridControlNet:
             for dx in range(granule_size):
                 for dy in range(granule_size):
                     if (0 <= x + dx < width and 0 <= y + dy < height and
-                        pixels[x + dx, y + dy] == (255, 255, 255)):  # Только пустые пиксели
+                        pixels[x + dx, y + dy] == (255, 255, 255, 0)):  # Только прозрачные пиксели
                         pixels[x + dx, y + dy] = color_info["color"]
                         pixels_placed[color_idx] += 1
         
@@ -201,7 +202,7 @@ class ColorGridControlNet:
     def _create_random_pattern(self, colors, size):
         """Создает случайный паттерн с точными пропорциями"""
         width, height = size
-        canvas = Image.new('RGB', size, (255, 255, 255))
+        canvas = Image.new('RGBA', size, (255, 255, 255, 0))  # Прозрачный фон
         pixels = canvas.load()
         
         # Нормализация пропорций
@@ -228,33 +229,42 @@ class ColorGridControlNet:
         return canvas
     
     def _create_grid_pattern(self, colors, size):
-        """Создает сеточный паттерн с точными пропорциями"""
+        """Создает сеточный паттерн с точечным распределением"""
         width, height = size
-        canvas = Image.new('RGB', size, (255, 255, 255))
+        canvas = Image.new('RGBA', size, (255, 255, 255, 0))  # Прозрачный фон
         pixels = canvas.load()
         
         # Нормализация пропорций
         total_proportion = sum(color.get("proportion", 0) for color in colors)
-        x_pos = 0
         
+        # Создание точечного распределения вместо вертикальных полос
         for color in colors:
             proportion = color.get("proportion", 0) / total_proportion
             color_rgb = self._name_to_rgb(color.get("name", "white"))
-            color_width = int(proportion * width)
+            pixels_needed = int(proportion * width * height)
             
-            # Заполнение вертикальной полосы
-            for x in range(x_pos, min(x_pos + color_width, width)):
-                for y in range(height):
+            # Случайное размещение точек по всей поверхности
+            positions_placed = 0
+            attempts = 0
+            max_attempts = pixels_needed * 10  # Ограничение попыток
+            
+            while positions_placed < pixels_needed and attempts < max_attempts:
+                x = random.randint(0, width - 1)
+                y = random.randint(0, height - 1)
+                
+                # Проверяем, что позиция свободна
+                if pixels[x, y] == (255, 255, 255, 0):
                     pixels[x, y] = color_rgb
-            
-            x_pos += color_width
+                    positions_placed += 1
+                
+                attempts += 1
         
         return canvas
     
     def _create_radial_pattern(self, colors, size):
-        """Создает радиальный паттерн с точными пропорциями"""
+        """Создает радиальный паттерн с точечным распределением"""
         width, height = size
-        canvas = Image.new('RGB', size, (255, 255, 255))
+        canvas = Image.new('RGBA', size, (255, 255, 255, 0))  # Прозрачный фон
         pixels = canvas.load()
         
         center_x, center_y = width // 2, height // 2
@@ -262,22 +272,34 @@ class ColorGridControlNet:
         
         # Нормализация пропорций
         total_proportion = sum(color.get("proportion", 0) for color in colors)
-        current_radius = 0
         
+        # Создание точечного распределения с радиальным влиянием
         for color in colors:
             proportion = color.get("proportion", 0) / total_proportion
             color_rgb = self._name_to_rgb(color.get("name", "white"))
-            radius_increment = int(proportion * max_radius)
+            pixels_needed = int(proportion * width * height)
             
-            # Заполнение кольца
-            for r in range(current_radius, current_radius + radius_increment):
-                for x in range(width):
-                    for y in range(height):
-                        dist = ((x - center_x) ** 2 + (y - center_y) ** 2) ** 0.5
-                        if r <= dist < r + 1:
-                            pixels[x, y] = color_rgb
+            # Случайное размещение точек с радиальным приоритетом
+            positions_placed = 0
+            attempts = 0
+            max_attempts = pixels_needed * 10  # Ограничение попыток
             
-            current_radius += radius_increment
+            while positions_placed < pixels_needed and attempts < max_attempts:
+                # Генерируем позицию с радиальным распределением
+                angle = random.uniform(0, 2 * 3.14159)  # 0 до 2π
+                radius = random.uniform(0, max_radius)
+                
+                x = int(center_x + radius * math.cos(angle))
+                y = int(center_y + radius * math.sin(angle))
+                
+                # Проверяем границы
+                if 0 <= x < width and 0 <= y < height:
+                    # Проверяем, что позиция свободна
+                    if pixels[x, y] == (255, 255, 255, 0):
+                        pixels[x, y] = color_rgb
+                        positions_placed += 1
+                
+                attempts += 1
         
         return canvas
     
@@ -291,7 +313,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Единая версия модели для логов
-MODEL_VERSION = "v4.4.58"
+MODEL_VERSION = "v4.4.60"
 
 # Переменные окружения для оптимизации
 os.environ["HF_HOME"] = "/tmp/hf_home"
@@ -663,7 +685,7 @@ class Predictor(BasePredictor):
 
     def _render_legend(self, colors: List[Dict[str, Any]], size: int = 256) -> Image.Image:
         """Строим простую легенду/colormap из входных пропорций (горизонтальные полосы)."""
-        img = Image.new('RGB', (size, size), color='white')
+        img = Image.new('RGBA', (size, size), color=(255, 255, 255, 255))  # Непрозрачный белый
         draw = ImageDraw.Draw(img)
         y = 0
         for c in colors:
@@ -716,7 +738,7 @@ class Predictor(BasePredictor):
             colors = self._parse_percent_colors(prompt)
             if not colors:
                 logger.warning("⚠️ Не удалось распарсить цвета, создаем базовый colormap")
-                return Image.new('RGB', size, (255, 255, 255))
+                return Image.new('RGBA', size, (255, 255, 255, 0))  # Прозрачный фон
             
             # Определяем оптимальный паттерн на основе количества цветов
             color_count = len(colors)
@@ -850,10 +872,10 @@ class Predictor(BasePredictor):
             if not colors:
                 logger.error("❌ Не удалось извлечь цвета для пересборки colormap")
                 # Fallback: простой серый colormap
-                return Image.new('RGB', size, (127, 127, 127))
+                return Image.new('RGBA', size, (127, 127, 127, 255))  # Непрозрачный серый фон
             
             # Создаем простой colormap с правильными цветами
-            colormap = Image.new('RGB', size, (255, 255, 255))
+            colormap = Image.new('RGBA', size, (255, 255, 255, 0))  # Прозрачный фон
             pixels = colormap.load()
             
             # Размещаем цвета в простом паттерне
@@ -872,7 +894,7 @@ class Predictor(BasePredictor):
         except Exception as e:
             logger.error(f"❌ Критическая ошибка пересборки colormap: {e}")
             # Fallback: простой серый colormap
-            return Image.new('RGB', size, (127, 127, 127))
+            return Image.new('RGBA', size, (127, 127, 127, 255))  # Непрозрачный серый фон
     
     def predict(self, prompt: str = Input(description="Описание цветов резиновой плитки", default="100% red"), 
                 negative_prompt: Optional[str] = Input(description="Негативный промпт", default=None), 
@@ -1153,7 +1175,7 @@ class Predictor(BasePredictor):
                     logger.info(f"🎨 FALLBACK COLORMAP_READY {colormap_path}")
                 except Exception as e2:
                     logger.error(f"❌ Критическая ошибка создания colormap: {e2}")
-                    Image.new('RGB', (256, 256), color='white').save(colormap_path)
+                    Image.new('RGBA', (256, 256), color=(255, 255, 255, 255)).save(colormap_path)
             
             # Очистка памяти
             if torch.cuda.is_available():

@@ -1,0 +1,250 @@
+{
+  "test_suite_v4.4.60": {
+    "version": "v4.4.60",
+    "description": "Тестовый набор для проверки исправления паттернов colormap",
+    "model_url": "https://replicate.com/nauslava/plitka-pro-project:v4.4.60",
+    "total_tests": 12,
+    "critical_tests": 2
+  },
+  "critical_tests": {
+    "test_1_grid_pattern_fix": {
+      "name": "Grid Pattern Fix - Critical Test",
+      "description": "Проверка исправления вертикальных полос в grid паттерне",
+      "url": "https://replicate.com/nauslava/plitka-pro-project:v4.4.60",
+      "parameters": {
+        "prompt": "ohwx_rubber_tile <s0><s1> 50% red, 50% blue rubber tile, grid pattern, scattered dots, realistic texture",
+        "negative_prompt": "missing red, missing blue, blurry, low quality, vertical stripes, solid bands",
+        "num_inference_steps": 25,
+        "guidance_scale": 7.5,
+        "seed": 42,
+        "colormap": "grid",
+        "granule_size": "medium"
+      },
+      "expected_result": "Точечное распределение красного и синего цветов по всей поверхности, НЕ вертикальные полосы",
+      "priority": "CRITICAL"
+    },
+    "test_2_radial_pattern_fix": {
+      "name": "Radial Pattern Fix - Critical Test",
+      "description": "Проверка исправления концентрических колец в radial паттерне",
+      "url": "https://replicate.com/nauslava/plitka-pro-project:v4.4.60",
+      "parameters": {
+        "prompt": "ohwx_rubber_tile <s0><s1> 50% red, 50% blue rubber tile, radial pattern, scattered dots, natural distribution",
+        "negative_prompt": "missing red, missing blue, blurry, low quality, circular bands, solid rings",
+        "num_inference_steps": 25,
+        "guidance_scale": 7.5,
+        "seed": 456,
+        "colormap": "radial",
+        "granule_size": "medium"
+      },
+      "expected_result": "Точечное распределение с радиальным влиянием, НЕ концентрические кольца",
+      "priority": "CRITICAL"
+    }
+  },
+  "validation_tests": {
+    "test_3_pattern_comparison": {
+      "name": "Pattern Comparison - Validation Test",
+      "description": "Сравнение исправленных паттернов с рабочими",
+      "url": "https://replicate.com/nauslava/plitka-pro-project:v4.4.60",
+      "test_1_random": {
+        "name": "Random Pattern (Control)",
+        "parameters": {
+          "prompt": "ohwx_rubber_tile <s0><s1> 50% red, 50% blue rubber tile, random pattern, scattered dots, organic texture",
+          "negative_prompt": "missing red, missing blue, blurry, low quality, organized patterns",
+          "num_inference_steps": 25,
+          "guidance_scale": 7.5,
+          "seed": 789,
+          "colormap": "random",
+          "granule_size": "medium"
+        },
+        "expected_result": "Органическое точечное распределение"
+      },
+      "test_2_grid": {
+        "name": "Grid Pattern (Fixed)",
+        "parameters": {
+          "prompt": "ohwx_rubber_tile <s0><s1> 50% red, 50% blue rubber tile, grid pattern, scattered dots, geometric distribution",
+          "negative_prompt": "missing red, missing blue, blurry, low quality, vertical stripes",
+          "num_inference_steps": 25,
+          "guidance_scale": 7.5,
+          "seed": 123,
+          "colormap": "grid",
+          "granule_size": "medium"
+        },
+        "expected_result": "Точечное распределение, НЕ вертикальные полосы"
+      }
+    }
+  },
+  "color_complexity_tests": {
+    "test_4_mono_color_grid": {
+      "name": "Mono-color with Grid Pattern",
+      "description": "Проверка моно-цвета с исправленным grid паттерном",
+      "url": "https://replicate.com/nauslava/plitka-pro-project:v4.4.60",
+      "parameters": {
+        "prompt": "ohwx_rubber_tile <s0><s1> 100% red rubber tile, grid pattern, scattered dots, professional finish",
+        "negative_prompt": "missing red, blurry, low quality, solid color, uniform, vertical stripes",
+        "num_inference_steps": 20,
+        "guidance_scale": 7.0,
+        "seed": 333,
+        "colormap": "grid",
+        "granule_size": "medium"
+      },
+      "expected_result": "Равномерное точечное распределение красного цвета по всей поверхности"
+    },
+    "test_5_three_colors_grid": {
+      "name": "Three Colors with Grid Pattern",
+      "description": "Проверка сложных комбинаций с исправленным паттерном",
+      "url": "https://replicate.com/nauslava/plitka-pro-project:v4.4.60",
+      "parameters": {
+        "prompt": "ohwx_rubber_tile <s0><s1> 40% red, 30% blue, 30% yellow rubber tile, grid pattern, scattered dots, realistic",
+        "negative_prompt": "missing red, missing blue, missing yellow, blurry, low quality, vertical stripes, solid bands",
+        "num_inference_steps": 30,
+        "guidance_scale": 8.0,
+        "seed": 444,
+        "colormap": "grid",
+        "granule_size": "medium"
+      },
+      "expected_result": "Точечное распределение трех цветов в правильных пропорциях, НЕ вертикальные полосы"
+    },
+    "test_6_four_colors_grid": {
+      "name": "Four Colors with Grid Pattern",
+      "description": "Проверка максимальной сложности с исправленным паттерном",
+      "url": "https://replicate.com/nauslava/plitka-pro-project:v4.4.60",
+      "parameters": {
+        "prompt": "ohwx_rubber_tile <s0><s1> 25% red, 25% blue, 25% yellow, 25% grsgrn rubber tile, grid pattern, scattered dots",
+        "negative_prompt": "missing red, missing blue, missing yellow, missing grsgrn, blurry, low quality, vertical stripes",
+        "num_inference_steps": 35,
+        "guidance_scale": 8.5,
+        "seed": 555,
+        "colormap": "grid",
+        "granule_size": "medium"
+      },
+      "expected_result": "Сложное точечное распределение четырех цветов, НЕ вертикальные полосы"
+    }
+  },
+  "granule_size_tests": {
+    "test_7_small_granules_grid": {
+      "name": "Small Granules with Grid Pattern",
+      "description": "Проверка мелкой текстуры с исправленным паттерном",
+      "url": "https://replicate.com/nauslava/plitka-pro-project:v4.4.60",
+      "parameters": {
+        "prompt": "ohwx_rubber_tile <s0><s1> 50% red, 50% blue rubber tile, grid pattern, small granules, fine texture",
+        "negative_prompt": "missing red, missing blue, blurry, low quality, vertical stripes, solid bands",
+        "num_inference_steps": 25,
+        "guidance_scale": 7.5,
+        "seed": 666,
+        "colormap": "grid",
+        "granule_size": "small"
+      },
+      "expected_result": "Мелкая точечная текстура с правильным распределением цветов"
+    },
+    "test_8_large_granules_grid": {
+      "name": "Large Granules with Grid Pattern",
+      "description": "Проверка крупной текстуры с исправленным паттерном",
+      "url": "https://replicate.com/nauslava/plitka-pro-project:v4.4.60",
+      "parameters": {
+        "prompt": "ohwx_rubber_tile <s0><s1> 50% red, 50% blue rubber tile, grid pattern, large granules, coarse texture",
+        "negative_prompt": "missing red, missing blue, blurry, low quality, vertical stripes, solid bands",
+        "num_inference_steps": 25,
+        "guidance_scale": 7.5,
+        "seed": 777,
+        "colormap": "grid",
+        "granule_size": "large"
+      },
+      "expected_result": "Крупная точечная текстура с правильным распределением цветов"
+    }
+  },
+  "controlnet_tests": {
+    "test_9_controlnet_grid": {
+      "name": "ControlNet with Fixed Grid Pattern",
+      "description": "Проверка работы ControlNet с исправленными паттернами",
+      "url": "https://replicate.com/nauslava/plitka-pro-project:v4.4.60",
+      "parameters": {
+        "prompt": "ohwx_rubber_tile <s0><s1> 30% red, 30% blue, 40% yellow rubber tile, grid pattern, scattered dots, ControlNet precision",
+        "negative_prompt": "missing red, missing blue, missing yellow, blurry, low quality, vertical stripes, solid bands",
+        "num_inference_steps": 30,
+        "guidance_scale": 8.0,
+        "seed": 888,
+        "colormap": "grid",
+        "granule_size": "medium"
+      },
+      "expected_result": "Высокоточное точечное распределение с ControlNet, НЕ вертикальные полосы"
+    },
+    "test_10_controlnet_four_colors": {
+      "name": "ControlNet with Four Colors",
+      "description": "Проверка максимальной сложности ControlNet с исправленными паттернами",
+      "url": "https://replicate.com/nauslava/plitka-pro-project:v4.4.60",
+      "parameters": {
+        "prompt": "ohwx_rubber_tile <s0><s1> 25% red, 25% blue, 25% yellow, 25% grsgrn rubber tile, grid pattern, scattered dots, ControlNet",
+        "negative_prompt": "missing red, missing blue, missing yellow, missing grsgrn, blurry, low quality, vertical stripes",
+        "num_inference_steps": 35,
+        "guidance_scale": 8.5,
+        "seed": 999,
+        "colormap": "grid",
+        "granule_size": "medium"
+      },
+      "expected_result": "Сложное точечное распределение четырех цветов с ControlNet, НЕ вертикальные полосы"
+    }
+  },
+  "production_tests": {
+    "test_11_production_grid": {
+      "name": "Production Quality with Grid Pattern",
+      "description": "Проверка готовности к продакшену с исправленными паттернами",
+      "url": "https://replicate.com/nauslava/plitka-pro-project:v4.4.60",
+      "parameters": {
+        "prompt": "ohwx_rubber_tile <s0><s1> 100% red rubber tile, grid pattern, scattered dots, production quality, commercial finish",
+        "negative_prompt": "missing red, blurry, low quality, solid color, vertical stripes, amateur",
+        "num_inference_steps": 20,
+        "guidance_scale": 7.0,
+        "seed": 1001,
+        "colormap": "grid",
+        "granule_size": "medium"
+      },
+      "expected_result": "Профессиональное качество с правильным точечным распределением"
+    },
+    "test_12_production_radial": {
+      "name": "Production Quality with Radial Pattern",
+      "description": "Проверка готовности к продакшену с исправленным radial паттерном",
+      "url": "https://replicate.com/nauslava/plitka-pro-project:v4.4.60",
+      "parameters": {
+        "prompt": "ohwx_rubber_tile <s0><s1> 100% blue rubber tile, radial pattern, scattered dots, production quality, architectural finish",
+        "negative_prompt": "missing blue, blurry, low quality, solid color, circular bands, amateur",
+        "num_inference_steps": 20,
+        "guidance_scale": 7.0,
+        "seed": 1002,
+        "colormap": "radial",
+        "granule_size": "medium"
+      },
+      "expected_result": "Профессиональное качество с правильным точечным распределением"
+    }
+  },
+  "testing_instructions": {
+    "priority_order": [
+      "test_1_grid_pattern_fix",
+      "test_2_radial_pattern_fix",
+      "test_3_pattern_comparison",
+      "test_4_mono_color_grid",
+      "test_5_three_colors_grid",
+      "test_6_four_colors_grid",
+      "test_7_small_granules_grid",
+      "test_8_large_granules_grid",
+      "test_9_controlnet_grid",
+      "test_10_controlnet_four_colors",
+      "test_11_production_grid",
+      "test_12_production_radial"
+    ],
+    "success_criteria": {
+      "grid_pattern": "Точечное распределение, НЕ вертикальные полосы",
+      "radial_pattern": "Точечное распределение, НЕ концентрические кольца",
+      "random_pattern": "Органическое точечное распределение",
+      "granular_pattern": "Реалистичная гранулярная текстура",
+      "color_distribution": "Правильные пропорции и распределение",
+      "controlnet_integration": "Высокая точность с исправленными паттернами",
+      "production_quality": "Профессиональный уровень готовности"
+    },
+    "expected_improvements": {
+      "before_fix": "Вертикальные полосы в grid, концентрические кольца в radial",
+      "after_fix": "Точечное распределение во всех паттернах",
+      "quality_improvement": "Улучшенная реалистичность и естественность текстуры",
+      "production_readiness": "Модель готова к продакшен использованию"
+    }
+  }
+}
