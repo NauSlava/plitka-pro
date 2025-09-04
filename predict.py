@@ -313,7 +313,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Единая версия модели для логов
-MODEL_VERSION = "v4.4.60"
+MODEL_VERSION = "v4.5.01"
 
 # Переменные окружения для оптимизации
 os.environ["HF_HOME"] = "/tmp/hf_home"
@@ -839,21 +839,40 @@ class Predictor(BasePredictor):
         return test_results
     
     def _validate_colormap_against_prompt(self, colormap: Image, prompt: str) -> bool:
-        """Валидация colormap против промпта"""
+        """Валидация colormap против промпта (поддержка RGBA)"""
         try:
             expected_colors = self.color_manager.extract_colors_from_prompt(prompt)
             if not expected_colors:
                 logger.warning("⚠️ Не удалось извлечь цвета из промпта")
                 return False
             
-            # Простая проверка: colormap не должен быть полностью серым
+            # Проверка: colormap не должен быть полностью серым или прозрачным
             colormap_array = np.array(colormap)
+            
             if len(colormap_array.shape) == 3:
                 # RGB изображение
                 gray_pixels = np.all(colormap_array == [127, 127, 127], axis=2)
                 if np.all(gray_pixels):
                     logger.warning("⚠️ Colormap полностью серый - ошибка распознавания цветов")
                     return False
+            elif len(colormap_array.shape) == 4:
+                # RGBA изображение - проверяем RGB каналы
+                rgb_array = colormap_array[:, :, :3]  # Берем только RGB каналы
+                alpha_array = colormap_array[:, :, 3]  # Альфа канал
+                
+                # Проверяем, что есть непрозрачные пиксели
+                opaque_pixels = alpha_array > 0
+                if not np.any(opaque_pixels):
+                    logger.warning("⚠️ Colormap полностью прозрачный")
+                    return False
+                
+                # Проверяем RGB каналы непрозрачных пикселей
+                opaque_rgb = rgb_array[opaque_pixels]
+                if len(opaque_rgb) > 0:
+                    gray_pixels = np.all(opaque_rgb == [127, 127, 127], axis=1)
+                    if np.all(gray_pixels):
+                        logger.warning("⚠️ Colormap полностью серый в непрозрачных областях")
+                        return False
             
             logger.info(f"✅ Colormap валиден для цветов: {expected_colors}")
             return True
@@ -1051,20 +1070,24 @@ class Predictor(BasePredictor):
                         pass
                     preview_emitted = True
 
-            # Автоматическое включение ControlNet для сложных промптов (2+ цветов)
+            # МУЛЬТИМОДАЛЬНЫЙ CONTROLNET: Адаптивный выбор на основе сложности
             auto_controlnet = False
+            selected_controlnets = None
+            
             if not use_controlnet:
                 # Используем уже подсчитанное количество цветов
                 if color_count >= 2:
                     auto_controlnet = True
-                    logger.info(f"🎯 Автоматически включаем ControlNet для {color_count} цветов")
+                    # Выбираем оптимальную комбинацию ControlNet
+                    selected_controlnets = self.select_optimal_controlnet(color_count)
+                    logger.info(f"🎯 Автоматически включаем мультимодальный ControlNet для {color_count} цветов: {selected_controlnets}")
             
             # Обновляем общую статистику
             self.color_grid_stats["total_generations"] += 1
             if use_controlnet or auto_controlnet:
                 self.color_grid_stats["controlnet_used"] += 1
             
-            # ControlNet lazy init (включая автоматическое включение)
+            # МУЛЬТИМОДАЛЬНЫЙ CONTROLNET: Инициализация и применение
             if (use_controlnet or auto_controlnet) and ControlNetModel is not None and StableDiffusionXLControlNetPipeline is not None:
                 try:
                     if self.controlnet is None:
@@ -1085,17 +1108,29 @@ class Predictor(BasePredictor):
                         ).to(self.device)
                     pipe_to_use = self.pipe_cn
                     
-                    # Подготовка контрольной карты для ControlNet
+                    # МУЛЬТИМОДАЛЬНЫЙ CONTROLNET: Подготовка множественных контрольных карт
                     try:
                         if control_image is not None:
                             # Если пользователь предоставил контрольное изображение
                             from PIL import ImageFilter
-                            hint = Image.open(control_image).convert('L').resize((1024, 1024), Image.Resampling.LANCZOS)
-                            hint = hint.filter(ImageFilter.EDGE_ENHANCE)
+                            user_hint = Image.open(control_image).convert('L').resize((1024, 1024), Image.Resampling.LANCZOS)
+                            user_hint = user_hint.filter(ImageFilter.EDGE_ENHANCE)
                             logger.info("✅ ControlNet использует пользовательское контрольное изображение")
+                            
+                            # Создаем дополнительные контрольные карты для мультимодальности
+                            control_images = [user_hint]
+                            if selected_controlnets and len(selected_controlnets) > 1:
+                                # Добавляем автоматически созданные карты для дополнительных ControlNet
+                                for i in range(1, len(selected_controlnets)):
+                                    additional_hint = self._create_optimized_colormap(prompt, size=(1024, 1024))
+                                    additional_hint = additional_hint.convert('L').filter(ImageFilter.EDGE_ENHANCE)
+                                    control_images.append(additional_hint)
                         else:
-                            # Автоматически создаем оптимизированную контрольную карту
-                            logger.info("🎨 Создание автоматической контрольной карты для ControlNet")
+                            # Автоматически создаем множественные контрольные карты для мультимодального ControlNet
+                            logger.info("🎨 Создание множественных контрольных карт для мультимодального ControlNet")
+                            control_images = []
+                            
+                            # Основная цветовая карта
                             color_control_image = self._create_optimized_colormap(prompt, size=(1024, 1024))
                             
                             # Валидация colormap против промпта
@@ -1104,17 +1139,34 @@ class Predictor(BasePredictor):
                                 color_control_image = self._force_rebuild_colormap(prompt, size=(1024, 1024))
                             
                             # Преобразуем в grayscale для ControlNet
-                            hint = color_control_image.convert('L')
+                            main_hint = color_control_image.convert('L')
+                            main_hint = main_hint.filter(ImageFilter.EDGE_ENHANCE)
+                            control_images.append(main_hint)
                             
-                            # Применяем edge enhancement для лучшего контроля
-                            hint = hint.filter(ImageFilter.EDGE_ENHANCE)
-                            logger.info("✅ ControlNet использует автоматически созданную контрольную карту")
+                            # Создаем дополнительные контрольные карты для мультимодальности
+                            if selected_controlnets and len(selected_controlnets) > 1:
+                                for i in range(1, len(selected_controlnets)):
+                                    additional_hint = self._create_optimized_colormap(prompt, size=(1024, 1024))
+                                    additional_hint = additional_hint.convert('L').filter(ImageFilter.EDGE_ENHANCE)
+                                    control_images.append(additional_hint)
                         
-                        pipe_kwargs["image"] = hint
-                        logger.info("✅ ControlNet активирован с контрольной картой")
+                        # Применяем мультимодальный ControlNet
+                        if selected_controlnets and len(control_images) > 1:
+                            multi_controlnet_kwargs = self.apply_multi_controlnet(prompt, selected_controlnets, control_images)
+                            if multi_controlnet_kwargs:
+                                pipe_kwargs.update(multi_controlnet_kwargs)
+                                logger.info(f"✅ Мультимодальный ControlNet активирован с {len(control_images)} контрольными картами")
+                            else:
+                                # Fallback к основной карте
+                                pipe_kwargs["image"] = control_images[0]
+                                logger.info("✅ ControlNet активирован с основной контрольной картой (fallback)")
+                        else:
+                            # Обычный режим с одной картой
+                            pipe_kwargs["image"] = control_images[0]
+                            logger.info("✅ ControlNet активирован с контрольной картой")
                         
                     except Exception as e:
-                        logger.warning(f"⚠️ Ошибка подготовки контрольной карты: {e}")
+                        logger.warning(f"⚠️ Ошибка подготовки мультимодального ControlNet: {e}")
                         # Fallback: простая контрольная карта
                         hint = Image.new('L', (1024, 1024), color=255)
                         pipe_kwargs["image"] = hint
@@ -1227,3 +1279,68 @@ class Predictor(BasePredictor):
             logger.error(f"📊 Тип ошибки: {type(e).__name__}")
             logger.error(f"📊 Детали ошибки: {str(e)}")
             raise e
+
+    def select_optimal_controlnet(self, color_count):
+        """Выбирает оптимальную комбинацию ControlNet на основе сложности промпта"""
+        if color_count == 1:
+            return None  # Базовая модель справляется
+        elif color_count == 2:
+            return ["t2i_color"]  # Только цветовой контроль
+        elif color_count == 3:
+            return ["t2i_color", "shuffle"]  # Цвет + перемешивание
+        else:  # 4+ цветов
+            return ["t2i_color", "color_grid", "shuffle"]  # Полный контроль
+
+    def apply_multi_controlnet(self, prompt, controlnets, control_images):
+        """Применяет несколько ControlNet последовательно для максимальной точности"""
+        if not controlnets or not control_images:
+            return None
+        
+        try:
+            # Создаем комбинированную контрольную карту
+            combined_hint = self._create_combined_control_hint(control_images)
+            
+            # Применяем каждый ControlNet с соответствующими весами
+            pipe_kwargs = {}
+            for i, controlnet_type in enumerate(controlnets):
+                if controlnet_type == "t2i_color":
+                    pipe_kwargs["image"] = control_images[i] if i < len(control_images) else combined_hint
+                    pipe_kwargs["controlnet_conditioning_scale"] = 0.8
+                elif controlnet_type == "color_grid":
+                    pipe_kwargs["image"] = control_images[i] if i < len(control_images) else combined_hint
+                    pipe_kwargs["controlnet_conditioning_scale"] = 0.9
+                elif controlnet_type == "shuffle":
+                    pipe_kwargs["image"] = control_images[i] if i < len(control_images) else combined_hint
+                    pipe_kwargs["controlnet_conditioning_scale"] = 0.7
+            
+            return pipe_kwargs
+        except Exception as e:
+            logger.warning(f"⚠️ Ошибка применения мульти ControlNet: {e}")
+            return None
+
+    def _create_combined_control_hint(self, control_images):
+        """Создает комбинированную контрольную карту из нескольких источников"""
+        try:
+            if not control_images:
+                return None
+            
+            # Берем первое изображение как основу
+            base_image = control_images[0]
+            if len(control_images) == 1:
+                return base_image
+            
+            # Комбинируем несколько контрольных карт
+            combined = Image.new('L', base_image.size, 0)
+            for i, img in enumerate(control_images):
+                if img is not None:
+                    # Нормализуем и добавляем с весами
+                    weight = 1.0 / len(control_images)
+                    img_array = np.array(img.convert('L')).astype(np.float32) * weight
+                    combined_array = np.array(combined).astype(np.float32)
+                    combined_array += img_array
+                    combined = Image.fromarray(np.clip(combined_array, 0, 255).astype(np.uint8))
+            
+            return combined
+        except Exception as e:
+            logger.warning(f"⚠️ Ошибка создания комбинированной контрольной карты: {e}")
+            return control_images[0] if control_images else None

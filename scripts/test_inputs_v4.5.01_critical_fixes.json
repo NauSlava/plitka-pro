@@ -1,0 +1,223 @@
+{
+  "🎯 CRITICAL FIXES TESTING v4.5.01": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 100% red rubber tile, high quality, realistic texture",
+    "negative_prompt": "blurry, low quality, artifacts",
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "seed": 42,
+    "colormap": "random",
+    "granule_size": "medium",
+    "description": "Тестирование критических исправлений: AttributeError, валидация colormap, ControlNet методы",
+    "version": "v4.5.01",
+    "focus": "Критические исправления архитектуры"
+  },
+
+  "🔴 MONO COLOR - BASIC FUNCTIONALITY": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 100% red rubber tile, high quality, realistic texture",
+    "negative_prompt": "missing red, blurry, low quality, artifacts",
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "seed": 42,
+    "colormap": "random",
+    "granule_size": "medium",
+    "test_purpose": "Базовая функциональность моно-цветов"
+  },
+
+  "🔴🔵 DUO COLOR - ATTRIBUTEERROR FIX": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 50% red, 50% blue rubber tile, grid pattern, scattered dots, realistic texture",
+    "negative_prompt": "missing red, missing blue, blurry, low quality, vertical stripes, solid bands",
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "seed": 123,
+    "colormap": "grid",
+    "granule_size": "medium",
+    "test_purpose": "Тестирование исправления AttributeError для дуо-цветов"
+  },
+
+  "🔴🔵🔵 TRIO COLOR - CONTROLNET METHODS": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 40% red, 30% blue, 30% dkgreen rubber tile, radial pattern, natural distribution",
+    "negative_prompt": "missing red, missing blue, missing dkgreen, blurry, low quality, circular bands",
+    "num_inference_steps": 30,
+    "guidance_scale": 8.0,
+    "seed": 456,
+    "colormap": "radial",
+    "granule_size": "medium",
+    "test_purpose": "Тестирование методов ControlNet для трио-цветов"
+  },
+
+  "🌈 MULTI COLOR - COMPLEX CONTROLNET": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 30% red, 30% blue, 20% dkgreen, 20% yellow rubber tile, granular pattern, realistic granules",
+    "negative_prompt": "missing red, missing blue, missing dkgreen, missing yellow, blurry, low quality, solid areas",
+    "num_inference_steps": 35,
+    "guidance_scale": 8.5,
+    "seed": 789,
+    "colormap": "granular",
+    "granule_size": "medium",
+    "test_purpose": "Тестирование сложного мультимодального ControlNet"
+  },
+
+  "🎨 RGBA COLORMAP VALIDATION": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 60% red, 40% blue rubber tile, random pattern, organic texture, high quality",
+    "negative_prompt": "missing red, missing blue, blurry, low quality, artifacts",
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "seed": 101,
+    "colormap": "random",
+    "granule_size": "medium",
+    "test_purpose": "Тестирование валидации RGBA colormap"
+  },
+
+  "🔧 CONTROLNET T2I_COLOR TEST": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 70% red, 30% blue rubber tile, grid pattern, precise color control",
+    "negative_prompt": "missing red, missing blue, blurry, low quality, color bleeding",
+    "num_inference_steps": 30,
+    "guidance_scale": 8.0,
+    "seed": 202,
+    "colormap": "grid",
+    "granule_size": "small",
+    "test_purpose": "Тестирование ControlNet t2i_color"
+  },
+
+  "🔧 CONTROLNET COLOR_GRID TEST": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 50% dkgreen, 50% yellow rubber tile, grid pattern, structured layout",
+    "negative_prompt": "missing green, missing yellow, blurry, low quality, unstructured",
+    "num_inference_steps": 30,
+    "guidance_scale": 8.0,
+    "seed": 303,
+    "colormap": "grid",
+    "granule_size": "medium",
+    "test_purpose": "Тестирование ControlNet color_grid"
+  },
+
+  "🔧 CONTROLNET SHUFFLE TEST": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 40% red, 40% blue, 20% green rubber tile, random pattern, shuffled colors",
+    "negative_prompt": "missing red, missing blue, missing green, blurry, low quality, organized",
+    "num_inference_steps": 30,
+    "guidance_scale": 8.0,
+    "seed": 404,
+    "colormap": "random",
+    "granule_size": "medium",
+    "test_purpose": "Тестирование ControlNet shuffle"
+  },
+
+  "🔧 CONTROLNET SOFTEDGE TEST": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 60% red, 40% blue rubber tile, soft edges, natural transitions",
+    "negative_prompt": "missing red, missing blue, blurry, low quality, hard edges",
+    "num_inference_steps": 30,
+    "guidance_scale": 8.0,
+    "seed": 505,
+    "colormap": "radial",
+    "granule_size": "large",
+    "test_purpose": "Тестирование ControlNet softedge"
+  },
+
+  "🔧 CONTROLNET CANNY TEST": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 50% red, 50% blue rubber tile, defined edges, clear boundaries",
+    "negative_prompt": "missing red, missing blue, blurry, low quality, undefined edges",
+    "num_inference_steps": 30,
+    "guidance_scale": 8.0,
+    "seed": 606,
+    "colormap": "grid",
+    "granule_size": "small",
+    "test_purpose": "Тестирование ControlNet canny"
+  },
+
+  "🎯 GRANULE SIZE VARIATIONS": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 50% red, 50% blue rubber tile, granular pattern, realistic texture",
+    "negative_prompt": "missing red, missing blue, blurry, low quality, unrealistic granules",
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "seed": 707,
+    "colormap": "granular",
+    "granule_size": "small",
+    "test_purpose": "Тестирование малых гранул"
+  },
+
+  "🎯 GRANULE SIZE VARIATIONS LARGE": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 50% red, 50% blue rubber tile, granular pattern, realistic texture",
+    "negative_prompt": "missing red, missing blue, blurry, low quality, unrealistic granules",
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "seed": 808,
+    "colormap": "granular",
+    "granule_size": "large",
+    "test_purpose": "Тестирование больших гранул"
+  },
+
+  "🎯 HIGH QUALITY PRODUCTION": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 30% red, 30% blue, 20% dkgreen, 20% yellow rubber tile, high quality, production ready, realistic texture",
+    "negative_prompt": "missing red, missing blue, missing green, missing yellow, blurry, low quality, artifacts, unrealistic",
+    "num_inference_steps": 40,
+    "guidance_scale": 9.0,
+    "seed": 909,
+    "colormap": "random",
+    "granule_size": "medium",
+    "test_purpose": "Тестирование высокого качества для продакшена"
+  },
+
+  "🎯 EDGE CASE - MINIMAL COLORS": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 90% red, 10% blue rubber tile, subtle pattern, realistic texture",
+    "negative_prompt": "missing red, missing blue, blurry, low quality, dominant blue",
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "seed": 111,
+    "colormap": "random",
+    "granule_size": "medium",
+    "test_purpose": "Тестирование крайнего случая - минимальные цвета"
+  },
+
+  "🎯 EDGE CASE - MAXIMUM COLORS": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 25% red, 25% blue, 25% dkgreen, 25% yellow rubber tile, complex pattern, realistic texture",
+    "negative_prompt": "missing red, missing blue, missing green, missing yellow, blurry, low quality, chaotic",
+    "num_inference_steps": 40,
+    "guidance_scale": 9.0,
+    "seed": 222,
+    "colormap": "random",
+    "granule_size": "medium",
+    "test_purpose": "Тестирование крайнего случая - максимальные цвета"
+  },
+
+  "🎯 SEED CONSISTENCY TEST": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 50% red, 50% blue rubber tile, grid pattern, consistent results",
+    "negative_prompt": "missing red, missing blue, blurry, low quality, inconsistent",
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "seed": 333,
+    "colormap": "grid",
+    "granule_size": "medium",
+    "test_purpose": "Тестирование консистентности с одинаковым seed"
+  },
+
+  "🎯 SEED CONSISTENCY TEST REPEAT": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 50% red, 50% blue rubber tile, grid pattern, consistent results",
+    "negative_prompt": "missing red, missing blue, blurry, low quality, inconsistent",
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "seed": 333,
+    "colormap": "grid",
+    "granule_size": "medium",
+    "test_purpose": "Повторное тестирование консистентности с тем же seed"
+  },
+
+  "🎯 GUIDANCE SCALE VARIATIONS": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 50% red, 50% blue rubber tile, grid pattern, high guidance",
+    "negative_prompt": "missing red, missing blue, blurry, low quality, low guidance",
+    "num_inference_steps": 25,
+    "guidance_scale": 10.0,
+    "seed": 444,
+    "colormap": "grid",
+    "granule_size": "medium",
+    "test_purpose": "Тестирование высокого guidance_scale"
+  },
+
+  "🎯 INFERENCE STEPS VARIATIONS": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 50% red, 50% blue rubber tile, grid pattern, high quality",
+    "negative_prompt": "missing red, missing blue, blurry, low quality, low steps",
+    "num_inference_steps": 50,
+    "guidance_scale": 7.5,
+    "seed": 555,
+    "colormap": "grid",
+    "granule_size": "medium",
+    "test_purpose": "Тестирование высокого количества inference_steps"
+  }
+}
