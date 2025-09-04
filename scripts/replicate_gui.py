@@ -33,6 +33,28 @@ except ImportError:
     print("⚠️ Модуль 'hashlib' недоступен. Хеши будут генерироваться по умолчанию.")
 
 
+def compare_versions(version1: str, version2: str) -> int:
+    """Сравнивает версии. Возвращает -1 если version1 < version2, 0 если равны, 1 если version1 > version2"""
+    def version_tuple(v):
+        # Убираем 'v' и разбиваем на части
+        v = v.replace('v', '')
+        parts = v.split('.')
+        return tuple(int(part) for part in parts)
+    
+    try:
+        v1_tuple = version_tuple(version1)
+        v2_tuple = version_tuple(version2)
+        if v1_tuple < v2_tuple:
+            return -1
+        elif v1_tuple > v2_tuple:
+            return 1
+        else:
+            return 0
+    except (ValueError, IndexError):
+        # Если не можем распарсить, сравниваем как строки
+        return -1 if version1 < version2 else (1 if version1 > version2 else 0)
+
+
 def load_env_token() -> Optional[str]:
     token = os.getenv("REPLICATE_API_TOKEN")
     if token:
@@ -734,14 +756,14 @@ class App:
         print("🔄 Инициализация App...")
         self.root = root
         root.title("Replicate Test Runner - версия определяется автоматически")
-        root.geometry("1400x900")  # Делаем окно шире и выше для лучшего отображения параметров
+        root.geometry("1600x1000")  # Делаем окно еще шире и выше для лучшего отображения
         print("✅ Основные параметры окна установлены")
 
         self.ui_queue: "queue.Queue[str]" = queue.Queue()
         self.controls_locked: bool = False
         
         # Текущая версия (инициализируем автоматически)
-        self.current_version = "unknown"  # Будет определено автоматически
+        self.current_version = "v4.5.01"  # Принудительно используем v4.5.01
         self.current_hash = "unknown"     # Хеш будет определен автоматически
         
         # Автоматически обновляем версию и хеш при запуске (после создания всех UI элементов)
@@ -799,12 +821,12 @@ class App:
         left.pack(side=tk.LEFT, fill=tk.Y)
 
         ttk.Label(left, text="Presets").pack(anchor=tk.W)
-        self.listbox = tk.Listbox(left, selectmode=tk.EXTENDED, height=12)
+        self.listbox = tk.Listbox(left, selectmode=tk.EXTENDED, height=15, width=60, font=("Arial", 9))
         self.listbox.pack(fill=tk.Y, expand=False)
         
         # Область отображения параметров выбранного пресета
         ttk.Label(left, text="Preset Parameters", font=("Arial", 10, "bold")).pack(anchor=tk.W, pady=(8,2))
-        self.preset_params_text = tk.Text(left, height=25, width=50, wrap=tk.WORD, state=tk.DISABLED)
+        self.preset_params_text = tk.Text(left, height=30, width=60, wrap=tk.WORD, state=tk.DISABLED, font=("Arial", 8))
         self.preset_params_text.pack(fill=tk.X, expand=False, pady=(0,6))
 
         # Buttons
@@ -877,7 +899,7 @@ class App:
         total_presets = len(self.presets)
         
         for name, preset_data in self.presets.items():
-            is_valid, errors = self.validate_preset(name, preset_data)
+            is_valid, errors = self.validate_preset(name, preset_data, self.current_version)
             if is_valid:
                 valid_presets += 1
                 self.listbox.insert(tk.END, name)
@@ -1197,23 +1219,38 @@ class App:
             if not version:
                 version = self._determine_version_fallback()
             
+            # Принудительно устанавливаем v4.5.01 для неизвестных версий
+            if not version or version == "unknown":
+                version = "v4.5.01"
+                self.append_log(f"⚠️ Версия не определена, принудительно используем {version}\n")
+            
             # Маппинг версий к файлам пресетов
             version_mapping = {
+                "v4.5.01": "test_inputs_v4.5.01_critical_fixes.json",  # Critical Architecture Fixes
+                "v4.4.61": "test_inputs_v4.4.61_extended.json",  # Multimodal ControlNet + Production Ready
+                "v4.4.60": "test_inputs_v4.4.60_extended.json",  # Extended testing
+                "v4.4.59": "test_inputs_v4.4.59.json",  # Previous version
+                "v4.4.58": "test_inputs_v4.4.58.json",  # Previous version
                 "v4.4.56": "test_inputs_v4.4.56.json",  # Color Grid Adapter + ControlNet
                 "v4.4.45": "test_inputs_v4.4.45.json",  # Улучшенная LoRA загрузка
                 "v4.4.39": "test_inputs_v4.4.39.json",  # Базовая версия
             }
             
+            # Если версия неизвестна или "unknown", принудительно используем v4.5.01
+            if version not in version_mapping or version == "unknown":
+                self.append_log(f"⚠️ Версия {version} не найдена или неизвестна, принудительно используем v4.5.01\n")
+                version = "v4.5.01"
+            
             # Получаем имя файла для версии
-            filename = version_mapping.get(version, "test_inputs_v4.4.39.json")
+            filename = version_mapping.get(version, "test_inputs_v4.5.01_critical_fixes.json")
             presets_path = os.path.join(os.path.dirname(__file__), filename)
             
             # Проверяем существование файла
             if os.path.exists(presets_path):
                 return presets_path
             else:
-                # Fallback к базовому файлу
-                fallback_path = os.path.join(os.path.dirname(__file__), "test_inputs_v4.4.39.json")
+                # Fallback к файлу v4.5.01
+                fallback_path = os.path.join(os.path.dirname(__file__), "test_inputs_v4.5.01_critical_fixes.json")
                 if os.path.exists(fallback_path):
                     self.append_log(f"⚠️ Файл пресетов для версии {version} не найден, используем базовый\n")
                     return fallback_path
@@ -1253,13 +1290,23 @@ class App:
             total_presets = len(self.presets)
             
             for name, preset_data in self.presets.items():
-                is_valid, errors = self.validate_preset(name, preset_data)
+                # Используем текущую версию для валидации
+                is_valid, errors = self.validate_preset(name, preset_data, self.current_version)
                 if is_valid:
                     valid_presets += 1
-                    self.listbox.insert(tk.END, name)
+                    self.listbox.insert(tk.END, f"✅ {name}")
                 else:
-                    # Добавляем проблемный пресет с пометкой
-                    self.listbox.insert(tk.END, f"❌ {name}")
+                    # Определяем тип ошибок
+                    critical_errors = [e for e in errors if e.startswith("❌")]
+                    warnings = [e for e in errors if e.startswith("⚠️")]
+                    
+                    if critical_errors:
+                        # Критические ошибки
+                        self.listbox.insert(tk.END, f"❌ {name}")
+                    else:
+                        # Только предупреждения
+                        self.listbox.insert(tk.END, f"⚠️ {name}")
+                    
                     self.append_log(f"⚠️ Пресет '{name}' содержит ошибки:\n")
                     for error in errors:
                         self.append_log(f"  {error}\n")
@@ -1275,9 +1322,32 @@ class App:
         except Exception as e:
             self.append_log(f"❌ Ошибка перезагрузки пресетов: {e}\n")
     
-    def validate_preset(self, preset_name: str, preset_data: dict) -> tuple[bool, list[str]]:
+    def _load_color_table(self) -> list[str]:
+        """Загружает таблицу цветов из файла colors_table.txt"""
+        try:
+            color_file = os.path.join(os.path.dirname(__file__), "..", "colors_table.txt")
+            if not os.path.exists(color_file):
+                # Fallback к стандартным цветам
+                return ["RED", "BLUE", "GREEN", "YELLOW", "ORANGE", "PINK", "WHITE", "BLACK", "GRAY", "BROWN"]
+            
+            with open(color_file, "r", encoding="utf-8") as f:
+                colors = [line.strip().upper() for line in f if line.strip()]
+            return colors
+        except Exception as e:
+            print(f"⚠️ Ошибка загрузки таблицы цветов: {e}")
+            # Fallback к стандартным цветам
+            return ["RED", "BLUE", "GREEN", "YELLOW", "ORANGE", "PINK", "WHITE", "BLACK", "GRAY", "BROWN"]
+    
+    def validate_preset(self, preset_name: str, preset_data: dict, version: str = None) -> tuple[bool, list[str]]:
         """Валидирует пресет на соответствие требованиям"""
         errors = []
+        
+        # Загружаем таблицу цветов
+        valid_colors = self._load_color_table()
+        
+        # Определяем версию для валидации
+        if version is None:
+            version = getattr(self, 'current_version', 'v4.5.01')
         
         try:
             # Проверяем наличие prompt
@@ -1287,8 +1357,12 @@ class App:
             
             prompt = preset_data['prompt']
             
-            # Парсим цвета и их соотношения
-            color_parts = [p.strip() for p in prompt.split(',') if p.strip()]
+            # Парсим цвета и их соотношения (учитываем токены <s0><s1>)
+            # Убираем токены и триггеры для парсинга цветов
+            clean_prompt = prompt.replace('ohwx_rubber_tile', '').replace('<s0><s1>', '').strip()
+            # Убираем общие слова, которые не являются цветами
+            clean_prompt = clean_prompt.replace('rubber tile', '').replace('high quality', '').replace('realistic texture', '').replace('grid pattern', '').replace('random pattern', '').replace('radial pattern', '').replace('granular pattern', '').strip()
+            color_parts = [p.strip() for p in clean_prompt.split(',') if p.strip() and '%' in p]
             colors = []
             total_percentage = 0
             
@@ -1303,29 +1377,53 @@ class App:
                             errors.append(f"❌ Неверный процент для {color_name}: {percent}%")
                             continue
                         
+                        # Проверяем, что цвет есть в таблице
+                        if color_name.upper() not in valid_colors:
+                            errors.append(f"❌ Неизвестный цвет '{color_name}'. Доступные цвета: {', '.join(valid_colors[:10])}...")
+                            continue
+                        
                         colors.append({"name": color_name, "percentage": percent})
                         total_percentage += percent
                     else:
                         # Если нет процентов, считаем как 100%
-                        colors.append({"name": part.strip(), "percentage": 100})
+                        color_name = part.strip()
+                        if color_name.upper() not in valid_colors:
+                            errors.append(f"❌ Неизвестный цвет '{color_name}'. Доступные цвета: {', '.join(valid_colors[:10])}...")
+                            continue
+                        colors.append({"name": color_name, "percentage": 100})
                         total_percentage = 100
                         break
                 except Exception as e:
                     errors.append(f"❌ Ошибка парсинга '{part}': {e}")
             
-            # Проверяем количество цветов
-            if len(colors) > 4:
-                errors.append(f"❌ Слишком много цветов: {len(colors)} (максимум: 4)")
+            # Проверяем количество цветов (более мягкая проверка)
+            if len(colors) > 5:
+                errors.append(f"❌ Слишком много цветов: {len(colors)} (максимум: 5)")
+            elif len(colors) > 4:
+                errors.append(f"⚠️ Много цветов: {len(colors)} (рекомендуется: до 4)")
             
             # Проверяем сумму процентов
             if total_percentage != 100:
                 errors.append(f"❌ Сумма процентов не равна 100%: {total_percentage}%")
             
-            # Проверяем другие обязательные поля
-            required_fields = ['seed', 'steps', 'guidance', 'lora_scale']
+            # Проверяем другие обязательные поля (адаптивно для разных версий)
+            # Для v4.5.01 и новее используем новые поля
+            if compare_versions(version, "v4.5.01") >= 0:
+                required_fields = ['seed', 'num_inference_steps', 'guidance_scale']
+                optional_fields = ['colormap', 'granule_size', 'negative_prompt']
+            else:
+                # Для старых версий используем старые поля
+                required_fields = ['seed', 'steps', 'guidance', 'lora_scale']
+                optional_fields = ['use_controlnet', 'description']
+            
             for field in required_fields:
                 if field not in preset_data:
                     errors.append(f"❌ Отсутствует обязательное поле '{field}'")
+            
+            # Проверяем опциональные поля
+            for field in optional_fields:
+                if field not in preset_data:
+                    errors.append(f"⚠️ Отсутствует опциональное поле '{field}'")
             
             return len(errors) == 0, errors
             
@@ -1357,15 +1455,15 @@ class App:
     def _display_single_preset(self, preset_name: str) -> None:
         """Отображает параметры одного пресета"""
         try:
-            # Убираем префикс ❌ если есть
-            clean_name = preset_name.replace("❌ ", "")
+            # Убираем префиксы ✅, ❌, ⚠️ если есть
+            clean_name = preset_name.replace("✅ ", "").replace("❌ ", "").replace("⚠️ ", "")
             
             # Получаем параметры пресета
             if clean_name in self.presets:
                 preset_data = self.presets[clean_name]
                 
                 # Валидируем пресет
-                is_valid, validation_errors = self.validate_preset(clean_name, preset_data)
+                is_valid, validation_errors = self.validate_preset(clean_name, preset_data, self.current_version)
                 
                 # Форматируем параметры для отображения
                 params_text = f"📋 Preset: {clean_name}\n"
@@ -1401,8 +1499,16 @@ class App:
                     params_text += f"\n🎨 АНАЛИЗ PROMPT:\n"
                     params_text += "-" * 20 + "\n"
                     
+                    # Показываем доступные цвета
+                    valid_colors = self._load_color_table()
+                    params_text += f"• Доступные цвета: {', '.join(valid_colors[:15])}...\n"
+                    
                     try:
-                        color_parts = [p.strip() for p in prompt.split(',') if p.strip()]
+                        # Убираем токены и триггеры для парсинга цветов
+                        clean_prompt = prompt.replace('ohwx_rubber_tile', '').replace('<s0><s1>', '').strip()
+                        # Убираем общие слова, которые не являются цветами
+                        clean_prompt = clean_prompt.replace('rubber tile', '').replace('high quality', '').replace('realistic texture', '').replace('grid pattern', '').replace('random pattern', '').replace('radial pattern', '').replace('granular pattern', '').strip()
+                        color_parts = [p.strip() for p in clean_prompt.split(',') if p.strip() and '%' in p]
                         colors = []
                         total_percentage = 0
                         
@@ -1417,6 +1523,13 @@ class App:
                         params_text += f"• Количество цветов: {len(colors)}\n"
                         params_text += f"• Сумма процентов: {total_percentage}%\n"
                         params_text += f"• Цвета: {', '.join([f'{c['percentage']}% {c['name']}' for c in colors])}\n"
+                        
+                        # Проверяем валидность цветов
+                        invalid_colors = [c['name'] for c in colors if c['name'].upper() not in valid_colors]
+                        if invalid_colors:
+                            params_text += f"❌ Неизвестные цвета: {', '.join(invalid_colors)}\n"
+                        else:
+                            params_text += f"✅ Все цвета валидны\n"
                         
                         if total_percentage != 100:
                             params_text += f"⚠️ Внимание: сумма не равна 100%\n"
@@ -1455,7 +1568,7 @@ class App:
             selected_presets = []
             for idx in selection:
                 preset_name = self.listbox.get(idx)
-                clean_name = preset_name.replace("❌ ", "")
+                clean_name = preset_name.replace("✅ ", "").replace("❌ ", "").replace("⚠️ ", "")
                 selected_presets.append(clean_name)
             
             # Форматируем информацию о множественном выборе
@@ -1475,7 +1588,7 @@ class App:
                     preset_data = self.presets[preset_name]
                     
                     # Проверяем валидность
-                    is_valid, _ = self.validate_preset(preset_name, preset_data)
+                    is_valid, _ = self.validate_preset(preset_name, preset_data, self.current_version)
                     status = "✅" if is_valid else "❌"
                     
                     # Краткая информация
@@ -1485,8 +1598,19 @@ class App:
                             prompt = prompt[:37] + "..."
                         params_text += f"   Prompt: {prompt}\n"
                     
-                    if 'steps' in preset_data and 'guidance' in preset_data:
-                        params_text += f"   Steps: {preset_data['steps']}, Guidance: {preset_data['guidance']}\n"
+                    # Адаптивное отображение параметров для разных версий
+                    if hasattr(self, 'current_version') and self.current_version and compare_versions(self.current_version, "v4.5.01") >= 0:
+                        if 'num_inference_steps' in preset_data and 'guidance_scale' in preset_data:
+                            params_text += f"   Steps: {preset_data['num_inference_steps']}, Guidance: {preset_data['guidance_scale']}\n"
+                        if 'colormap' in preset_data:
+                            params_text += f"   Colormap: {preset_data['colormap']}\n"
+                        if 'granule_size' in preset_data:
+                            params_text += f"   Granule Size: {preset_data['granule_size']}\n"
+                    else:
+                        if 'steps' in preset_data and 'guidance' in preset_data:
+                            params_text += f"   Steps: {preset_data['steps']}, Guidance: {preset_data['guidance']}\n"
+                        if 'lora_scale' in preset_data:
+                            params_text += f"   LoRA Scale: {preset_data['lora_scale']}\n"
                     
                     params_text += f"   Статус: {status}\n\n"
                 else:
@@ -1525,6 +1649,11 @@ class App:
         try:
             # Автоматически определяем версию из cog.yaml без зависимости от YAML
             new_version = self._extract_version_from_cog_yaml()
+            
+            # Принудительно устанавливаем v4.5.01 для неизвестных версий
+            if not new_version or new_version == "unknown":
+                new_version = "v4.5.01"
+                self.append_log(f"⚠️ Версия не определена, принудительно используем {new_version}\n")
             
             if new_version and new_version != self.current_version:
                 self.current_version = new_version
@@ -1830,8 +1959,10 @@ class App:
         items: List[Dict[str, Any]] = []
         for idx in sel:
             name = self.listbox.get(idx)
-            inputs = self.presets.get(name, {})
-            items.append({"name": name, "inputs": inputs})
+            # Убираем префиксы статуса
+            clean_name = name.replace("✅ ", "").replace("❌ ", "").replace("⚠️ ", "")
+            inputs = self.presets.get(clean_name, {})
+            items.append({"name": clean_name, "inputs": inputs})
         if not items and self.presets:
             # default to first preset if nothing selected
             name = list(self.presets.keys())[0]

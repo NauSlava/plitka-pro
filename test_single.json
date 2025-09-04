@@ -1,0 +1,1 @@
+{"prompt": "ohwx_rubber_tile <s0><s1> 100% red rubber tile, realistic texture", "negative_prompt": "missing red, blurry, low quality", "num_inference_steps": 20, "guidance_scale": 7.0}

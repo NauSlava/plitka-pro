@@ -2,7 +2,7 @@
 """
 Replicate Test Harness for Plitka Pro Project
 Version: v1.2.0
-Compatible with: Plitka Pro v4.4.56+
+Compatible with: Plitka Pro v4.5.01+ (Critical Architecture Fixes)
 Description: Comprehensive testing framework for Color Grid Adapter and ControlNet integration
 Author: Plitka Pro Development Team
 Date: 2025-09-02
@@ -41,7 +41,7 @@ def _load_env_token() -> Optional[str]:
 
 def _parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Replicate test harness with Color Grid Adapter testing and startup log monitoring")
-    parser.add_argument("--model", default="nauslava/plitka-pro-project:v4.4.56", help="Model ref 'owner/name[:version_or_tag]' (default: %(default)s)")
+    parser.add_argument("--model", default="nauslava/plitka-pro-project:v4.5.01", help="Model ref 'owner/name[:version_or_tag]' (default: %(default)s)")
     parser.add_argument("--preset", default=None, help="Preset name from JSON presets file")
     parser.add_argument("--version-id", default=None, help="Explicit 64-hex Replicate version id to use")
     parser.add_argument("--batch", default=None, help="Path to JSON file with presets to run as a batch")
@@ -487,7 +487,7 @@ def main() -> int:
     # Single run (optionally via named preset file)
     if args.preset:
         # default preset file name for current version
-        default_file = os.path.join(os.path.dirname(__file__), "test_inputs_v4.4.56.json")
+        default_file = os.path.join(os.path.dirname(__file__), "test_inputs_v4.5.01_critical_fixes.json")
         if not os.path.exists(default_file):
             print(f"Preset file not found: {default_file}")
             return 7

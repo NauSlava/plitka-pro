@@ -1,0 +1,145 @@
+[2025-09-04 08:26:50] Prediction id: h529rj8vdhrga0cs2crtxvytwr
+[2025-09-04 08:26:50] 🔍 Начинаем создание папки для результатов...
+[2025-09-04 08:26:50] 🔍 Текущий рабочий каталог: /home/papaandrey/plitka-pro-project
+[2025-09-04 08:26:50] 🔍 Автоматически определенные значения:
+[2025-09-04 08:26:50] 🔍 ver_for_hash: v4.5.01
+[2025-09-04 08:26:50] 🔐 forced_hash: 32cbff02
+[2025-09-04 08:26:50] 🔄 Папка создана: /home/papaandrey/plitka-pro-project/replicate_runs/32cbff02/run_20250904_082649
+[2025-09-04 08:26:50] 🔄 _current_run_dir установлен: /home/papaandrey/plitka-pro-project/replicate_runs/32cbff02/run_20250904_082649
+[2025-09-04 08:26:50] 🔐 Создаем папку с хешем: 32cbff02
+[2025-09-04 08:26:50] 📁 Создана папка: /home/papaandrey/plitka-pro-project/replicate_runs/32cbff02/run_20250904_082649
+[2025-09-04 08:26:50] 🔐 Хеш версии: 32cbff02
+[2025-09-04 08:26:50] 🔍 Базовая папка: /home/papaandrey/plitka-pro-project/replicate_runs/32cbff02
+[2025-09-04 08:26:50] 🔍 Полный путь: /home/papaandrey/plitka-pro-project/replicate_runs/32cbff02/run_20250904_082649
+[2025-09-04 08:26:50] ✅ Папка успешно создана и существует
+[2025-09-04 08:26:50] INFO:coglet:prediction started: id=h529rj8vdhrga0cs2crtxvytwr
+WARNING unknown input field ignored: colormap
+[2025-09-04 08:26:50] 
+✅ Startup phase completed. Proceeding to completion...
+[2025-09-04 08:26:56] WARNING unknown input field ignored: granule_size
+WARNING unknown input field ignored: guidance_scale
+WARNING unknown input field ignored: num_inference_steps
+WARNING unknown input field ignored: test_purpose
+INFO:predict:🚀 STARTUP_SNAPSHOT_START
+INFO:predict:🧭 MODEL_START v4.5.01 | device=cuda | diffusers=0.21.4 | torch=2.1.0+cu121
+INFO:predict:📊 GPU: Tesla T4
+INFO:predict:💾 GPU Memory: 14.6 GB
+INFO:predict:🔧 SDXL Base: unknown
+INFO:predict:🎨 LoRA: unknown (rank: 32)
+INFO:predict:🔤 TI: unknown (tokens: <s0><s1>)
+INFO:predict:⚙️ Scheduler: DPMSolverMultistepScheduler
+INFO:predict:🎭 VAE: AutoencoderKL
+INFO:predict:🎯 Prompt: ohwx_rubber_tile <s0><s1> 50% red, 50% blue rubber tile, grid pattern, scattered dots, realistic texture
+INFO:predict:🚫 Negative Prompt: missing red, missing blue, blurry, low quality, vertical stripes, solid bands
+INFO:predict:🎲 Seed: 123
+INFO:predict:📊 Steps: 20 (базовый)
+INFO:predict:🎚️ Guidance: 7.0 (базовый)
+INFO:predict:🔧 LoRA Scale: 0.7 (базовый)
+INFO:predict:🎨 Адаптивные параметры будут рассчитаны на основе количества цветов
+INFO:predict:🚀 STARTUP_SNAPSHOT_END
+INFO:predict:🎨 Начало генерации изображения...
+INFO:predict:📝 Входной промпт: ohwx_rubber_tile <s0><s1> 50% red, 50% blue rubber tile, grid pattern, scattered dots, realistic texture
+INFO:predict:🚫 Входной негативный промпт: missing red, missing blue, blurry, low quality, vertical stripes, solid bands
+INFO:predict:🎲 Входной сид: 123
+INFO:predict:🎨 Генерация изображения...
+INFO:predict:📝 Полный промпт: ohwx_rubber_tile <s0><s1> 50% red, 50% blue rubber tile, grid pattern, scattered dots, realistic texture, photorealistic rubber tile, high quality, detailed texture, professional photography, sharp focus
+INFO:predict:🚫 Финальный негативный промпт: missing red, missing blue, blurry, low quality, vertical stripes, solid bands
+INFO:predict:🎲 Финальный сид: 123
+INFO:predict:🔧 Устройство: cuda
+INFO:predict:🎨 Анализ сложности промпта для адаптивных параметров...
+INFO:predict:🎨 Обнаружено цветов в промпте: 2
+INFO:predict:🎯 Адаптивные параметры для 2 цветов: steps=25, guidance=7.5
+INFO:predict:🚀 Запуск pipeline для генерации с адаптивными параметрами...
+INFO:predict:🎯 Автоматически включаем мультимодальный ControlNet для 2 цветов: ['t2i_color']
+INFO:predict:🔗 Загрузка ControlNet SoftEdge для SDXL...
+WARNING:predict:⚠️ ControlNet недоступен: diffusers/controlnet-softedge-sdxl-1.0 is not a local folder and is not a valid model identifier listed on 'https://huggingface.co/models'
+If this is a private repository, make sure to pass a token having permission to this repo with `use_auth_token` or log in with `huggingface-cli login`.
+INFO:predict:🚀 Финальный сегмент: единый проход без callback
+
+  0%|          | 0/25 [00:00<?, ?it/s]
+  4%|▍         | 1/25 [00:01<00:25,  1.05s/it]
+  8%|▊         | 2/25 [00:02<00:23,  1.04s/it]
+ 12%|█▏        | 3/25 [00:03<00:22,  1.03s/it]
+ 16%|█▌        | 4/25 [00:04<00:21,  1.04s/it]
+ 20%|██        | 5/25 [00:05<00:20,  1.05s/it]
+[2025-09-04 08:27:03]  24%|██▍       | 6/25 [00:06<00:19,  1.05s/it]
+ 28%|██▊       | 7/25 [00:07<00:18,  1.05s/it]
+ 32%|███▏      | 8/25 [00:08<00:18,  1.06s/it]
+ 36%|███▌      | 9/25 [00:09<00:17,  1.06s/it]
+ 40%|████      | 10/25 [00:10<00:16,  1.07s/it]
+ 44%|████▍     | 11/25 [00:11<00:15,  1.07s/it]
+[2025-09-04 08:27:09]  48%|████▊     | 12/25 [00:12<00:14,  1.08s/it]
+ 52%|█████▏    | 13/25 [00:13<00:13,  1.08s/it]
+ 56%|█████▌    | 14/25 [00:14<00:11,  1.09s/it]
+ 60%|██████    | 15/25 [00:16<00:10,  1.09s/it]
+ 64%|██████▍   | 16/25 [00:17<00:09,  1.10s/it]
+ 68%|██████▊   | 17/25 [00:18<00:08,  1.10s/it]
+[2025-09-04 08:27:16]  72%|███████▏  | 18/25 [00:19<00:07,  1.11s/it]
+ 76%|███████▌  | 19/25 [00:20<00:06,  1.11s/it]
+ 80%|████████  | 20/25 [00:21<00:05,  1.12s/it]
+ 84%|████████▍ | 21/25 [00:22<00:04,  1.12s/it]
+ 88%|████████▊ | 22/25 [00:23<00:03,  1.12s/it]
+ 92%|█████████▏| 23/25 [00:25<00:02,  1.13s/it]
+[2025-09-04 08:27:23]  96%|█████████▌| 24/25 [00:26<00:01,  1.13s/it]
+100%|██████████| 25/25 [00:27<00:00,  1.13s/it]
+100%|██████████| 25/25 [00:27<00:00,  1.09s/it]
+INFO:predict:✅ Финальная генерация завершена
+INFO:predict:📊 Размер сгенерированного изображения: (1024, 1024)
+INFO:predict:✅ FINAL_READY /tmp/final.png
+WARNING:predict:⚠️ Недопустимый цвет в промпте: blue rubber tile
+INFO:predict:🎨 Создание colormap: 1 цветов, паттерн: random, гранулы: medium
+INFO:predict:✅ Оптимизированный colormap создан: (1024, 1024)
+INFO:predict:📊 Статистика паттернов: {'random': 1, 'grid': 0, 'radial': 0, 'granular': 0}
+INFO:predict:📊 Статистика размеров гранул: {'small': 0, 'medium': 1, 'large': 0}
+ERROR:predict:❌ Ошибка валидации colormap: operands could not be broadcast together with shapes (1024,1024,4) (3,) 
+WARNING:predict:⚠️ Colormap не соответствует промпту, пересоздаем...
+INFO:predict:🔧 Принудительная пересборка colormap...
+INFO:predict:✅ Colormap пересобран для цветов: ['red', 'blue']
+INFO:predict:🎨 ОПТИМИЗИРОВАННЫЙ COLORMAP_READY /tmp/colormap.png
+INFO:predict:📊 Размер colormap: (1024, 1024)
+INFO:predict:📋 ЛЕГЕНДА_READY /tmp/legend.png
+INFO:predict:🧹 Память очищена
+INFO:predict:📄 JSON_READY /tmp/generation_data.json
+INFO:predict:✅ Изображение успешно сгенерировано!
+INFO:predict:📊 Color Grid Adapter статистика:
+INFO:predict:   - Всего генераций: 2
+INFO:predict:   - ControlNet использован: 1 (50.0%)
+INFO:predict:   - Популярный паттерн: random
+INFO:predict:   - Популярный размер гранул: medium
+INFO:coglet:prediction completed: id=h529rj8vdhrga0cs2crtxvytwr
+[2025-09-04 08:27:23] 🔄 Загрузка изображения 0: https://replicate.delivery/czjl/XXirXDk5eVwoW6Jj2PmMJGStBrTqslQxZelKTmnb2NJ6UtRVA/final.png
+[2025-09-04 08:27:24] ✅ Изображение сохранено: /home/papaandrey/plitka-pro-project/replicate_runs/32cbff02/run_20250904_082649/out_0.png
+[2025-09-04 08:27:24] 🔄 Загрузка изображения 1: https://replicate.delivery/czjl/fDBPIUv9h6VyOyRqGyEMjbeN345umqCvvaJm7vWgDeM0pajqA/colormap.png
+[2025-09-04 08:27:24] ✅ Изображение сохранено: /home/papaandrey/plitka-pro-project/replicate_runs/32cbff02/run_20250904_082649/out_1.png
+[2025-09-04 08:27:24] 🔄 Загрузка изображения 2: https://replicate.delivery/czjl/SSff1agCEruzDkLW1FWJAM4Z6p687ikpgkjP5NQweXL1pajqA/legend.png
+[2025-09-04 08:27:25] ✅ Изображение сохранено: /home/papaandrey/plitka-pro-project/replicate_runs/32cbff02/run_20250904_082649/out_2.png
+[2025-09-04 08:27:25] 
+=== Final status: succeeded
+[2025-09-04 08:27:25] [
+  "https://replicate.delivery/czjl/XXirXDk5eVwoW6Jj2PmMJGStBrTqslQxZelKTmnb2NJ6UtRVA/final.png",
+  "https://replicate.delivery/czjl/fDBPIUv9h6VyOyRqGyEMjbeN345umqCvvaJm7vWgDeM0pajqA/colormap.png",
+  "https://replicate.delivery/czjl/SSff1agCEruzDkLW1FWJAM4Z6p687ikpgkjP5NQweXL1pajqA/legend.png"
+]
+[2025-09-04 08:27:25] 🔄 _save_outputs вызван
+[2025-09-04 08:27:25] 💾 Сохраняем результаты в папку: /home/papaandrey/plitka-pro-project/replicate_runs/32cbff02/run_20250904_082649
+[2025-09-04 08:27:25] 🔐 ПРИНУДИТЕЛЬНО используем хеш: 89fdd926
+[2025-09-04 08:27:25] ✅ Используем подготовленную папку: /home/papaandrey/plitka-pro-project/replicate_runs/32cbff02/run_20250904_082649
+[2025-09-04 08:27:25] 🔄 Начинаем обработку 3 выходных файлов...
+[2025-09-04 08:27:25] 📁 Папка для сохранения: /home/papaandrey/plitka-pro-project/replicate_runs/32cbff02/run_20250904_082649
+[2025-09-04 08:27:26] 📥 Скачан файл 0: out_0.png
+[2025-09-04 08:27:26] 📥 Скачан файл 1: out_1.png
+[2025-09-04 08:27:26] 📥 Скачан файл 2: out_2.png
+[2025-09-04 08:27:26] 📁 Найдено файлов для переименования: 3
+[2025-09-04 08:27:26] 📝 Промпт для именования: 'ohwx_rubber_tile_<s0><s1>_50pct_red,_50pct_blue_ru'
+[2025-09-04 08:27:26] ⏰ Временная метка из папки: 20250904_082649
+[2025-09-04 08:27:27] 🔐 Автоматически определенный хеш версии: 315aaaea
+[2025-09-04 08:27:27] ✅ FINAL saved as: 20250904_082649_ohwx_rubber_tile_<s0><s1>_50pct_red,_50pct_blue_ru_final_315aaaea.png
+[2025-09-04 08:27:27] 📁 Путь: /home/papaandrey/plitka-pro-project/replicate_runs/32cbff02/run_20250904_082649/20250904_082649_ohwx_rubber_tile_<s0><s1>_50pct_red,_50pct_blue_ru_final_315aaaea.png
+[2025-09-04 08:27:27] 🎨 COLORMAP saved as: 20250904_082649_ohwx_rubber_tile_<s0><s1>_50pct_red,_50pct_blue_ru_colormap_315aaaea.png
+[2025-09-04 08:27:27] 📁 Путь: /home/papaandrey/plitka-pro-project/replicate_runs/32cbff02/run_20250904_082649/20250904_082649_ohwx_rubber_tile_<s0><s1>_50pct_red,_50pct_blue_ru_colormap_315aaaea.png
+[2025-09-04 08:27:27] 
+################ PRESET: 🔴🔵🔵 TRIO COLOR - CONTROLNET METHODS ################
+[2025-09-04 08:27:27] 🔄 _run_single() вызван
+[2025-09-04 08:27:27] 
+=== Creating prediction: nauslava/plitka-pro-project (version: 32cbff024118a62304c89c1d5246664b37652e308d024d82e35d10b316d881a5)
+Inputs: {"prompt": "ohwx_rubber_tile <s0><s1> 40% red, 30% blue, 30% dkgreen rubber tile, radial pattern, natural distribution", "negative_prompt": "missing red, missing blue, missing dkgreen, blurry, low quality, circular bands", "num_inference_steps": 30, "guidance_scale": 8.0, "seed": 456, "colormap": "radial", "granule_size": "medium", "test_purpose": "Тестирование методов ControlNet для трио-цветов"}

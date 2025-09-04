@@ -1,0 +1,8 @@
+[
+  {
+    "name": "MONO_COLOR_GRID_TEST",
+    "description": "Тест моно-цвета с grid паттерном для проверки исправления colormap",
+    "prompt": "ohwx_rubber_tile <s0><s1> 100% red rubber tile, grid pattern, realistic texture",
+    "negative_prompt": "missing red, blurry, low quality, vertical stripes",
+    "negative_prompt": "missing red, blurry, low quality, vertical stripes",
+    "negative_prompt": "missing red, blurry, low quality, vertical stripes",

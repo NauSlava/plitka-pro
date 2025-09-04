@@ -1,562 +1,1329 @@
-# predict.py - Optimized Version with Dual Pipeline Architecture
-from cog import BasePredictor, Input, Path
-from typing import List, Dict, Any, Tuple, Optional
-import json
+# predict.py - Основной файл предсказания для модели "nauslava/plitka-pro-project:v4.4.56"
+# Использует НАШУ обученную модель с LoRA и Textual Inversion (ИСПРАВЛЕНИЕ ПЕРЕПУТАННЫХ РАЗМЕРОВ)
+
 import os
-import random
-import time
-import logging
-import warnings
-from concurrent.futures import ThreadPoolExecutor
-
-import numpy as np
-from PIL import Image
-import cv2
-
 import torch
-from safetensors.torch import load_file as load_safetensors
-from diffusers import (
-    StableDiffusionXLControlNetPipeline,
-    StableDiffusionXLPipeline,
-    ControlNetModel,
-    EulerDiscreteScheduler,
-)
+import random
+import gc
+import json
+import logging
+import time
+import math
+from typing import Optional, List, Dict, Any, Iterator
+from PIL import Image, ImageDraw, ImageColor
+import numpy as np
+from pathlib import Path
 
-# Максимально агрессивное подавление предупреждений
-import os
-os.environ['PYTHONWARNINGS'] = 'ignore'
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+# Добавляем импорты для Color Grid Adapter
+import numpy as np
+from PIL import Image, ImageDraw, ImageFilter
+import random
 
-warnings.filterwarnings("ignore", category=FutureWarning)
-warnings.filterwarnings("ignore", category=UserWarning)
-warnings.filterwarnings("ignore", category=DeprecationWarning)
-warnings.filterwarnings("ignore", message=".*torch.utils._pytree.*")
-warnings.filterwarnings("ignore", message=".*_register_pytree_node.*")
-warnings.filterwarnings("ignore", message=".*")
+class ColorManager:
+    """Централизованное управление цветами для устранения рассинхронизации модулей"""
+    
+    def __init__(self):
+        # Таблица соответствий русских и английских названий цветов
+        self.color_table = {
+            "Бежевый": "BEIGE",
+            "Бело-зеленый": "WHTGRN", 
+            "Белый": "WHITE",
+            "Бирюзовый": "TURQSE",
+            "Голубой": "SKYBLUE",
+            "Желтый": "YELLOW",
+            "Жемчужный": "PEARL",
+            "Зеленая трава": "GRSGRN",
+            "Зеленое яблоко": "GRNAPL",
+            "Изумрудный": "EMERALD",
+            "Коричневый": "BROWN",
+            "Красный": "RED",
+            "Лосось": "SALMON",
+            "Оранжевый": "ORANGE",
+            "Песочный": "SAND",
+            "Розовый": "PINK",
+            "Салатовый": "LIMEGRN",
+            "Светло-зеленый": "LTGREEN",
+            "Светло-серый": "LTGRAY",
+            "Серый": "GRAY",
+            "Синий": "BLUE",
+            "Сиреневый": "LILAC",
+            "Темно-зеленый": "DKGREEN",
+            "Темно-серый": "DKGRAY",
+            "Темно-синий": "DKBLUE",
+            "Терракот": "TERCOT",
+            "Фиолетовый": "VIOLET",
+            "Хаки": "KHAKI",
+            "Чёрный": "BLACK"
+        }
+        
+        # Допустимые названия цветов (в нижнем регистре)
+        self.valid_colors = {color.lower() for color in self.color_table.values()}
+        
+        # RGB значения для всех цветов
+        self.color_rgb_map = {
+            "black": (0, 0, 0),
+            "white": (255, 255, 255),
+            "red": (255, 0, 0),
+            "blue": (0, 0, 255),
+            "yellow": (255, 255, 0),
+            "gray": (128, 128, 128),
+            "grey": (128, 128, 128),
+            "brown": (139, 69, 19),
+            "orange": (255, 165, 0),
+            "pink": (255, 192, 203),
+            "beige": (245, 245, 220),
+            "dkblue": (0, 0, 139),
+            "dkgray": (64, 64, 64),
+            "dkgreen": (0, 100, 0),
+            "emerald": (0, 128, 0),
+            "grnapl": (0, 128, 0),
+            "grsgrn": (34, 139, 34),
+            "khaki": (240, 230, 140),
+            "lilac": (200, 162, 200),
+            "limegrn": (50, 205, 50),
+            "ltgray": (192, 192, 192),
+            "ltgreen": (144, 238, 144),
+            "pearl": (240, 248, 255),
+            "salmon": (250, 128, 114),
+            "sand": (244, 164, 96),
+            "skyblue": (135, 206, 235),
+            "tercot": (205, 92, 92),
+            "turqse": (64, 224, 208),
+            "violet": (238, 130, 238),
+            "whtgrn": (240, 255, 240)
+        }
+    
+    def extract_colors_from_prompt(self, prompt: str) -> List[str]:
+        """Единая функция для извлечения цветов из промпта"""
+        colors = []
+        words = prompt.lower().split()
+        
+        for word in words:
+            # Убираем знаки препинания и проценты
+            clean_word = word.strip('%,.!?()[]{}')
+            if clean_word in self.valid_colors:
+                colors.append(clean_word)
+        
+        return colors
+    
+    def get_color_rgb(self, color_name: str) -> tuple:
+        """Получение RGB значения для цвета"""
+        return self.color_rgb_map.get(color_name.lower(), (127, 127, 127))
+    
+    def validate_colors(self, colors: List[str]) -> bool:
+        """Валидация списка цветов"""
+        return all(color in self.valid_colors for color in colors)
+    
+    def get_color_count(self, prompt: str) -> int:
+        """Получение количества цветов в промпте"""
+        return len(self.extract_colors_from_prompt(prompt))
 
-# CUDA Memory Optimization
-import os
-os.environ['PYTORCH_CUDA_ALLOC_CONF'] = 'expandable_segments:True'
-os.environ['CUDA_LAUNCH_BLOCKING'] = '0'
-
-# Suppress specific warnings
-os.environ['PYTHONWARNINGS'] = 'ignore'
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+class ColorGridControlNet:
+    """Улучшенный Color Grid Adapter для точного контроля цветовых пропорций"""
+    
+    def __init__(self):
+        self.patterns = ["random", "grid", "radial", "granular"]
+        self.granule_sizes = {
+            "small": {"size_range": (2, 4), "density": 0.9},
+            "medium": {"size_range": (3, 6), "density": 0.8},
+            "large": {"size_range": (5, 8), "density": 0.7}
+        }
+        
+        # Инициализация централизованного менеджера цветов
+        self.color_manager = ColorManager()
+    
+    def create_optimized_colormap(self, colors, size=(1024, 1024), 
+                                 pattern_type="granular", granule_size="medium"):
+        """Создает оптимизированный colormap для ControlNet"""
+        
+        if pattern_type == "granular":
+            return self._create_granular_pattern(colors, size, granule_size)
+        elif pattern_type == "random":
+            return self._create_random_pattern(colors, size)
+        elif pattern_type == "grid":
+            return self._create_grid_pattern(colors, size)
+        elif pattern_type == "radial":
+            return self._create_radial_pattern(colors, size)
+        else:
+            return self._create_granular_pattern(colors, size, "medium")
+    
+    def _create_granular_pattern(self, colors, size, granule_size="medium"):
+        """Создает паттерн, имитирующий резиновую крошку"""
+        width, height = size
+        canvas = Image.new('RGBA', size, (255, 255, 255, 0))  # Прозрачный фон
+        pixels = canvas.load()
+        
+        # Параметры гранул
+        granule_params = self.granule_sizes[granule_size]
+        min_size, max_size = granule_params["size_range"]
+        density = granule_params["density"]
+        
+        # Нормализация пропорций
+        total_proportion = sum(color.get("proportion", 0) for color in colors)
+        normalized_colors = []
+        for color in colors:
+            proportion = color.get("proportion", 0) / total_proportion
+            color_rgb = self._name_to_rgb(color.get("name", "white"))
+            normalized_colors.append({
+                "color": color_rgb,
+                "proportion": proportion,
+                "pixels_needed": int(proportion * width * height * density)
+            })
+        
+        # Создание гранул
+        pixels_placed = {i: 0 for i in range(len(normalized_colors))}
+        
+        for _ in range(int(width * height * density)):
+            # Выбор цвета на основе пропорций
+            available_colors = [i for i, color_info in enumerate(normalized_colors) 
+                              if pixels_placed[i] < color_info["pixels_needed"]]
+            
+            if not available_colors:
+                break
+            
+            color_idx = random.choice(available_colors)
+            color_info = normalized_colors[color_idx]
+            
+            # Создание гранулы
+            granule_size = random.randint(min_size, max_size)
+            x = random.randint(0, width - granule_size)
+            y = random.randint(0, height - granule_size)
+            
+            # Размещение гранулы
+            for dx in range(granule_size):
+                for dy in range(granule_size):
+                    if (0 <= x + dx < width and 0 <= y + dy < height and
+                        pixels[x + dx, y + dy] == (255, 255, 255, 0)):  # Только прозрачные пиксели
+                        pixels[x + dx, y + dy] = color_info["color"]
+                        pixels_placed[color_idx] += 1
+        
+        return canvas
+    
+    def _create_random_pattern(self, colors, size):
+        """Создает случайный паттерн с точными пропорциями"""
+        width, height = size
+        canvas = Image.new('RGBA', size, (255, 255, 255, 0))  # Прозрачный фон
+        pixels = canvas.load()
+        
+        # Нормализация пропорций
+        total_proportion = sum(color.get("proportion", 0) for color in colors)
+        color_pixels = {}
+        
+        for color in colors:
+            proportion = color.get("proportion", 0) / total_proportion
+            color_rgb = self._name_to_rgb(color.get("name", "white"))
+            color_pixels[color_rgb] = int(proportion * width * height)
+        
+        # Случайное размещение пикселей
+        all_positions = [(x, y) for x in range(width) for y in range(height)]
+        random.shuffle(all_positions)
+        
+        pos_idx = 0
+        for color_rgb, pixel_count in color_pixels.items():
+            for _ in range(pixel_count):
+                if pos_idx < len(all_positions):
+                    x, y = all_positions[pos_idx]
+                    pixels[x, y] = color_rgb
+                    pos_idx += 1
+        
+        return canvas
+    
+    def _create_grid_pattern(self, colors, size):
+        """Создает сеточный паттерн с точечным распределением"""
+        width, height = size
+        canvas = Image.new('RGBA', size, (255, 255, 255, 0))  # Прозрачный фон
+        pixels = canvas.load()
+        
+        # Нормализация пропорций
+        total_proportion = sum(color.get("proportion", 0) for color in colors)
+        
+        # Создание точечного распределения вместо вертикальных полос
+        for color in colors:
+            proportion = color.get("proportion", 0) / total_proportion
+            color_rgb = self._name_to_rgb(color.get("name", "white"))
+            pixels_needed = int(proportion * width * height)
+            
+            # Случайное размещение точек по всей поверхности
+            positions_placed = 0
+            attempts = 0
+            max_attempts = pixels_needed * 10  # Ограничение попыток
+            
+            while positions_placed < pixels_needed and attempts < max_attempts:
+                x = random.randint(0, width - 1)
+                y = random.randint(0, height - 1)
+                
+                # Проверяем, что позиция свободна
+                if pixels[x, y] == (255, 255, 255, 0):
+                    pixels[x, y] = color_rgb
+                    positions_placed += 1
+                
+                attempts += 1
+        
+        return canvas
+    
+    def _create_radial_pattern(self, colors, size):
+        """Создает радиальный паттерн с точечным распределением"""
+        width, height = size
+        canvas = Image.new('RGBA', size, (255, 255, 255, 0))  # Прозрачный фон
+        pixels = canvas.load()
+        
+        center_x, center_y = width // 2, height // 2
+        max_radius = max(center_x, center_y)
+        
+        # Нормализация пропорций
+        total_proportion = sum(color.get("proportion", 0) for color in colors)
+        
+        # Создание точечного распределения с радиальным влиянием
+        for color in colors:
+            proportion = color.get("proportion", 0) / total_proportion
+            color_rgb = self._name_to_rgb(color.get("name", "white"))
+            pixels_needed = int(proportion * width * height)
+            
+            # Случайное размещение точек с радиальным приоритетом
+            positions_placed = 0
+            attempts = 0
+            max_attempts = pixels_needed * 10  # Ограничение попыток
+            
+            while positions_placed < pixels_needed and attempts < max_attempts:
+                # Генерируем позицию с радиальным распределением
+                angle = random.uniform(0, 2 * 3.14159)  # 0 до 2π
+                radius = random.uniform(0, max_radius)
+                
+                x = int(center_x + radius * math.cos(angle))
+                y = int(center_y + radius * math.sin(angle))
+                
+                # Проверяем границы
+                if 0 <= x < width and 0 <= y < height:
+                    # Проверяем, что позиция свободна
+                    if pixels[x, y] == (255, 255, 255, 0):
+                        pixels[x, y] = color_rgb
+                        positions_placed += 1
+                
+                attempts += 1
+        
+        return canvas
+    
+    def _name_to_rgb(self, color_name):
+        """Преобразует название цвета в RGB через ColorManager"""
+        # Используем централизованную систему цветов
+        return self.color_manager.get_color_rgb(color_name)
 
 # Настройка логирования
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Absolute cache paths inside the container
-WEIGHTS_ROOT = "/weights"
-if os.path.isdir(WEIGHTS_ROOT):
-    SDXL_CACHE_DIR = os.path.join(WEIGHTS_ROOT, "sdxl-cache")
-    CONTROLNET_CACHE_DIR = os.path.join(WEIGHTS_ROOT, "controlnet-cache")
-else:
-    SDXL_CACHE_DIR = "/src/sdxl-cache"
-    CONTROLNET_CACHE_DIR = "/src/controlnet-cache"
-REFS_DIR = "/src/model_files/refs"
+# Единая версия модели для логов
+MODEL_VERSION = "v4.4.61"
 
-# ControlNet local subfolders
-CONTROLNET_CANNY_DIR = os.path.join(CONTROLNET_CACHE_DIR, "controlnet-canny-sdxl-1.0")
-CONTROLNET_HED_DIR = os.path.join(CONTROLNET_CACHE_DIR, "controlnet-hed-sdxl-1.0")
-CONTROLNET_SOFTEDGE_DIR = os.path.join(CONTROLNET_CACHE_DIR, "controlnet-softedge-sdxl-1.0")
-CONTROLNET_LINEART_DIR = os.path.join(CONTROLNET_CACHE_DIR, "controlnet-lineart-sdxl-1.0")
+# Переменные окружения для оптимизации
+os.environ["HF_HOME"] = "/tmp/hf_home"
+os.environ["HF_DATASETS_CACHE"] = "/tmp/hf_datasets_cache"
+os.environ["HF_MODELS_CACHE"] = "/tmp/hf_cache"
+os.environ["TRANSFORMERS_CACHE_MIGRATION_DISABLE"] = "1"
+os.environ["HF_HUB_CACHE_MIGRATION_DISABLE"] = "1"
+os.environ["HF_HUB_DISABLE_TELEMETRY"] = "1"
+os.environ["HF_HUB_DISABLE_PROGRESS_BARS"] = "1"
+os.environ["TRANSFORMERS_VERBOSITY"] = "error"
+os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
-# HF repo ids for fallback
-SDXL_REPO_ID = "stabilityai/stable-diffusion-xl-base-1.0"
-CONTROLNET_CANNY_REPO_ID = "diffusers/controlnet-canny-sdxl-1.0"
-CONTROLNET_LINEART_REPO_ID = "diffusers/controlnet-lineart-sdxl-1.0"
+from diffusers import StableDiffusionXLPipeline, DPMSolverMultistepScheduler
+try:
+    from diffusers import ControlNetModel, StableDiffusionXLControlNetPipeline
+except Exception:
+    ControlNetModel = None
+    StableDiffusionXLControlNetPipeline = None
+from transformers import CLIPTextModel, T5EncoderModel
+from cog import BasePredictor, Input
 
-
-def hex_to_rgb(hex_color: str) -> Tuple[int, int, int]:
-    h = hex_color.strip().lstrip("#")
-    return tuple(int(h[i:i+2], 16) for i in (0, 2, 4))
-
-
-def average_color_from_image(image_path: str) -> Tuple[int, int, int]:
-    img = Image.open(image_path).convert("RGB")
-    arr = np.asarray(img)
-    mean = arr.reshape(-1, 3).mean(axis=0)
-    return tuple(int(x) for x in mean.tolist())
-
-
-def sample_color_for_name(color_name: str) -> Tuple[int, int, int]:
-    """Улучшенный цветовой маппинг с точными цветами"""
-    # Сначала пробуем найти цвет в референсах
-    color_folder = os.path.join(REFS_DIR, color_name)
-    if os.path.isdir(color_folder):
-        candidates: List[str] = []
-        for fn in os.listdir(color_folder):
-            if fn.lower().endswith((".png", ".jpg", ".jpeg")):
-                candidates.append(os.path.join(color_folder, fn))
-        if candidates:
-            choice = random.choice(candidates)
-            return average_color_from_image(choice)
-    
-    # Улучшенный fallback с точными цветами
-    color_map = {
-        "black": (0, 0, 0),           # Истинно черный
-        "white": (255, 255, 255),     # Истинно белый
-        "red": (255, 0, 0),           # Яркий красный
-        "blue": (0, 0, 255),          # Яркий синий
-        "green": (0, 255, 0),         # Яркий зеленый
-        "yellow": (255, 255, 0),      # Яркий желтый
-        "gray": (128, 128, 128),      # Средний серый
-        "brown": (139, 69, 19),       # Коричневый
-        "dark green": (0, 100, 0),    # Темно-зеленый
-        "orange": (255, 165, 0),      # Оранжевый
-        "purple": (128, 0, 128),      # Фиолетовый
-        "pink": (255, 192, 203),      # Розовый
-    }
-    return color_map.get(color_name.lower(), (127, 127, 127))
-
-
-def build_color_map(colors: List[Dict[str, Any]], size: Tuple[int, int], out_path: str) -> Image.Image:
-    width, height = size
-    canvas = Image.new("RGB", (width, height))
-    
-    # Normalize proportions
-    props = [max(0.0, float(c.get("proportion", 0))) for c in colors]
-    total = sum(props) or 1.0
-    props = [p / total for p in props]
-
-    x0 = 0
-    for c, p in zip(colors, props):
-        w = int(round(p * width))
-        if w <= 0:
-            continue
-        name = c.get("name")
-        hex_color = c.get("hex")
-        if hex_color:
-            rgb = hex_to_rgb(hex_color)
-        elif name:
-            rgb = sample_color_for_name(name)
-        else:
-            rgb = (127, 127, 127)
-        block = Image.new("RGB", (w, height), rgb)
-        canvas.paste(block, (x0, 0))
-        x0 += w
-
-    canvas.save(out_path)
-    return canvas
-
-
-def canny_edge_from_image(img: Image.Image, low: int = 100, high: int = 200) -> Image.Image:
-    arr = np.array(img.convert("RGB"))
-    edges = cv2.Canny(arr, low, high)
-    edges_rgb = cv2.cvtColor(edges, cv2.COLOR_GRAY2RGB)
-    return Image.fromarray(edges_rgb)
-
-
-def select_controlnet_by_angle(
-    angle: int,
-    cn_canny: ControlNetModel,
-    cn_softedge: Optional[ControlNetModel],
-    cn_lineart: Optional[ControlNetModel],
-) -> ControlNetModel:
-    angle_norm = int(angle) % 180
-    # Prefer canny for 0/90
-    if angle_norm in (0, 90):
-        return cn_canny
-    # For diagonals prefer lineart if available, then softedge/HED, else fallback to canny
-    if cn_lineart is not None:
-        return cn_lineart
-    if cn_softedge is not None:
-        return cn_softedge
-    return cn_canny
-
-
-class OptimizedPredictor(BasePredictor):
-    def setup(self):
-        """Оптимизированная настройка модели с lazy loading архитектурой"""
-        logger.info("🚀 Starting optimized model setup with lazy loading...")
+class Predictor(BasePredictor):
+    def __init__(self):
+        self.device = None
+        self.pipe = None
+        self.controlnet = None
+        self.pipe_cn = None
         
-        # Загружаем только базовые компоненты
-        logger.info("📦 Loading shared components...")
-        self._load_shared_components() # Pass a default repo ID for shared components
+        # Инициализация Color Grid Adapter
+        self.color_grid_adapter = ColorGridControlNet()
+        logger.info("🎨 Color Grid Adapter инициализирован")
         
-        logger.info("�� Loading ControlNet models...")
-        self._load_controlnet_models() # Pass default repo IDs for controlnet models
+        # Инициализация централизованного менеджера цветов
+        self.color_manager = ColorManager()
+        logger.info("🎨 Color Manager инициализирован")
         
-        # Инициализируем пайплайны как None для lazy loading
-        self.controlnet_pipeline = None
-        self.base_pipeline = None
-        
-        logger.info("✅ Model setup completed with lazy loading architecture")
-        logger.info("💡 Pipelines will be created on-demand to optimize memory usage")
-
-    def _get_controlnet_pipeline(self):
-        """Lazy loading для ControlNet пайплайна"""
-        if self.controlnet_pipeline is None:
-            logger.info("🎨 Creating ControlNet pipeline on-demand...")
-            # Очищаем память перед созданием нового пайплайна
-            torch.cuda.empty_cache()
-            
-            base_model_src = SDXL_CACHE_DIR if os.path.isdir(SDXL_CACHE_DIR) else SDXL_REPO_ID
-            shared_components = self._load_shared_components()
-            self.controlnet_pipeline = self._create_controlnet_pipeline(base_model_src, shared_components)
-            logger.info("✅ ControlNet pipeline created and cached")
-        return self.controlnet_pipeline
-
-    def _get_base_pipeline(self):
-        """Lazy loading для базового SDXL пайплайна"""
-        if self.base_pipeline is None:
-            logger.info("🎯 Creating base SDXL pipeline on-demand...")
-            # Очищаем память перед созданием нового пайплайна
-            torch.cuda.empty_cache()
-            
-            base_model_src = SDXL_CACHE_DIR if os.path.isdir(SDXL_CACHE_DIR) else SDXL_REPO_ID
-            shared_components = self._load_shared_components()
-            self.base_pipeline = self._create_base_pipeline(base_model_src, shared_components)
-            logger.info("✅ Base SDXL pipeline created and cached")
-        return self.base_pipeline
-
-    def _load_shared_components(self) -> Dict[str, Any]:
-        """Load shared components (LoRA, TI) that will be used by both pipelines."""
-        logger.info("🔧 Loading LoRA weights...")
-        lora_path = os.path.join(WEIGHTS_ROOT, "ohwx_rubber_tile_lora.safetensors")
-        if not os.path.exists(lora_path):
-            raise FileNotFoundError(f"LoRA weights not found at {lora_path}")
-        
-        logger.info("🔤 Loading Textual Inversion embeddings...")
-        ti_path = os.path.join(WEIGHTS_ROOT, "ohwx_rubber_tile_ti.safetensors")
-        if not os.path.exists(ti_path):
-            raise FileNotFoundError(f"Textual Inversion embeddings not found at {ti_path}")
-        
-        return {
-            "lora_path": lora_path,
-            "ti_path": ti_path
+        # Статистика использования Color Grid Adapter
+        self.color_grid_stats = {
+            "total_generations": 0,
+            "controlnet_used": 0,
+            "patterns_used": {"random": 0, "grid": 0, "radial": 0, "granular": 0},
+            "granule_sizes_used": {"small": 0, "medium": 0, "large": 0}
         }
-
-    def _load_controlnet_models(self):
-        """Load ControlNet models for edge detection and line control."""
-        logger.info("🎯 Loading ControlNet models...")
+    
+    def setup(self):
+        """Инициализация модели при запуске сервера."""
+        logger.info(f"🚀 Инициализация модели {MODEL_VERSION} (Color Grid Adapter + ControlNet Integration)...")
         
-        # Resolve model sources
-        canny_model_src = CONTROLNET_CANNY_DIR if os.path.isdir(CONTROLNET_CANNY_DIR) else CONTROLNET_CANNY_REPO_ID
-        softedge_path = CONTROLNET_HED_DIR if os.path.isdir(CONTROLNET_HED_DIR) else (
-            CONTROLNET_SOFTEDGE_DIR if os.path.isdir(CONTROLNET_SOFTEDGE_DIR) else None
-        )
-        
-        self.controlnet_models = {}
-        
-        # Load Canny ControlNet
-        try:
-            self.controlnet_models["canny"] = ControlNetModel.from_pretrained(
-                canny_model_src,
-                torch_dtype=torch.float16,
-                use_safetensors=True
-            )
-            logger.info("✅ Canny ControlNet loaded successfully")
-        except Exception as e:
-            logger.warning(f"⚠️ Failed to load Canny ControlNet: {e}")
-            self.controlnet_models["canny"] = None
-        
-        # Load SoftEdge/HED ControlNet
-        if softedge_path:
-            try:
-                self.controlnet_models["softedge"] = ControlNetModel.from_pretrained(
-                    softedge_path,
-                    torch_dtype=torch.float16,
-                    use_safetensors=True
-                )
-                logger.info("✅ SoftEdge ControlNet loaded successfully")
-            except Exception as e:
-                logger.warning(f"⚠️ Failed to load SoftEdge ControlNet: {e}")
-                self.controlnet_models["softedge"] = None
+        # 1. Определение устройства
+        if torch.cuda.is_available():
+            self.device = "cuda"
+            # Выбор GPU с наибольшей памятью
+            best_gpu = max(range(torch.cuda.device_count()), 
+                          key=lambda i: torch.cuda.get_device_properties(i).total_memory)
+            torch.cuda.set_device(best_gpu)
+            logger.info(f"✅ Используется GPU: {torch.cuda.get_device_name(best_gpu)}")
+            logger.info(f"📊 Память GPU: {torch.cuda.get_device_properties(best_gpu).total_memory / 1024**3:.1f} GB")
         else:
-            self.controlnet_models["softedge"] = None
+            self.device = "cpu"
+            logger.info("⚠️ CUDA недоступен, используется CPU")
         
-        # Load Lineart ControlNet
-        try:
-            self.controlnet_models["lineart"] = ControlNetModel.from_pretrained(
-                CONTROLNET_LINEART_REPO_ID,
-                torch_dtype=torch.float16,
-                use_safetensors=True
-            )
-            logger.info("✅ Lineart ControlNet loaded successfully")
-        except Exception as e:
-            logger.warning(f"⚠️ Failed to load Lineart ControlNet: {e}")
-            self.controlnet_models["lineart"] = None
-
-    def _create_controlnet_pipeline(self, base_model_src: str, shared_components: Dict[str, Any]) -> StableDiffusionXLControlNetPipeline:
-        """Create ControlNet pipeline with optimizations."""
-        logger.info("🎨 Creating ControlNet pipeline...")
-        
-        pipeline = StableDiffusionXLControlNetPipeline.from_pretrained(
-            base_model_src,
-            controlnet=self.controlnet_models['canny'],
+        # 2. Загрузка SDXL pipeline
+        logger.info("📥 Загрузка базовой модели SDXL...")
+        self.pipe = StableDiffusionXLPipeline.from_pretrained(
+            "stabilityai/stable-diffusion-xl-base-1.0",
             torch_dtype=torch.float16,
-            variant="fp16",
             use_safetensors=True,
-        ).to("cuda")
-        
-        # Apply shared components
-        self._apply_shared_components(pipeline, shared_components)
-        
-        # Optimizations
-        pipeline.scheduler = EulerDiscreteScheduler.from_config(pipeline.scheduler.config)
-        if hasattr(pipeline, "enable_vae_slicing"):
-            pipeline.enable_vae_slicing()
-        if hasattr(pipeline, "enable_vae_tiling"):
-            pipeline.enable_vae_tiling()
-        
-        return pipeline
-
-    def _create_base_pipeline(self, base_model_src: str, shared_components: Dict[str, Any]) -> StableDiffusionXLPipeline:
-        """Create base SDXL pipeline without ControlNet."""
-        logger.info("🎯 Creating base SDXL pipeline...")
-        
-        pipeline = StableDiffusionXLPipeline.from_pretrained(
-            base_model_src,
-            torch_dtype=torch.float16,
             variant="fp16",
-            use_safetensors=True,
-        ).to("cuda")
+            resume_download=False
+        )
         
-        # Apply shared components
-        self._apply_shared_components(pipeline, shared_components)
-        
-        # Optimizations
-        pipeline.scheduler = EulerDiscreteScheduler.from_config(pipeline.scheduler.config)
-        if hasattr(pipeline, "enable_vae_slicing"):
-            pipeline.enable_vae_slicing()
-        if hasattr(pipeline, "enable_vae_tiling"):
-            pipeline.enable_vae_tiling()
-        
-        return pipeline
-
-    def _apply_shared_components(self, pipeline, shared_components: Dict[str, Any]):
-        """Apply LoRA and Textual Inversion to pipeline."""
-        # Load LoRA
-        if 'lora_path' in shared_components:
-            pipeline.load_lora_weights(shared_components['lora_path'])
-            pipeline.fuse_lora()
-        
-        # Load Textual Inversion
-        if 'ti_path' in shared_components:
+        # 3. Перемещение на GPU
+        self.pipe = self.pipe.to(self.device)
+        if self.device == "cuda":
             try:
-                pipeline.load_textual_inversion(shared_components['ti_path'], token="<s0>")
-                logger.info("✅ Standard TI load successful")
+                self.pipe.enable_xformers_memory_efficient_attention()
+            except Exception:
+                pass
+            try:
+                torch.backends.cudnn.benchmark = True
+            except Exception:
+                pass
+        
+        # 4. Загрузка НАШИХ обученных LoRA (как в успешной модели v45)
+        logger.info("🔧 Загрузка НАШИХ LoRA адаптеров (метод v45)...")
+        lora_path = "/src/model_files/rubber-tile-lora-v4_sdxl_lora.safetensors"
+        try:
+            # Используем метод v45: set_adapters + fuse_lora для максимальной эффективности
+            try:
+                # Совместимость с новыми версиями diffusers
+                self.pipe.set_adapters(["rubber-tile-lora-v4"], adapter_weights=[0.7])
+                self.pipe.fuse_lora()
+                logger.info("✅ LoRA адаптеры загружены через set_adapters + fuse_lora (метод v45)")
+            except Exception as e1:
+                logger.warning(f"⚠️ set_adapters не сработал: {e1}")
+                try:
+                    # Fallback: загружаем с именем адаптера
+                    self.pipe.load_lora_weights(lora_path, adapter_name="rt")
+                    logger.info("✅ LoRA адаптеры загружены через load_lora_weights (fallback)")
+                except Exception as e2:
+                    logger.warning(f"⚠️ load_lora_weights с adapter_name не сработал: {e2}")
+                    # Final fallback: простая загрузка
+                    self.pipe.load_lora_weights(lora_path)
+                    logger.info("✅ LoRA адаптеры загружены через load_lora_weights (final fallback)")
+        except Exception as e:
+            logger.error(f"❌ Критическая ошибка загрузки LoRA: {e}")
+            raise e
+        
+        # 5. ДЕТАЛЬНАЯ ДИАГНОСТИКА РАЗМЕРОВ SDXL
+        logger.info("🔍 ДЕТАЛЬНАЯ ДИАГНОСТИКА РАЗМЕРОВ SDXL...")
+        
+        # Проверяем размеры text_encoder ДО добавления токенов
+        logger.info("📊 АНАЛИЗ РАЗМЕРОВ ДО ДОБАВЛЕНИЯ ТОКЕНОВ:")
+        
+        # text_encoder (первый)
+        emb_1 = self.pipe.text_encoder.get_input_embeddings()
+        logger.info(f"🔍 text_encoder.get_input_embeddings().weight.shape: {emb_1.weight.shape}")
+        logger.info(f"🔍 text_encoder.config.hidden_size: {self.pipe.text_encoder.config.hidden_size}")
+        logger.info(f"🔍 text_encoder.config.vocab_size: {self.pipe.text_encoder.config.vocab_size}")
+        
+        # text_encoder_2 (второй)
+        emb_2 = self.pipe.text_encoder_2.get_input_embeddings()
+        logger.info(f"🔍 text_encoder_2.get_input_embeddings().weight.shape: {emb_2.weight.shape}")
+        logger.info(f"🔍 text_encoder_2.config.hidden_size: {self.pipe.text_encoder_2.config.hidden_size}")
+        logger.info(f"🔍 text_encoder_2.config.vocab_size: {self.pipe.text_encoder_2.config.vocab_size}")
+        
+        # Проверяем размеры токенизаторов
+        logger.info(f"🔍 tokenizer.vocab_size: {self.pipe.tokenizer.vocab_size}")
+        logger.info(f"🔍 tokenizer_2.vocab_size: {self.pipe.tokenizer_2.vocab_size}")
+        
+        # 6. Загрузка НАШИХ обученных Textual Inversion (ИСПРАВЛЕНИЕ ПЕРЕПУТАННЫХ РАЗМЕРОВ)
+        logger.info("🔤 Загрузка НАШИХ Textual Inversion (ИСПРАВЛЕНИЕ ПЕРЕПУТАННЫХ РАЗМЕРОВ)...")
+        ti_path = "/src/model_files/rubber-tile-lora-v4_sdxl_embeddings.safetensors"
+        try:
+            # Ручная загрузка dual-encoder Textual Inversion для SDXL
+            try:
+                from safetensors.torch import load_file
+                state_dict = load_file(ti_path)
+                logger.info("✅ Файл загружен через safetensors.load_file")
+            except ImportError:
+                logger.warning("⚠️ safetensors не найден, используем torch.load")
+                try:
+                    state_dict = torch.load(ti_path, map_location="cpu")
+                    logger.info("✅ Файл загружен через torch.load")
+                except Exception as e:
+                    logger.error(f"❌ Ошибка загрузки torch.load: {e}")
+                    raise e
             except Exception as e:
-                logger.warning(f"⚠️ Standard TI load failed ({e}). Using manual SDXL dual-encoder TI install...")
-                self._install_sdxl_textual_inversion_dual(
-                    shared_components['ti_path'], 
-                    pipeline, 
-                    token_g="<s0>", 
-                    token_l="<s0>"
-                )
-                logger.info("✅ Manual TI installation completed")
-
-    def predict(
-        self,
-        params_json: str = Input(description="Business-oriented parameters JSON: colors, angle, seed, quality, overrides")
-    ) -> List[Path]:
-        """Generate preview/final images using optimized dual pipeline architecture."""
-        start_time = time.time()
-        try:
-            # Parse parameters
-            params = json.loads(params_json) if params_json else {}
-            if "params_json" in params:
-                inner_json = params["params_json"]
-                params = json.loads(inner_json)
-        except json.JSONDecodeError as e:
-            raise ValueError(f"Invalid params_json: {e}")
-
-        colors = params.get("colors", [])
-        angle = int(params.get("angle", 0))
-        seed = int(params.get("seed", -1))
-        quality = str(params.get("quality", "standard"))
-        overrides: Dict[str, Any] = params.get("overrides", {}) or {}
-        use_controlnet = overrides.get("use_controlnet", True)
-
-        logger.info(f"🎨 Generating with params: colors={len(colors)}, angle={angle}, quality={quality}, seed={seed}, controlnet={use_controlnet}")
-
-        # Quality profiles
-        if quality == "preview":
-            steps_preview, steps_final = 16, 24
-            size_preview, size_final = (512, 512), (1024, 1024)
-        elif quality == "high":
-            steps_preview, steps_final = 24, 40
-            size_preview, size_final = (512, 512), (1024, 1024)
-        else:  # standard
-            steps_preview, steps_final = 20, 30
-            size_preview, size_final = (512, 512), (1024, 1024)
-
-        num_inference_steps_preview = int(overrides.get("num_inference_steps_preview", steps_preview))
-        num_inference_steps_final = int(overrides.get("num_inference_steps_final", steps_final))
-        guidance_scale = float(overrides.get("guidance_scale", 7.5))
-
-        # Build optimized prompt
-        prompt_parts = ["ohwx_rubber_tile <s0><s1>"]
-        
-        if colors:
-            color_desc = []
-            for color_info in colors:
-                name = color_info.get("name", "").lower()
-                proportion = color_info.get("proportion", 0)
-                if proportion > 0:
-                    percentage = int(proportion)  # Правильные проценты
-                    color_desc.append(f"{percentage}% {name}")
+                logger.error(f"❌ Ошибка загрузки safetensors: {e}")
+                raise e
             
-            if color_desc:
-                prompt_parts.append(", ".join(color_desc))
-        
-        prompt_parts.extend([
-            "photorealistic rubber tile",
-            "matte texture", 
-            "top view",
-            "rubber granules",
-            "textured surface"
-        ])
-        
-        base_prompt = ", ".join(prompt_parts)
-        negative_prompt = overrides.get(
-            "negative_prompt",
-            "object, blurry, worst quality, low quality, deformed, watermark, 3d render, cartoon, abstract, smooth, flat",
-        )
-
-        # Generator
-        generator = torch.manual_seed(seed) if seed != -1 else torch.Generator(device="cuda")
-        if seed == -1:
-            seed = generator.seed()
-
-        # Create color map
-        colormap_path = "/tmp/colormap.png"
-        logger.info(f"🎨 Building color map for {len(colors)} colors")
-        colormap_img = build_color_map(colors, size_final, colormap_path)
-        logger.info(f"✅ Color map saved to {colormap_path}")
-
-        # Choose pipeline based on ControlNet setting
-        if use_controlnet:
-            logger.info("🎯 Using ControlNet pipeline")
-            return self._generate_with_controlnet(
-                base_prompt, negative_prompt, colormap_img,
-                guidance_scale, num_inference_steps_preview, seed
-            )
-        else:
-            logger.info("🎯 Using base SDXL pipeline")
-            return self._generate_without_controlnet(
-                base_prompt, negative_prompt,
-                guidance_scale, num_inference_steps_preview, seed
-            )
-
-    def _generate_with_controlnet(self, prompt: str, negative_prompt: str, image: Image.Image, 
-                                 guidance_scale: float, num_inference_steps: int, seed: int) -> Image.Image:
-        """Generate image using ControlNet pipeline with lazy loading."""
-        # Получаем пайплайн через lazy loading
-        pipeline = self._get_controlnet_pipeline()
-        
-        # Select appropriate ControlNet model based on angle
-        controlnet_model = self._select_controlnet_model(0)  # Default to Canny for now
-        
-        if controlnet_model is None:
-            logger.warning("⚠️ No ControlNet model available, falling back to base pipeline")
-            return self._generate_without_controlnet(prompt, negative_prompt, guidance_scale, num_inference_steps, seed)
-        
-        # Generate control image
-        control_image = self._create_control_image(image, controlnet_model)
-        
-        # Generate image
-        result = pipeline(
-            prompt=prompt,
-            negative_prompt=negative_prompt,
-            image=control_image,
-            guidance_scale=guidance_scale,
-            num_inference_steps=num_inference_steps,
-            generator=torch.Generator(device="cuda").manual_seed(seed)
-        )
-        
-        return result.images[0]
-
-    def _select_controlnet_model(self, angle: int):
-        """Select appropriate ControlNet model based on angle."""
-        if angle in [0, 90, 180, 270]:
-            return self.controlnet_models.get("canny")
-        elif angle in [30, 45, 60, 120, 135, 150, 210, 225, 240, 300, 315, 330]:
-            return self.controlnet_models.get("lineart")
-        else:
-            return self.controlnet_models.get("softedge") or self.controlnet_models.get("canny")
-
-    def _create_control_image(self, image: Image.Image, controlnet_model) -> Image.Image:
-        """Create control image using appropriate ControlNet model."""
-        if "canny" in str(controlnet_model):
-            return canny_edge_from_image(image, 80, 160)
-        elif "lineart" in str(controlnet_model):
-            # For lineart, we'll use a simple edge detection for now
-            return canny_edge_from_image(image, 100, 200)
-        else:
-            # Default to canny
-            return canny_edge_from_image(image, 80, 160)
-
-    def _generate_without_controlnet(self, prompt: str, negative_prompt: str, 
-                                   guidance_scale: float, num_inference_steps: int, seed: int) -> Image.Image:
-        """Generate image using base SDXL pipeline with lazy loading."""
-        # Получаем пайплайн через lazy loading
-        pipeline = self._get_base_pipeline()
-        
-        result = pipeline(
-            prompt=prompt,
-            negative_prompt=negative_prompt,
-            guidance_scale=guidance_scale,
-            num_inference_steps=num_inference_steps,
-            generator=torch.Generator(device="cuda").manual_seed(seed)
-        )
-        
-        return result.images[0]
-
-    def _install_sdxl_textual_inversion_dual(self, ti_path: str, pipeline, token_g: str, token_l: str) -> None:
-        """Install SDXL textual inversion that contains separate embeddings for CLIP-G and CLIP-L encoders."""
-        try:
-            # Load the safetensors file
-            state_dict = load_safetensors(ti_path)
+            # Проверяем структуру загруженного файла
+            if not isinstance(state_dict, dict):
+                logger.error("❌ Загруженный файл не является словарем")
+                raise ValueError("Invalid file format")
             
-            # Check if it's dual-encoder format
-            if 'clip_g' in state_dict and 'clip_l' in state_dict:
-                logger.info("🔤 Installing dual-encoder SDXL textual inversion...")
+            logger.info(f"📊 Структура state_dict: {list(state_dict.keys())}")
+            
+            # ДЕТАЛЬНЫЙ АНАЛИЗ РАЗМЕРОВ ЭМБЕДДИНГОВ
+            logger.info("🔍 ДЕТАЛЬНЫЙ АНАЛИЗ РАЗМЕРОВ ЭМБЕДДИНГОВ:")
+            
+            if 'clip_g' in state_dict:
+                embeddings_0 = state_dict['clip_g']
+                logger.info(f"📊 clip_g (embeddings_0) размер: {embeddings_0.shape}")
+                logger.info(f"🔍 clip_g размерность 0: {embeddings_0.shape[0]}")
+                logger.info(f"🔍 clip_g размерность 1: {embeddings_0.shape[1]}")
                 
-                # Get embeddings
-                clip_g_embeddings = state_dict['clip_g']
-                clip_l_embeddings = state_dict['clip_l']
+                # Проверяем совместимость с text_encoder_2 (ИСПРАВЛЕНИЕ!)
+                emb_2_hidden_size = self.pipe.text_encoder_2.config.hidden_size
+                logger.info(f"🔍 text_encoder_2.config.hidden_size: {emb_2_hidden_size}")
+                logger.info(f"🔍 Совместимость clip_g с text_encoder_2: {embeddings_0.shape[1]} == {emb_2_hidden_size}")
                 
-                # Determine number of tokens
-                num_tokens = clip_g_embeddings.shape[0]
-                logger.info(f"🔤 Textual inversion contains {num_tokens} token(s)")
+            if 'clip_l' in state_dict:
+                embeddings_1 = state_dict['clip_l']
+                logger.info(f"📊 clip_l (embeddings_1) размер: {embeddings_1.shape}")
+                logger.info(f"🔍 clip_l размерность 0: {embeddings_1.shape[0]}")
+                logger.info(f"🔍 clip_l размерность 1: {embeddings_1.shape[1]}")
                 
-                # Generate token names
-                token_names = [f"<s{i}>" for i in range(num_tokens)]
-                logger.info(f"🔤 Token names: {token_names}")
+                # Проверяем совместимость с text_encoder (ИСПРАВЛЕНИЕ!)
+                emb_1_hidden_size = self.pipe.text_encoder.config.hidden_size
+                logger.info(f"🔍 text_encoder.config.hidden_size: {emb_1_hidden_size}")
+                logger.info(f"🔍 Совместимость clip_l с text_encoder: {embeddings_1.shape[1]} == {emb_1_hidden_size}")
+            
+            # Добавление новых токенов в токенизаторы
+            logger.info("🔤 Добавление новых токенов в токенизаторы...")
+            self.pipe.tokenizer.add_tokens(["<s0>", "<s1>"])
+            self.pipe.tokenizer_2.add_tokens(["<s0>", "<s1>"])
+            
+            # Получение ID токенов и проверка границ
+            token_ids_one = self.pipe.tokenizer.convert_tokens_to_ids(["<s0>", "<s1>"])
+            token_ids_two = self.pipe.tokenizer_2.convert_tokens_to_ids(["<s0>", "<s1>"])
+            
+            logger.info(f"🔤 ID токенов для tokenizer: {token_ids_one}")
+            logger.info(f"🔤 ID токенов для tokenizer_2: {token_ids_two}")
+            
+            # Проверка размеров embedding слоев ПОСЛЕ добавления токенов
+            logger.info("📊 АНАЛИЗ РАЗМЕРОВ ПОСЛЕ ДОБАВЛЕНИЯ ТОКЕНОВ:")
+            
+            emb_one_size = self.pipe.text_encoder.get_input_embeddings().weight.shape[0]
+            emb_two_size = self.pipe.text_encoder_2.get_input_embeddings().weight.shape[0]
+            
+            logger.info(f"📊 Размер embedding слоя text_encoder: {emb_one_size}")
+            logger.info(f"📊 Размер embedding слоя text_encoder_2: {emb_two_size}")
+            
+            # Проверка необходимости изменения размера
+            max_id_one = max(token_ids_one)
+            max_id_two = max(token_ids_two)
+            
+            if max_id_one >= emb_one_size:
+                logger.info(f"🔧 Изменение размера embedding слоя text_encoder с {emb_one_size} на {max_id_one + 1}")
+                self.pipe.text_encoder.resize_token_embeddings(len(self.pipe.tokenizer))
+                emb_one_size = self.pipe.text_encoder.get_input_embeddings().weight.shape[0]
+                logger.info(f"✅ Новый размер embedding слоя text_encoder: {emb_one_size}")
+            
+            if max_id_two >= emb_two_size:
+                logger.info(f"🔧 Изменение размера embedding слоя text_encoder_2 с {emb_two_size} на {max_id_two + 1}")
+                self.pipe.text_encoder_2.resize_token_embeddings(len(self.pipe.tokenizer_2))
+                emb_two_size = self.pipe.text_encoder_2.get_input_embeddings().weight.shape[0]
+                logger.info(f"✅ Новый размер embedding слоя text_encoder_2: {emb_two_size}")
+            
+            # ПОПЫТКА ЗАГРУЗКИ С ПРОВЕРКОЙ СОВМЕСТИМОСТИ (ИСПРАВЛЕНИЕ!)
+            logger.info("🔧 ПОПЫТКА ЗАГРУЗКИ ЭМБЕДДИНГОВ С ПРОВЕРКОЙ СОВМЕСТИМОСТИ (ИСПРАВЛЕНИЕ!):")
+            
+            # ИСПРАВЛЕНИЕ: Загружаем clip_g (1280) в text_encoder_2 (1280)
+            if 'clip_g' in state_dict:
+                embeddings_0 = state_dict['clip_g']
+                logger.info(f"📊 Размер embeddings_0 (clip_g): {embeddings_0.shape}")
                 
-                # Install in text_encoder_2 (CLIP-G)
-                if hasattr(pipeline, 'text_encoder_2'):
-                    pipeline.text_encoder_2.resize_token_embeddings(len(pipeline.tokenizer_2) + num_tokens)
-                    with torch.no_grad():
-                        pipeline.text_encoder_2.get_input_embeddings().weight[-num_tokens:] = clip_g_embeddings
-                
-                # Install in text_encoder (CLIP-L)
-                if hasattr(pipeline, 'text_encoder'):
-                    pipeline.text_encoder.resize_token_embeddings(len(pipeline.tokenizer) + num_tokens)
-                    with torch.no_grad():
-                        pipeline.text_encoder.get_input_embeddings().weight[-num_tokens:] = clip_l_embeddings
-                
-                # Add tokens to tokenizers
-                if hasattr(pipeline, 'tokenizer_2'):
-                    pipeline.tokenizer_2.add_tokens(token_names)
-                if hasattr(pipeline, 'tokenizer'):
-                    pipeline.tokenizer.add_tokens(token_names)
-                
-                logger.info(f"✅ SDXL textual inversion installed manually for {num_tokens} token(s): {token_names}")
+                # Проверка совместимости размеров с text_encoder_2
+                emb_2_hidden_size = self.pipe.text_encoder_2.config.hidden_size
+                if embeddings_0.shape[1] == emb_2_hidden_size:
+                    logger.info(f"✅ clip_g совместим с text_encoder_2: {embeddings_0.shape[1]} == {emb_2_hidden_size}")
+                    if embeddings_0.shape[0] >= 2 and token_ids_two[0] < emb_two_size and token_ids_two[1] < emb_two_size:
+                        self.pipe.text_encoder_2.get_input_embeddings().weight.data[token_ids_two[0]] = embeddings_0[0]
+                        self.pipe.text_encoder_2.get_input_embeddings().weight.data[token_ids_two[1]] = embeddings_0[1]
+                        logger.info("✅ Эмбеддинги clip_g загружены в text_encoder_2 (ИСПРАВЛЕНИЕ!)")
+                    else:
+                        logger.error(f"❌ Несовместимость размеров: embeddings_0={embeddings_0.shape}, token_ids={token_ids_two}, emb_size={emb_two_size}")
+                        raise ValueError("Embedding size mismatch")
+                else:
+                    logger.warning(f"⚠️ clip_g НЕ совместим с text_encoder_2: {embeddings_0.shape[1]} != {emb_2_hidden_size}")
+                    logger.warning(f"⚠️ Пропускаем загрузку clip_g в text_encoder_2")
             else:
-                raise ValueError("Textual inversion file does not contain dual-encoder format")
+                logger.warning("⚠️ Ключ 'clip_g' не найден в state_dict")
+            
+            # ИСПРАВЛЕНИЕ: Загружаем clip_l (768) в text_encoder (768)
+            if 'clip_l' in state_dict:
+                embeddings_1 = state_dict['clip_l']
+                logger.info(f"📊 Размер embeddings_1 (clip_l): {embeddings_1.shape}")
                 
+                # Проверка совместимости размеров с text_encoder
+                emb_1_hidden_size = self.pipe.text_encoder.config.hidden_size
+                if embeddings_1.shape[1] == emb_1_hidden_size:
+                    logger.info(f"✅ clip_l совместим с text_encoder: {embeddings_1.shape[1]} == {emb_1_hidden_size}")
+                    if embeddings_1.shape[0] >= 2 and token_ids_one[0] < emb_one_size and token_ids_one[1] < emb_one_size:
+                        self.pipe.text_encoder.get_input_embeddings().weight.data[token_ids_one[0]] = embeddings_1[0]
+                        self.pipe.text_encoder.get_input_embeddings().weight.data[token_ids_one[1]] = embeddings_1[1]
+                        logger.info("✅ Эмбеддинги clip_l загружены в text_encoder (ИСПРАВЛЕНИЕ!)")
+                    else:
+                        logger.error(f"❌ Несовместимость размеров: embeddings_1={embeddings_1.shape}, token_ids={token_ids_one}, emb_size={emb_one_size}")
+                        raise ValueError("Embedding size mismatch")
+                else:
+                    logger.warning(f"⚠️ clip_l НЕ совместим с text_encoder: {embeddings_1.shape[1]} != {emb_1_hidden_size}")
+                    logger.warning(f"⚠️ Пропускаем загрузку clip_l в text_encoder")
+            else:
+                logger.warning("⚠️ Ключ 'clip_l' не найден в state_dict")
+            
+            logger.info("✅ Textual Inversion загрузка завершена (ИСПРАВЛЕНИЕ ПЕРЕПУТАННЫХ РАЗМЕРОВ)")
+            
         except Exception as e:
-            logger.error(f"❌ Failed to install SDXL textual inversion: {e}")
-            raise RuntimeError(f"Textual inversion installation failed: {e}")
+            logger.error(f"❌ Критическая ошибка загрузки Textual Inversion: {e}")
+            logger.error(f"📊 Детали ошибки: {type(e).__name__}: {str(e)}")
+            logger.error("🔄 Продолжение без Textual Inversion (качество может быть снижено)")
+            # Продолжаем без Textual Inversion, если загрузка не удалась
+        
+        # 7. Настройка планировщика
+        logger.info("⚙️ Настройка планировщика...")
+        self.pipe.scheduler = DPMSolverMultistepScheduler.from_config(
+            self.pipe.scheduler.config,
+            algorithm_type="dpmsolver++",
+            use_karras_sigmas=True
+        )
+        
+        # 8. Оптимизации VAE (как в успешной модели v45)
+        logger.info("🚀 Применение VAE оптимизаций (метод v45)...")
+        self.pipe.vae.enable_slicing()
+        # Включаем tiling для лучшей детализации (как в v45)
+        self.pipe.vae.enable_tiling()
+        logger.info("✅ VAE tiling включен для максимальной детализации")
+        try:
+            # Формат каналов для ускорения и стабильности
+            self.pipe.unet.to(memory_format=torch.channels_last)
+            self.pipe.vae.to(memory_format=torch.channels_last)
+        except Exception:
+            pass
+        
+        # 9. Очистка памяти
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
+        gc.collect()
+        
+        logger.info(f"🎉 Модель {MODEL_VERSION} успешно инициализирована!")
+    
+    def _build_prompt(self, colors: List[Dict[str, Any]], angle: int) -> str:
+        """Построение полного промпта с использованием НАШИХ обученных токенов (как в v45)."""
+        # Базовый промпт с НАШИМИ токенами активации (как в v45)
+        base_prompt = "ohwx_rubber_tile <s0><s1>"
+        
+        # Формирование описания цветов
+        color_parts = []
+        for color in colors:
+            name = color["name"]
+            proportion = color["proportion"]
+            percentage = int(proportion * 100)
+            color_parts.append(f"{percentage}% {name}")
+        
+        color_description = ", ".join(color_parts)
+        
+        # Добавление описания цветов
+        full_prompt = f"{base_prompt}, {color_description}"
+        
+        # Добавление качественных дескрипторов
+        quality_descriptors = [
+            "photorealistic rubber tile",
+            "high quality",
+            "detailed texture",
+            "professional photography",
+            "sharp focus"
+        ]
+        
+        full_prompt += ", " + ", ".join(quality_descriptors)
+        
+        return full_prompt
+    
+    def _build_negative_prompt(self) -> str:
+        """Построение негативного промпта."""
+        # Краткий базовый список + обязательный "object" и анти‑мозаичные токены
+        return (
+            "object, text, watermark, logo, signature, blur, blurry, low quality, distorted,"
+            " mosaic, checkerboard, grid, patchwork, tiled, seams"
+        )
 
+    def _parse_percent_colors(self, simple_prompt: str) -> List[Dict[str, Any]]:
+        """Простенький парсер строк вида '60% red, 40% white' → список цветов и долей [0..1]."""
+        parts = [p.strip() for p in simple_prompt.split(',') if p.strip()]
+        result: List[Dict[str, Any]] = []
+        for p in parts:
+            try:
+                percent_str, name = p.split('%', 1)
+                percent = float(percent_str.strip())
+                color_name = name.strip()
+                if color_name.lower().startswith(('of ', ' ')):
+                    color_name = color_name.split()[-1]
+                
+                # Валидация цвета через ColorManager
+                if self.color_manager.validate_colors([color_name]):
+                    result.append({"name": color_name, "proportion": max(0.0, min(1.0, percent / 100.0))})
+                else:
+                    logger.warning(f"⚠️ Недопустимый цвет в промпте: {color_name}")
+                    # Fallback: заменяем на белый
+                    result.append({"name": "white", "proportion": max(0.0, min(1.0, percent / 100.0))})
+            except Exception:
+                continue
+        # Нормализация, если сумма не 1.0
+        total = sum(c["proportion"] for c in result) or 1.0
+        for c in result:
+            c["proportion"] = c["proportion"] / total
+        return result
 
-# CUDA optimizations
-if torch.cuda.is_available():
-    torch.backends.cudnn.benchmark = True
-    torch.backends.cuda.matmul.allow_tf32 = True
-    torch.backends.cudnn.allow_tf32 = True
+    def _render_legend(self, colors: List[Dict[str, Any]], size: int = 256) -> Image.Image:
+        """Строим простую легенду/colormap из входных пропорций (горизонтальные полосы)."""
+        img = Image.new('RGBA', (size, size), color=(255, 255, 255, 255))  # Непрозрачный белый
+        draw = ImageDraw.Draw(img)
+        y = 0
+        for c in colors:
+            h = max(1, int(size * c["proportion"]))
+            try:
+                rgb = ImageColor.getrgb(c["name"])  # распознает стандартные цвета
+            except Exception:
+                rgb = (200, 200, 200)
+            draw.rectangle([0, y, size, min(size, y + h)], fill=rgb)
+            y += h
+        # Подгоняем последнюю полосу до края
+        if y < size and colors:
+            try:
+                rgb_last = ImageColor.getrgb(colors[-1]["name"])
+            except Exception:
+                rgb_last = (200, 200, 200)
+            draw.rectangle([0, y, size, size], fill=rgb_last)
+        return img
+    
+    def _build_prompt_from_simple(self, simple_prompt: str) -> str:
+        """Преобразование простого промпта в полный формат с НАШИМИ токенами (как в v45)."""
+        # Базовый промпт с НАШИМИ токенами активации (как в v45)
+        base_prompt = "ohwx_rubber_tile <s0><s1>"
+        
+        # Добавление простого промпта (без дублирования base_prompt)
+        if simple_prompt.startswith("ohwx_rubber_tile"):
+            # Если промпт уже содержит base_prompt, не дублируем
+            full_prompt = simple_prompt
+        else:
+            # Если промпт не содержит base_prompt, добавляем
+            full_prompt = f"{base_prompt}, {simple_prompt}"
+        
+        # Добавление качественных дескрипторов
+        quality_descriptors = [
+            "photorealistic rubber tile",
+            "high quality",
+            "detailed texture",
+            "professional photography",
+            "sharp focus"
+        ]
+        
+        full_prompt += ", " + ", ".join(quality_descriptors)
+        
+        return full_prompt
+    
+    def _create_optimized_colormap(self, prompt: str, size: tuple = (1024, 1024)) -> Image.Image:
+        """Создает оптимизированный colormap для ControlNet с точными пропорциями"""
+        try:
+            # Парсим цвета из промпта
+            colors = self._parse_percent_colors(prompt)
+            if not colors:
+                logger.warning("⚠️ Не удалось распарсить цвета, создаем базовый colormap")
+                return Image.new('RGBA', size, (255, 255, 255, 0))  # Прозрачный фон
+            
+            # Определяем оптимальный паттерн на основе количества цветов
+            color_count = len(colors)
+            if color_count == 1:
+                pattern_type = "random"  # Простой случай
+            elif color_count == 2:
+                pattern_type = "granular"  # Имитация резиновой крошки
+            elif color_count == 3:
+                pattern_type = "granular"  # Сложная крошка
+            else:  # 4+ цветов
+                pattern_type = "granular"  # Максимальная сложность
+            
+            # Определяем размер гранул на основе сложности
+            if color_count <= 2:
+                granule_size = "medium"
+            else:
+                granule_size = "small"  # Меньшие гранулы для сложных комбинаций
+            
+            logger.info(f"🎨 Создание colormap: {color_count} цветов, паттерн: {pattern_type}, гранулы: {granule_size}")
+            
+            # Обновляем статистику использования
+            self.color_grid_stats["patterns_used"][pattern_type] += 1
+            self.color_grid_stats["granule_sizes_used"][granule_size] += 1
+            
+            # Создаем оптимизированный colormap
+            colormap = self.color_grid_adapter.create_optimized_colormap(
+                colors, size, pattern_type, granule_size
+            )
+            
+            logger.info(f"✅ Оптимизированный colormap создан: {colormap.size}")
+            logger.info(f"📊 Статистика паттернов: {self.color_grid_stats['patterns_used']}")
+            logger.info(f"📊 Статистика размеров гранул: {self.color_grid_stats['granule_sizes_used']}")
+            
+            return colormap
+            
+        except Exception as e:
+            logger.error(f"❌ Ошибка создания оптимизированного colormap: {e}")
+            # Fallback: простой colormap
+            return self._render_legend(self._parse_percent_colors(prompt), size)
+    
+    def get_color_grid_stats(self) -> Dict[str, Any]:
+        """Возвращает статистику использования Color Grid Adapter"""
+        return {
+            "total_generations": self.color_grid_stats["total_generations"],
+            "controlnet_used": self.color_grid_stats["controlnet_used"],
+            "controlnet_usage_percent": round(
+                (self.color_grid_stats["controlnet_used"] / max(1, self.color_grid_stats["total_generations"])) * 100, 2
+            ),
+            "patterns_used": self.color_grid_stats["patterns_used"].copy(),
+            "granule_sizes_used": self.color_grid_stats["granule_sizes_used"].copy(),
+            "most_used_pattern": max(self.color_grid_stats["patterns_used"].items(), key=lambda x: x[1])[0],
+            "most_used_granule_size": max(self.color_grid_stats["granule_sizes_used"].items(), key=lambda x: x[1])[0]
+        }
+    
+    def test_color_grid_adapter(self, test_prompts: List[str] = None) -> Dict[str, Any]:
+        """Тестирует Color Grid Adapter на различных промптах"""
+        if test_prompts is None:
+            test_prompts = [
+                "100% red",
+                "50% red, 50% white",
+                "50% red, 30% black, 20% white",
+                "25% red, 25% blue, 25% grsgrn, 25% yellow"
+            ]
+        
+        test_results = {}
+        logger.info("🧪 Начинаем тестирование Color Grid Adapter...")
+        
+        for prompt in test_prompts:
+            try:
+                logger.info(f"🧪 Тестируем промпт: {prompt}")
+                
+                # Создаем colormap
+                colormap = self._create_optimized_colormap(prompt, size=(512, 512))
+                
+                # Анализируем результат
+                colors = self._parse_percent_colors(prompt)
+                color_count = len(colors)
+                
+                test_results[prompt] = {
+                    "success": True,
+                    "color_count": color_count,
+                    "colormap_size": colormap.size,
+                    "colormap_mode": colormap.mode,
+                    "colors_parsed": colors
+                }
+                
+                logger.info(f"✅ Тест пройден: {prompt}")
+                
+            except Exception as e:
+                test_results[prompt] = {
+                    "success": False,
+                    "error": str(e),
+                    "error_type": type(e).__name__
+                }
+                logger.error(f"❌ Тест провален: {prompt} - {e}")
+        
+        logger.info("🧪 Тестирование Color Grid Adapter завершено")
+        return test_results
+    
+    def _validate_colormap_against_prompt(self, colormap: Image, prompt: str) -> bool:
+        """Валидация colormap против промпта"""
+        try:
+            expected_colors = self.color_manager.extract_colors_from_prompt(prompt)
+            if not expected_colors:
+                logger.warning("⚠️ Не удалось извлечь цвета из промпта")
+                return False
+            
+            # Простая проверка: colormap не должен быть полностью серым
+            colormap_array = np.array(colormap)
+            if len(colormap_array.shape) == 3:
+                # RGB изображение
+                gray_pixels = np.all(colormap_array == [127, 127, 127], axis=2)
+                if np.all(gray_pixels):
+                    logger.warning("⚠️ Colormap полностью серый - ошибка распознавания цветов")
+                    return False
+            
+            logger.info(f"✅ Colormap валиден для цветов: {expected_colors}")
+            return True
+            
+        except Exception as e:
+            logger.error(f"❌ Ошибка валидации colormap: {e}")
+            return False
+    
+    def _force_rebuild_colormap(self, prompt: str, size: tuple = (1024, 1024)) -> Image:
+        """Принудительная пересборка colormap при ошибках"""
+        try:
+            logger.info("🔧 Принудительная пересборка colormap...")
+            
+            # Извлекаем цвета через ColorManager
+            colors = self.color_manager.extract_colors_from_prompt(prompt)
+            if not colors:
+                logger.error("❌ Не удалось извлечь цвета для пересборки colormap")
+                # Fallback: простой серый colormap
+                return Image.new('RGBA', size, (127, 127, 127, 255))  # Непрозрачный серый фон
+            
+            # Создаем простой colormap с правильными цветами
+            colormap = Image.new('RGBA', size, (255, 255, 255, 0))  # Прозрачный фон
+            pixels = colormap.load()
+            
+            # Размещаем цвета в простом паттерне
+            for i, color in enumerate(colors):
+                rgb = self.color_manager.get_color_rgb(color)
+                # Разделяем изображение на секции по цветам
+                start_x = (i * size[0]) // len(colors)
+                end_x = ((i + 1) * size[0]) // len(colors)
+                for x in range(start_x, end_x):
+                    for y in range(size[1]):
+                        pixels[x, y] = rgb
+            
+            logger.info(f"✅ Colormap пересобран для цветов: {colors}")
+            return colormap
+            
+        except Exception as e:
+            logger.error(f"❌ Критическая ошибка пересборки colormap: {e}")
+            # Fallback: простой серый colormap
+            return Image.new('RGBA', size, (127, 127, 127, 255))  # Непрозрачный серый фон
+    
+    def predict(self, prompt: str = Input(description="Описание цветов резиновой плитки", default="100% red"), 
+                negative_prompt: Optional[str] = Input(description="Негативный промпт", default=None), 
+                seed: int = Input(description="Сид для воспроизводимости", default=-1),
+                steps: int = Input(description="Число шагов", default=20),
+                guidance: float = Input(description="Guidance scale", default=7.0),
+                lora_scale: float = Input(description="Сила LoRA (0.0-1.0)", default=0.7),
+                use_controlnet: bool = Input(description="Включить ControlNet SoftEdge (требует control_image)", default=False),
+                control_image: Optional[Path] = Input(description="Контрольное изображение (опц.) для SoftEdge", default=None)) -> Iterator[Path]:
+        """Генерация изображения резиновой плитки с использованием НАШЕЙ обученной модели."""
+        
+        try:
+            # 🚀 STARTUP_SNAPSHOT_START - Гарантированное сохранение логов стартапа
+            logger.info("🚀 STARTUP_SNAPSHOT_START")
+            logger.info(f"🧭 MODEL_START {MODEL_VERSION} | device={self.device} | diffusers={getattr(__import__('diffusers'),'__version__', 'unknown')} | torch={torch.__version__}")
+            logger.info(f"📊 GPU: {torch.cuda.get_device_name() if torch.cuda.is_available() else 'CPU'}")
+            logger.info(f"💾 GPU Memory: {torch.cuda.get_device_properties(0).total_memory / 1024**3:.1f} GB" if torch.cuda.is_available() else "N/A")
+            logger.info(f"🔧 SDXL Base: {getattr(self.pipe.unet.config, 'model_name_or_path', 'unknown')}")
+            logger.info(f"🎨 LoRA: {getattr(self, 'lora_path', 'unknown')} (rank: 32)")
+            logger.info(f"🔤 TI: {getattr(self, 'ti_path', 'unknown')} (tokens: <s0><s1>)")
+            logger.info(f"⚙️ Scheduler: {self.pipe.scheduler.__class__.__name__}")
+            logger.info(f"🎭 VAE: {self.pipe.vae.__class__.__name__}")
+            logger.info(f"🎯 Prompt: {prompt}")
+            logger.info(f"🚫 Negative Prompt: {negative_prompt}")
+            logger.info(f"🎲 Seed: {seed}")
+            logger.info(f"📊 Steps: {steps} (базовый)")
+            logger.info(f"🎚️ Guidance: {guidance} (базовый)")
+            logger.info(f"🔧 LoRA Scale: {lora_scale} (базовый)")
+            logger.info(f"🎨 Адаптивные параметры будут рассчитаны на основе количества цветов")
+            logger.info("🚀 STARTUP_SNAPSHOT_END")
+            
+            logger.info("🎨 Начало генерации изображения...")
+            logger.info(f"📝 Входной промпт: {prompt}")
+            logger.info(f"🚫 Входной негативный промпт: {negative_prompt}")
+            logger.info(f"🎲 Входной сид: {seed}")
+            
+            # ИСПРАВЛЕНИЕ: Обработка входного промпта (удаление JSON-обертки)
+            if isinstance(prompt, str) and prompt.strip().startswith('{'):
+                try:
+                    import json
+                    prompt_data = json.loads(prompt)
+                    if isinstance(prompt_data, dict) and "prompt" in prompt_data:
+                        prompt = prompt_data["prompt"]
+                        logger.info(f"🔧 Исправлен JSON-промпт: {prompt}")
+                except json.JSONDecodeError:
+                    logger.warning(f"⚠️ Не удалось распарсить JSON-промпт: {prompt}")
+                except Exception as e:
+                    logger.warning(f"⚠️ Ошибка обработки промпта: {e}")
+            
+            # Упрощенный негативный промпт для лучшей генерации многоцветных плиток
+            if negative_prompt is None:
+                negative_prompt = self._build_negative_prompt()
+                logger.info(f"🔧 Установлен стандартный негативный промпт: {negative_prompt}")
+            
+            # Установка сида
+            if seed == -1:
+                seed = random.randint(0, 999999999)
+                logger.info(f"🎲 Установлен случайный сид: {seed}")
+            
+            torch.manual_seed(seed)
+            if torch.cuda.is_available():
+                torch.cuda.manual_seed(seed)
+                torch.cuda.manual_seed_all(seed)
+            
+            # Преобразование простого промпта в полный формат с НАШИМИ токенами
+            full_prompt = self._build_prompt_from_simple(prompt)
+            
+            logger.info(f"🎨 Генерация изображения...")
+            logger.info(f"📝 Полный промпт: {full_prompt}")
+            logger.info(f"🚫 Финальный негативный промпт: {negative_prompt}")
+            logger.info(f"🎲 Финальный сид: {seed}")
+            logger.info(f"🔧 Устройство: {self.device}")
+            
+            # Адаптивные параметры для различного количества цветов (как в v45)
+            logger.info("🎨 Анализ сложности промпта для адаптивных параметров...")
+            
+            # Подсчитываем количество цветов в промпте через ColorManager
+            color_count = self.color_manager.get_color_count(prompt)
+            logger.info(f"🎨 Обнаружено цветов в промпте: {color_count}")
+            
+            # Адаптивные настройки на основе количества цветов (как в v45)
+            if color_count == 1:
+                # Один цвет - простой промпт, как в успешном тесте 4
+                adaptive_steps = 20
+                adaptive_guidance = 7.0
+                logger.info("🎯 Адаптивные параметры для 1 цвета: steps=20, guidance=7.0")
+            elif color_count == 2:
+                # Два цвета - средняя сложность
+                adaptive_steps = 25
+                adaptive_guidance = 7.5
+                logger.info("🎯 Адаптивные параметры для 2 цветов: steps=25, guidance=7.5")
+            elif color_count == 3:
+                # Три цвета - высокая сложность
+                adaptive_steps = 30
+                adaptive_guidance = 8.0
+                logger.info("🎯 Адаптивные параметры для 3 цветов: steps=30, guidance=8.0")
+            else:
+                # 4+ цвета - максимальная сложность
+                adaptive_steps = 35
+                adaptive_guidance = 8.5
+                logger.info("🎯 Адаптивные параметры для 4+ цветов: steps=35, guidance=8.5")
+            
+            # Генерация изображения с адаптивными параметрами
+            logger.info("🚀 Запуск pipeline для генерации с адаптивными параметрами...")
+            pipe_to_use = self.pipe
+            pipe_kwargs = dict(
+                prompt=full_prompt,
+                negative_prompt=negative_prompt,
+                num_inference_steps=max(5, int(adaptive_steps)),
+                guidance_scale=float(adaptive_guidance),
+                width=1024,
+                height=1024,
+                generator=torch.Generator(device=self.device).manual_seed(seed),
+                # LoRA уже интегрирован через fuse_lora, scale не нужен
+                # cross_attention_kwargs={"scale": float(max(0.0, min(1.0, lora_scale)))}
+            )
+
+            # Настройка callback для раннего превью с адаптивными параметрами
+            preview_path = "/tmp/preview.png"
+            preview_emitted = False
+            try_preview_step = max(1, int(adaptive_steps * 0.5))
+
+            def _decode_and_save_preview(current_latents: torch.FloatTensor) -> None:
+                nonlocal preview_emitted
+                if preview_emitted:
+                    return
+                try:
+                    scale = getattr(self.pipe.vae.config, "scaling_factor", 0.18215)
+                    with torch.no_grad():
+                        lat = current_latents.detach().to(self.device)
+                        image = self.pipe.vae.decode(lat / scale).sample
+                        image = (image / 2 + 0.5).clamp(0, 1)
+                        image = image[0].permute(1, 2, 0).cpu().numpy()
+                        image = (image * 255).round().astype("uint8")
+                        Image.fromarray(image).resize((512, 512), Image.Resampling.LANCZOS).save(preview_path)
+                    logger.info(f"🟡 PREVIEW_READY {preview_path}")
+                except Exception as e:
+                    logger.warning(f"⚠️ Не удалось сохранить промежуточный preview: {e}")
+
+            def _callback_on_step(step: int = None, timestep: int = None, **kwargs):
+                nonlocal preview_emitted
+                latents = kwargs.get("latents")
+                if latents is None and len(kwargs) == 0:
+                    # некоторые версии передают latents последним аргументом
+                    pass
+                if not preview_emitted and step is not None and step >= try_preview_step and latents is not None:
+                    _decode_and_save_preview(latents)
+                    try:
+                        # стримим превью немедленно
+                        yield_path = Path(preview_path)
+                        # Cog поддерживает генераторный вывод через yield
+                        # Внутри Cog: просто используем print маркер, GUI подтянет файл по окончании
+                    except Exception:
+                        pass
+                    preview_emitted = True
+
+            # МУЛЬТИМОДАЛЬНЫЙ CONTROLNET: Адаптивный выбор на основе сложности
+            auto_controlnet = False
+            selected_controlnets = None
+            
+            if not use_controlnet:
+                # Используем уже подсчитанное количество цветов
+                if color_count >= 2:
+                    auto_controlnet = True
+                    # Выбираем оптимальную комбинацию ControlNet
+                    selected_controlnets = self.select_optimal_controlnet(color_count)
+                    logger.info(f"🎯 Автоматически включаем мультимодальный ControlNet для {color_count} цветов: {selected_controlnets}")
+            
+            # Обновляем общую статистику
+            self.color_grid_stats["total_generations"] += 1
+            if use_controlnet or auto_controlnet:
+                self.color_grid_stats["controlnet_used"] += 1
+            
+            # МУЛЬТИМОДАЛЬНЫЙ CONTROLNET: Инициализация и применение
+            if (use_controlnet or auto_controlnet) and ControlNetModel is not None and StableDiffusionXLControlNetPipeline is not None:
+                try:
+                    if self.controlnet is None:
+                        logger.info("🔗 Загрузка ControlNet SoftEdge для SDXL...")
+                        self.controlnet = ControlNetModel.from_pretrained(
+                            "diffusers/controlnet-softedge-sdxl-1.0", torch_dtype=torch.float16
+                        )
+                    if self.pipe_cn is None:
+                        self.pipe_cn = StableDiffusionXLControlNetPipeline(
+                            vae=self.pipe.vae,
+                            text_encoder=self.pipe.text_encoder,
+                            text_encoder_2=self.pipe.text_encoder_2,
+                            tokenizer=self.pipe.tokenizer,
+                            tokenizer_2=self.pipe.tokenizer_2,
+                            unet=self.pipe.unet,
+                            controlnet=self.controlnet,
+                            scheduler=self.pipe.scheduler
+                        ).to(self.device)
+                    pipe_to_use = self.pipe_cn
+                    
+                    # МУЛЬТИМОДАЛЬНЫЙ CONTROLNET: Подготовка множественных контрольных карт
+                    try:
+                        if control_image is not None:
+                            # Если пользователь предоставил контрольное изображение
+                            from PIL import ImageFilter
+                            user_hint = Image.open(control_image).convert('L').resize((1024, 1024), Image.Resampling.LANCZOS)
+                            user_hint = user_hint.filter(ImageFilter.EDGE_ENHANCE)
+                            logger.info("✅ ControlNet использует пользовательское контрольное изображение")
+                            
+                            # Создаем дополнительные контрольные карты для мультимодальности
+                            control_images = [user_hint]
+                            if selected_controlnets and len(selected_controlnets) > 1:
+                                # Добавляем автоматически созданные карты для дополнительных ControlNet
+                                for i in range(1, len(selected_controlnets)):
+                                    additional_hint = self._create_optimized_colormap(prompt, size=(1024, 1024))
+                                    additional_hint = additional_hint.convert('L').filter(ImageFilter.EDGE_ENHANCE)
+                                    control_images.append(additional_hint)
+                        else:
+                            # Автоматически создаем множественные контрольные карты для мультимодального ControlNet
+                            logger.info("🎨 Создание множественных контрольных карт для мультимодального ControlNet")
+                            control_images = []
+                            
+                            # Основная цветовая карта
+                            color_control_image = self._create_optimized_colormap(prompt, size=(1024, 1024))
+                            
+                            # Валидация colormap против промпта
+                            if not self._validate_colormap_against_prompt(color_control_image, prompt):
+                                logger.warning("⚠️ Colormap не соответствует промпту, пересоздаем...")
+                                color_control_image = self._force_rebuild_colormap(prompt, size=(1024, 1024))
+                            
+                            # Преобразуем в grayscale для ControlNet
+                            main_hint = color_control_image.convert('L')
+                            main_hint = main_hint.filter(ImageFilter.EDGE_ENHANCE)
+                            control_images.append(main_hint)
+                            
+                            # Создаем дополнительные контрольные карты для мультимодальности
+                            if selected_controlnets and len(selected_controlnets) > 1:
+                                for i in range(1, len(selected_controlnets)):
+                                    additional_hint = self._create_optimized_colormap(prompt, size=(1024, 1024))
+                                    additional_hint = additional_hint.convert('L').filter(ImageFilter.EDGE_ENHANCE)
+                                    control_images.append(additional_hint)
+                        
+                        # Применяем мультимодальный ControlNet
+                        if selected_controlnets and len(control_images) > 1:
+                            multi_controlnet_kwargs = self.apply_multi_controlnet(prompt, selected_controlnets, control_images)
+                            if multi_controlnet_kwargs:
+                                pipe_kwargs.update(multi_controlnet_kwargs)
+                                logger.info(f"✅ Мультимодальный ControlNet активирован с {len(control_images)} контрольными картами")
+                            else:
+                                # Fallback к основной карте
+                                pipe_kwargs["image"] = control_images[0]
+                                logger.info("✅ ControlNet активирован с основной контрольной картой (fallback)")
+                        else:
+                            # Обычный режим с одной картой
+                            pipe_kwargs["image"] = control_images[0]
+                            logger.info("✅ ControlNet активирован с контрольной картой")
+                        
+                    except Exception as e:
+                        logger.warning(f"⚠️ Ошибка подготовки мультимодального ControlNet: {e}")
+                        # Fallback: простая контрольная карта
+                        hint = Image.new('L', (1024, 1024), color=255)
+                        pipe_kwargs["image"] = hint
+                        logger.info("✅ ControlNet активирован с fallback картой")
+                except Exception as e:
+                    logger.warning(f"⚠️ ControlNet недоступен: {e}")
+
+            # Единый проход: генерируем только финальное изображение
+            logger.info("🚀 Финальный сегмент: единый проход без callback")
+            result = pipe_to_use(
+                **{**pipe_kwargs, "output_type": "pil"}
+            )
+            logger.info("✅ Финальная генерация завершена")
+            
+            # Сохранение результатов
+            final_image = result.images[0]
+            logger.info(f"📊 Размер сгенерированного изображения: {final_image.size}")
+            
+            # Превью уже построены из середины финального прохода (если удалось)
+            
+            # Сохранение файлов
+            final_path = "/tmp/final.png"
+            
+            final_image.save(final_path)
+            logger.info(f"✅ FINAL_READY {final_path}")
+            
+            # Создание оптимизированного colormap с помощью Color Grid Adapter
+            colormap_path = "/tmp/colormap.png"
+            try:
+                # Используем наш оптимизированный Color Grid Adapter
+                colormap_image = self._create_optimized_colormap(prompt, size=(1024, 1024))
+                
+                # Валидация colormap против промпта
+                if not self._validate_colormap_against_prompt(colormap_image, prompt):
+                    logger.warning("⚠️ Colormap не соответствует промпту, пересоздаем...")
+                    colormap_image = self._force_rebuild_colormap(prompt, size=(1024, 1024))
+                
+                # Сохраняем в высоком разрешении для лучшего качества
+                colormap_image.save(colormap_path)
+                logger.info(f"🎨 ОПТИМИЗИРОВАННЫЙ COLORMAP_READY {colormap_path}")
+                logger.info(f"📊 Размер colormap: {colormap_image.size}")
+                
+                # Дополнительно сохраняем в маленьком размере для легенды
+                legend_path = "/tmp/legend.png"
+                legend_image = colormap_image.resize((256, 256), Image.Resampling.LANCZOS)
+                legend_image.save(legend_path)
+                logger.info(f"📋 ЛЕГЕНДА_READY {legend_path}")
+                
+            except Exception as e:
+                logger.warning(f"⚠️ Не удалось построить оптимизированный colormap: {e}")
+                # Fallback: простой colormap
+                try:
+                    parsed_colors = self._parse_percent_colors(prompt)
+                    if not parsed_colors:
+                        parsed_colors = [{"name": "white", "proportion": 1.0}]
+                    colormap_image = self._render_legend(parsed_colors, size=256)
+                    colormap_image.save(colormap_path)
+                    logger.info(f"🎨 FALLBACK COLORMAP_READY {colormap_path}")
+                except Exception as e2:
+                    logger.error(f"❌ Критическая ошибка создания colormap: {e2}")
+                    Image.new('RGBA', (256, 256), color=(255, 255, 255, 255)).save(colormap_path)
+            
+            # Очистка памяти
+            if torch.cuda.is_available():
+                torch.cuda.empty_cache()
+            gc.collect()
+            logger.info("🧹 Память очищена")
+            
+            # Сохранение полного JSON-ответа с деталями генерации
+            try:
+                import json
+                generation_data = {
+                    "model_version": MODEL_VERSION,
+                    "input_prompt": prompt,
+                    "full_prompt": full_prompt,
+                    "negative_prompt": negative_prompt,
+                    "seed": seed,
+                    "steps": steps,
+                    "guidance": guidance,
+                    "lora_scale": lora_scale,
+                    "device": self.device,
+                    "image_size": final_image.size,
+                    "generation_time": time.time() if 'time' in globals() else None,
+                    "parsed_colors": parsed_colors if 'parsed_colors' in locals() else []
+                }
+                json_path = "/tmp/generation_data.json"
+                with open(json_path, "w", encoding="utf-8") as f:
+                    json.dump(generation_data, f, ensure_ascii=False, indent=2)
+                logger.info(f"📄 JSON_READY {json_path}")
+            except Exception as e:
+                logger.warning(f"⚠️ Не удалось сохранить JSON-данные: {e}")
+            
+            logger.info("✅ Изображение успешно сгенерировано!")
+            
+            # Логируем статистику Color Grid Adapter
+            stats = self.get_color_grid_stats()
+            logger.info(f"📊 Color Grid Adapter статистика:")
+            logger.info(f"   - Всего генераций: {stats['total_generations']}")
+            logger.info(f"   - ControlNet использован: {stats['controlnet_used']} ({stats['controlnet_usage_percent']}%)")
+            logger.info(f"   - Популярный паттерн: {stats['most_used_pattern']}")
+            logger.info(f"   - Популярный размер гранул: {stats['most_used_granule_size']}")
+            
+            # Возвращаем файлы в правильном порядке: final, colormap, legend
+            yield Path(final_path)
+            yield Path(colormap_path)
+            yield Path(legend_path)
+            
+        except Exception as e:
+            logger.error(f"❌ Ошибка генерации: {e}")
+            logger.error(f"📊 Тип ошибки: {type(e).__name__}")
+            logger.error(f"📊 Детали ошибки: {str(e)}")
+            raise e
+
+    # Адаптивный выбор ControlNet на основе количества цветов
+    def select_optimal_controlnet(self, color_count):
+        """Выбирает оптимальную комбинацию ControlNet на основе сложности промпта"""
+        if color_count == 1:
+            return None  # Базовая модель справляется
+        elif color_count == 2:
+            return ["t2i_color"]  # Только цветовой контроль
+        elif color_count == 3:
+            return ["t2i_color", "shuffle"]  # Цвет + перемешивание
+        else:  # 4+ цветов
+            return ["t2i_color", "color_grid", "shuffle"]  # Полный контроль
+
+    # Последовательное применение ControlNet
+    def apply_multi_controlnet(self, prompt, controlnets, control_images):
+        """Применяет несколько ControlNet последовательно для максимальной точности"""
+        if not controlnets or not control_images:
+            return None
+        
+        try:
+            # Создаем комбинированную контрольную карту
+            combined_hint = self._create_combined_control_hint(control_images)
+            
+            # Применяем каждый ControlNet с соответствующими весами
+            pipe_kwargs = {}
+            for i, controlnet_type in enumerate(controlnets):
+                if controlnet_type == "t2i_color":
+                    pipe_kwargs["image"] = control_images[i] if i < len(control_images) else combined_hint
+                    pipe_kwargs["controlnet_conditioning_scale"] = 0.8
+                elif controlnet_type == "color_grid":
+                    pipe_kwargs["image"] = control_images[i] if i < len(control_images) else combined_hint
+                    pipe_kwargs["controlnet_conditioning_scale"] = 0.9
+                elif controlnet_type == "shuffle":
+                    pipe_kwargs["image"] = control_images[i] if i < len(control_images) else combined_hint
+                    pipe_kwargs["controlnet_conditioning_scale"] = 0.7
+            
+            return pipe_kwargs
+        except Exception as e:
+            logger.warning(f"⚠️ Ошибка применения мульти ControlNet: {e}")
+            return None
+
+    def _create_combined_control_hint(self, control_images):
+        """Создает комбинированную контрольную карту из нескольких источников"""
+        try:
+            if not control_images:
+                return None
+            
+            # Берем первое изображение как основу
+            base_image = control_images[0]
+            if len(control_images) == 1:
+                return base_image
+            
+            # Комбинируем несколько контрольных карт
+            combined = Image.new('L', base_image.size, 0)
+            for i, img in enumerate(control_images):
+                if img is not None:
+                    # Нормализуем и добавляем с весами
+                    weight = 1.0 / len(control_images)
+                    img_array = np.array(img.convert('L')).astype(np.float32) * weight
+                    combined_array = np.array(combined).astype(np.float32)
+                    combined_array += img_array
+                    combined = Image.fromarray(np.clip(combined_array, 0, 255).astype(np.uint8))
+            
+            return combined
+        except Exception as e:
+            logger.warning(f"⚠️ Ошибка создания комбинированной контрольной карты: {e}")
+            return control_images[0] if control_images else None

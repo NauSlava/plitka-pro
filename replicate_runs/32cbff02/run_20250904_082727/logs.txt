@@ -1,0 +1,199 @@
+=== GENERATION START: 2025-09-04 08:27:28 ===
+INFO:coglet:prediction started: id=d8c1v2xf4hrg80cs2crvzj3424
+WARNING unknown input field ignored: colormap
+WARNING unknown input field ignored: granule_size
+WARNING unknown input field ignored: guidance_scale
+WARNING unknown input field ignored: num_inference_steps
+WARNING unknown input field ignored: test_purpose
+INFO:predict:🚀 STARTUP_SNAPSHOT_START
+INFO:predict:🧭 MODEL_START v4.5.01 | device=cuda | diffusers=0.21.4 | torch=2.1.0+cu121
+INFO:predict:📊 GPU: Tesla T4
+INFO:predict:💾 GPU Memory: 14.6 GB
+INFO:predict:🔧 SDXL Base: unknown
+INFO:predict:🎨 LoRA: unknown (rank: 32)
+INFO:predict:🔤 TI: unknown (tokens: <s0><s1>)
+INFO:predict:⚙️ Scheduler: DPMSolverMultistepScheduler
+INFO:predict:🎭 VAE: AutoencoderKL
+INFO:predict:🎯 Prompt: ohwx_rubber_tile <s0><s1> 40% red, 30% blue, 30% dkgreen rubber tile, radial pattern, natural distribution
+INFO:predict:🚫 Negative Prompt: missing red, missing blue, missing dkgreen, blurry, low quality, circular bands
+INFO:predict:🎲 Seed: 456
+INFO:predict:📊 Steps: 20 (базовый)
+INFO:predict:🎚️ Guidance: 7.0 (базовый)
+INFO:predict:🔧 LoRA Scale: 0.7 (базовый)
+INFO:predict:🎨 Адаптивные параметры будут рассчитаны на основе количества цветов
+INFO:predict:🚀 STARTUP_SNAPSHOT_END
+INFO:predict:🎨 Начало генерации изображения...
+INFO:predict:📝 Входной промпт: ohwx_rubber_tile <s0><s1> 40% red, 30% blue, 30% dkgreen rubber tile, radial pattern, natural distribution
+INFO:predict:🚫 Входной негативный промпт: missing red, missing blue, missing dkgreen, blurry, low quality, circular bands
+INFO:predict:🎲 Входной сид: 456
+INFO:predict:🎨 Генерация изображения...
+INFO:predict:📝 Полный промпт: ohwx_rubber_tile <s0><s1> 40% red, 30% blue, 30% dkgreen rubber tile, radial pattern, natural distribution, photorealistic rubber tile, high quality, detailed texture, professional photography, sharp focus
+INFO:predict:🚫 Финальный негативный промпт: missing red, missing blue, missing dkgreen, blurry, low quality, circular bands
+INFO:predict:🎲 Финальный сид: 456
+INFO:predict:🔧 Устройство: cuda
+INFO:predict:🎨 Анализ сложности промпта для адаптивных параметров...
+INFO:predict:🎨 Обнаружено цветов в промпте: 3
+INFO:predict:🎯 Адаптивные параметры для 3 цветов: steps=30, guidance=8.0
+INFO:predict:🚀 Запуск pipeline для генерации с адаптивными параметрами...
+INFO:predict:🎯 Автоматически включаем мультимодальный ControlNet для 3 цветов: ['t2i_color', 'shuffle']
+INFO:predict:🔗 Загрузка ControlNet SoftEdge для SDXL...
+WARNING:predict:⚠️ ControlNet недоступен: diffusers/controlnet-softedge-sdxl-1.0 is not a local folder and is not a valid model identifier listed on 'https://huggingface.co/models'
+If this is a private repository, make sure to pass a token having permission to this repo with `use_auth_token` or log in with `huggingface-cli login`.
+INFO:predict:🚀 Финальный сегмент: единый проход без callback
+
+  0%|          | 0/30 [00:00<?, ?it/s]
+  3%|▎         | 1/30 [00:01<00:31,  1.09s/it]
+  7%|▋         | 2/30 [00:02<00:29,  1.06s/it]
+ 10%|█         | 3/30 [00:03<00:28,  1.05s/it]
+ 13%|█▎        | 4/30 [00:04<00:27,  1.05s/it]
+ 17%|█▋        | 5/30 [00:05<00:26,  1.04s/it]
+ 20%|██        | 6/30 [00:06<00:25,  1.04s/it]
+ 23%|██▎       | 7/30 [00:07<00:23,  1.04s/it]
+ 27%|██▋       | 8/30 [00:08<00:22,  1.04s/it]
+ 30%|███       | 9/30 [00:09<00:21,  1.04s/it]
+ 33%|███▎      | 10/30 [00:10<00:20,  1.04s/it]
+ 37%|███▋      | 11/30 [00:11<00:19,  1.04s/it]
+ 40%|████      | 12/30 [00:12<00:18,  1.04s/it]
+ 43%|████▎     | 13/30 [00:13<00:17,  1.05s/it]
+ 47%|████▋     | 14/30 [00:14<00:16,  1.05s/it]
+ 50%|█████     | 15/30 [00:15<00:15,  1.05s/it]
+ 53%|█████▎    | 16/30 [00:16<00:14,  1.05s/it]
+ 57%|█████▋    | 17/30 [00:17<00:13,  1.05s/it]
+ 60%|██████    | 18/30 [00:18<00:12,  1.06s/it]
+ 63%|██████▎   | 19/30 [00:19<00:11,  1.06s/it]
+ 67%|██████▋   | 20/30 [00:21<00:10,  1.06s/it]
+ 70%|███████   | 21/30 [00:22<00:09,  1.06s/it]
+ 73%|███████▎  | 22/30 [00:23<00:08,  1.06s/it]
+ 77%|███████▋  | 23/30 [00:24<00:07,  1.06s/it]
+ 80%|████████  | 24/30 [00:25<00:06,  1.06s/it]
+ 83%|████████▎ | 25/30 [00:26<00:05,  1.06s/it]
+ 87%|████████▋ | 26/30 [00:27<00:04,  1.06s/it]
+ 90%|█████████ | 27/30 [00:28<00:03,  1.06s/it]
+ 93%|█████████▎| 28/30 [00:29<00:02,  1.06s/it]
+ 97%|█████████▋| 29/30 [00:30<00:01,  1.06s/it]
+100%|██████████| 30/30 [00:31<00:00,  1.06s/it]
+100%|██████████| 30/30 [00:31<00:00,  1.05s/it]
+INFO:predict:✅ Финальная генерация завершена
+INFO:predict:📊 Размер сгенерированного изображения: (1024, 1024)
+INFO:predict:✅ FINAL_READY /tmp/final.png
+WARNING:predict:⚠️ Недопустимый цвет в промпте: dkgreen rubber tile
+INFO:predict:🎨 Создание colormap: 2 цветов, паттерн: granular, гранулы: medium
+INFO:predict:✅ Оптимизированный colormap создан: (1024, 1024)
+INFO:predict:📊 Статистика паттернов: {'random': 1, 'grid': 0, 'radial': 0, 'granular': 1}
+INFO:predict:📊 Статистика размеров гранул: {'small': 0, 'medium': 2, 'large': 0}
+ERROR:predict:❌ Ошибка валидации colormap: operands could not be broadcast together with shapes (1024,1024,4) (3,) 
+WARNING:predict:⚠️ Colormap не соответствует промпту, пересоздаем...
+INFO:predict:🔧 Принудительная пересборка colormap...
+INFO:predict:✅ Colormap пересобран для цветов: ['red', 'blue', 'dkgreen']
+INFO:predict:🎨 ОПТИМИЗИРОВАННЫЙ COLORMAP_READY /tmp/colormap.png
+INFO:predict:📊 Размер colormap: (1024, 1024)
+INFO:predict:📋 ЛЕГЕНДА_READY /tmp/legend.png
+INFO:predict:🧹 Память очищена
+INFO:predict:📄 JSON_READY /tmp/generation_data.json
+INFO:predict:✅ Изображение успешно сгенерировано!
+INFO:predict:📊 Color Grid Adapter статистика:
+INFO:predict:   - Всего генераций: 3
+INFO:predict:   - ControlNet использован: 2 (66.67%)
+INFO:predict:   - Популярный паттерн: random
+INFO:predict:   - Популярный размер гранул: medium
+INFO:coglet:prediction completed: id=d8c1v2xf4hrg80cs2crvzj3424
+INFO:coglet:prediction started: id=d8c1v2xf4hrg80cs2crvzj3424
+WARNING unknown input field ignored: colormap
+WARNING unknown input field ignored: granule_size
+WARNING unknown input field ignored: guidance_scale
+WARNING unknown input field ignored: num_inference_steps
+WARNING unknown input field ignored: test_purpose
+INFO:predict:🚀 STARTUP_SNAPSHOT_START
+INFO:predict:🧭 MODEL_START v4.5.01 | device=cuda | diffusers=0.21.4 | torch=2.1.0+cu121
+INFO:predict:📊 GPU: Tesla T4
+INFO:predict:💾 GPU Memory: 14.6 GB
+INFO:predict:🔧 SDXL Base: unknown
+INFO:predict:🎨 LoRA: unknown (rank: 32)
+INFO:predict:🔤 TI: unknown (tokens: <s0><s1>)
+INFO:predict:⚙️ Scheduler: DPMSolverMultistepScheduler
+INFO:predict:🎭 VAE: AutoencoderKL
+INFO:predict:🎯 Prompt: ohwx_rubber_tile <s0><s1> 40% red, 30% blue, 30% dkgreen rubber tile, radial pattern, natural distribution
+INFO:predict:🚫 Negative Prompt: missing red, missing blue, missing dkgreen, blurry, low quality, circular bands
+INFO:predict:🎲 Seed: 456
+INFO:predict:📊 Steps: 20 (базовый)
+INFO:predict:🎚️ Guidance: 7.0 (базовый)
+INFO:predict:🔧 LoRA Scale: 0.7 (базовый)
+INFO:predict:🎨 Адаптивные параметры будут рассчитаны на основе количества цветов
+INFO:predict:🚀 STARTUP_SNAPSHOT_END
+INFO:predict:🎨 Начало генерации изображения...
+INFO:predict:📝 Входной промпт: ohwx_rubber_tile <s0><s1> 40% red, 30% blue, 30% dkgreen rubber tile, radial pattern, natural distribution
+INFO:predict:🚫 Входной негативный промпт: missing red, missing blue, missing dkgreen, blurry, low quality, circular bands
+INFO:predict:🎲 Входной сид: 456
+INFO:predict:🎨 Генерация изображения...
+INFO:predict:📝 Полный промпт: ohwx_rubber_tile <s0><s1> 40% red, 30% blue, 30% dkgreen rubber tile, radial pattern, natural distribution, photorealistic rubber tile, high quality, detailed texture, professional photography, sharp focus
+INFO:predict:🚫 Финальный негативный промпт: missing red, missing blue, missing dkgreen, blurry, low quality, circular bands
+INFO:predict:🎲 Финальный сид: 456
+INFO:predict:🔧 Устройство: cuda
+INFO:predict:🎨 Анализ сложности промпта для адаптивных параметров...
+INFO:predict:🎨 Обнаружено цветов в промпте: 3
+INFO:predict:🎯 Адаптивные параметры для 3 цветов: steps=30, guidance=8.0
+INFO:predict:🚀 Запуск pipeline для генерации с адаптивными параметрами...
+INFO:predict:🎯 Автоматически включаем мультимодальный ControlNet для 3 цветов: ['t2i_color', 'shuffle']
+INFO:predict:🔗 Загрузка ControlNet SoftEdge для SDXL...
+WARNING:predict:⚠️ ControlNet недоступен: diffusers/controlnet-softedge-sdxl-1.0 is not a local folder and is not a valid model identifier listed on 'https://huggingface.co/models'
+If this is a private repository, make sure to pass a token having permission to this repo with `use_auth_token` or log in with `huggingface-cli login`.
+INFO:predict:🚀 Финальный сегмент: единый проход без callback
+
+  0%|          | 0/30 [00:00<?, ?it/s]
+  3%|▎         | 1/30 [00:01<00:31,  1.09s/it]
+  7%|▋         | 2/30 [00:02<00:29,  1.06s/it]
+ 10%|█         | 3/30 [00:03<00:28,  1.05s/it]
+ 13%|█▎        | 4/30 [00:04<00:27,  1.05s/it]
+ 17%|█▋        | 5/30 [00:05<00:26,  1.04s/it]
+ 20%|██        | 6/30 [00:06<00:25,  1.04s/it]
+ 23%|██▎       | 7/30 [00:07<00:23,  1.04s/it]
+ 27%|██▋       | 8/30 [00:08<00:22,  1.04s/it]
+ 30%|███       | 9/30 [00:09<00:21,  1.04s/it]
+ 33%|███▎      | 10/30 [00:10<00:20,  1.04s/it]
+ 37%|███▋      | 11/30 [00:11<00:19,  1.04s/it]
+ 40%|████      | 12/30 [00:12<00:18,  1.04s/it]
+ 43%|████▎     | 13/30 [00:13<00:17,  1.05s/it]
+ 47%|████▋     | 14/30 [00:14<00:16,  1.05s/it]
+ 50%|█████     | 15/30 [00:15<00:15,  1.05s/it]
+ 53%|█████▎    | 16/30 [00:16<00:14,  1.05s/it]
+ 57%|█████▋    | 17/30 [00:17<00:13,  1.05s/it]
+ 60%|██████    | 18/30 [00:18<00:12,  1.06s/it]
+ 63%|██████▎   | 19/30 [00:19<00:11,  1.06s/it]
+ 67%|██████▋   | 20/30 [00:21<00:10,  1.06s/it]
+ 70%|███████   | 21/30 [00:22<00:09,  1.06s/it]
+ 73%|███████▎  | 22/30 [00:23<00:08,  1.06s/it]
+ 77%|███████▋  | 23/30 [00:24<00:07,  1.06s/it]
+ 80%|████████  | 24/30 [00:25<00:06,  1.06s/it]
+ 83%|████████▎ | 25/30 [00:26<00:05,  1.06s/it]
+ 87%|████████▋ | 26/30 [00:27<00:04,  1.06s/it]
+ 90%|█████████ | 27/30 [00:28<00:03,  1.06s/it]
+ 93%|█████████▎| 28/30 [00:29<00:02,  1.06s/it]
+ 97%|█████████▋| 29/30 [00:30<00:01,  1.06s/it]
+100%|██████████| 30/30 [00:31<00:00,  1.06s/it]
+100%|██████████| 30/30 [00:31<00:00,  1.05s/it]
+INFO:predict:✅ Финальная генерация завершена
+INFO:predict:📊 Размер сгенерированного изображения: (1024, 1024)
+INFO:predict:✅ FINAL_READY /tmp/final.png
+WARNING:predict:⚠️ Недопустимый цвет в промпте: dkgreen rubber tile
+INFO:predict:🎨 Создание colormap: 2 цветов, паттерн: granular, гранулы: medium
+INFO:predict:✅ Оптимизированный colormap создан: (1024, 1024)
+INFO:predict:📊 Статистика паттернов: {'random': 1, 'grid': 0, 'radial': 0, 'granular': 1}
+INFO:predict:📊 Статистика размеров гранул: {'small': 0, 'medium': 2, 'large': 0}
+ERROR:predict:❌ Ошибка валидации colormap: operands could not be broadcast together with shapes (1024,1024,4) (3,) 
+WARNING:predict:⚠️ Colormap не соответствует промпту, пересоздаем...
+INFO:predict:🔧 Принудительная пересборка colormap...
+INFO:predict:✅ Colormap пересобран для цветов: ['red', 'blue', 'dkgreen']
+INFO:predict:🎨 ОПТИМИЗИРОВАННЫЙ COLORMAP_READY /tmp/colormap.png
+INFO:predict:📊 Размер colormap: (1024, 1024)
+INFO:predict:📋 ЛЕГЕНДА_READY /tmp/legend.png
+INFO:predict:🧹 Память очищена
+INFO:predict:📄 JSON_READY /tmp/generation_data.json
+INFO:predict:✅ Изображение успешно сгенерировано!
+INFO:predict:📊 Color Grid Adapter статистика:
+INFO:predict:   - Всего генераций: 3
+INFO:predict:   - ControlNet использован: 2 (66.67%)
+INFO:predict:   - Популярный паттерн: random
+INFO:predict:   - Популярный размер гранул: medium
+INFO:coglet:prediction completed: id=d8c1v2xf4hrg80cs2crvzj3424
+
+=== GENERATION FINISH: 2025-09-04 08:28:09 ===

@@ -148,17 +148,25 @@ class ColorGridControlNet:
             return self._create_granular_pattern(colors, size, "medium")
     
     def _create_granular_pattern(self, colors, size, granule_size="medium"):
-        """Создает паттерн, имитирующий резиновую крошку"""
+        """Создает паттерн, имитирующий резиновую крошку с пустыми полями по краям"""
         width, height = size
         canvas = Image.new('RGBA', size, (255, 255, 255, 0))  # Прозрачный фон
         pixels = canvas.load()
+        
+        # Вычисляем размеры пустых полей (2-3% от общего размера)
+        margin_x = int(width * 0.025)  # 2.5% по горизонтали
+        margin_y = int(height * 0.025)  # 2.5% по вертикали
+        
+        # Рабочая область (без полей)
+        work_width = width - 2 * margin_x
+        work_height = height - 2 * margin_y
         
         # Параметры гранул
         granule_params = self.granule_sizes[granule_size]
         min_size, max_size = granule_params["size_range"]
         density = granule_params["density"]
         
-        # Нормализация пропорций
+        # Нормализация пропорций для рабочей области
         total_proportion = sum(color.get("proportion", 0) for color in colors)
         normalized_colors = []
         for color in colors:
@@ -167,55 +175,57 @@ class ColorGridControlNet:
             normalized_colors.append({
                 "color": color_rgb,
                 "proportion": proportion,
-                "pixels_needed": int(proportion * width * height * density)
+                "pixels_needed": int(proportion * work_width * work_height * density)
             })
         
-        # Создание гранул
+        # Создание гранул - случайные точки в рабочей области
         pixels_placed = {i: 0 for i in range(len(normalized_colors))}
         
-        for _ in range(int(width * height * density)):
-            # Выбор цвета на основе пропорций
-            available_colors = [i for i, color_info in enumerate(normalized_colors) 
-                              if pixels_placed[i] < color_info["pixels_needed"]]
+        # Создаем список позиций только в рабочей области и перемешиваем
+        all_positions = [(x + margin_x, y + margin_y) for x in range(work_width) for y in range(work_height)]
+        random.shuffle(all_positions)
+        
+        pos_idx = 0
+        for color_idx, color_info in enumerate(normalized_colors):
+            pixels_to_place = color_info["pixels_needed"]
+            placed = 0
             
-            if not available_colors:
-                break
-            
-            color_idx = random.choice(available_colors)
-            color_info = normalized_colors[color_idx]
-            
-            # Создание гранулы
-            granule_size = random.randint(min_size, max_size)
-            x = random.randint(0, width - granule_size)
-            y = random.randint(0, height - granule_size)
-            
-            # Размещение гранулы
-            for dx in range(granule_size):
-                for dy in range(granule_size):
-                    if (0 <= x + dx < width and 0 <= y + dy < height and
-                        pixels[x + dx, y + dy] == (255, 255, 255, 0)):  # Только прозрачные пиксели
-                        pixels[x + dx, y + dy] = color_info["color"]
-                        pixels_placed[color_idx] += 1
+            while placed < pixels_to_place and pos_idx < len(all_positions):
+                x, y = all_positions[pos_idx]
+                pos_idx += 1
+                
+                # Проверяем, что пиксель еще прозрачный
+                if pixels[x, y] == (255, 255, 255, 0):
+                    pixels[x, y] = color_info["color"]
+                    placed += 1
         
         return canvas
     
     def _create_random_pattern(self, colors, size):
-        """Создает случайный паттерн с точными пропорциями"""
+        """Создает случайный паттерн с точными пропорциями и пустыми полями по краям"""
         width, height = size
         canvas = Image.new('RGBA', size, (255, 255, 255, 0))  # Прозрачный фон
         pixels = canvas.load()
         
-        # Нормализация пропорций
+        # Вычисляем размеры пустых полей (2-3% от общего размера)
+        margin_x = int(width * 0.025)  # 2.5% по горизонтали
+        margin_y = int(height * 0.025)  # 2.5% по вертикали
+        
+        # Рабочая область (без полей)
+        work_width = width - 2 * margin_x
+        work_height = height - 2 * margin_y
+        
+        # Нормализация пропорций для рабочей области
         total_proportion = sum(color.get("proportion", 0) for color in colors)
         color_pixels = {}
         
         for color in colors:
             proportion = color.get("proportion", 0) / total_proportion
             color_rgb = self._name_to_rgb(color.get("name", "white"))
-            color_pixels[color_rgb] = int(proportion * width * height)
+            color_pixels[color_rgb] = int(proportion * work_width * work_height)
         
-        # Случайное размещение пикселей
-        all_positions = [(x, y) for x in range(width) for y in range(height)]
+        # Случайное размещение пикселей в рабочей области
+        all_positions = [(x + margin_x, y + margin_y) for x in range(work_width) for y in range(work_height)]
         random.shuffle(all_positions)
         
         pos_idx = 0
@@ -229,28 +239,36 @@ class ColorGridControlNet:
         return canvas
     
     def _create_grid_pattern(self, colors, size):
-        """Создает сеточный паттерн с точечным распределением"""
+        """Создает сеточный паттерн с точечным распределением и пустыми полями по краям"""
         width, height = size
         canvas = Image.new('RGBA', size, (255, 255, 255, 0))  # Прозрачный фон
         pixels = canvas.load()
         
-        # Нормализация пропорций
+        # Вычисляем размеры пустых полей (2-3% от общего размера)
+        margin_x = int(width * 0.025)  # 2.5% по горизонтали
+        margin_y = int(height * 0.025)  # 2.5% по вертикали
+        
+        # Рабочая область (без полей)
+        work_width = width - 2 * margin_x
+        work_height = height - 2 * margin_y
+        
+        # Нормализация пропорций для рабочей области
         total_proportion = sum(color.get("proportion", 0) for color in colors)
         
-        # Создание точечного распределения вместо вертикальных полос
+        # Создание точечного распределения в рабочей области
         for color in colors:
             proportion = color.get("proportion", 0) / total_proportion
             color_rgb = self._name_to_rgb(color.get("name", "white"))
-            pixels_needed = int(proportion * width * height)
+            pixels_needed = int(proportion * work_width * work_height)
             
-            # Случайное размещение точек по всей поверхности
+            # Случайное размещение точек в рабочей области
             positions_placed = 0
             attempts = 0
             max_attempts = pixels_needed * 10  # Ограничение попыток
             
             while positions_placed < pixels_needed and attempts < max_attempts:
-                x = random.randint(0, width - 1)
-                y = random.randint(0, height - 1)
+                x = random.randint(margin_x, margin_x + work_width - 1)
+                y = random.randint(margin_y, margin_y + work_height - 1)
                 
                 # Проверяем, что позиция свободна
                 if pixels[x, y] == (255, 255, 255, 0):
@@ -262,22 +280,32 @@ class ColorGridControlNet:
         return canvas
     
     def _create_radial_pattern(self, colors, size):
-        """Создает радиальный паттерн с точечным распределением"""
+        """Создает радиальный паттерн с точечным распределением и пустыми полями по краям"""
         width, height = size
         canvas = Image.new('RGBA', size, (255, 255, 255, 0))  # Прозрачный фон
         pixels = canvas.load()
         
-        center_x, center_y = width // 2, height // 2
-        max_radius = max(center_x, center_y)
+        # Вычисляем размеры пустых полей (2-3% от общего размера)
+        margin_x = int(width * 0.025)  # 2.5% по горизонтали
+        margin_y = int(height * 0.025)  # 2.5% по вертикали
         
-        # Нормализация пропорций
+        # Рабочая область (без полей)
+        work_width = width - 2 * margin_x
+        work_height = height - 2 * margin_y
+        
+        # Центр рабочей области
+        center_x = margin_x + work_width // 2
+        center_y = margin_y + work_height // 2
+        max_radius = min(work_width, work_height) // 2
+        
+        # Нормализация пропорций для рабочей области
         total_proportion = sum(color.get("proportion", 0) for color in colors)
         
-        # Создание точечного распределения с радиальным влиянием
+        # Создание точечного распределения с радиальным влиянием в рабочей области
         for color in colors:
             proportion = color.get("proportion", 0) / total_proportion
             color_rgb = self._name_to_rgb(color.get("name", "white"))
-            pixels_needed = int(proportion * width * height)
+            pixels_needed = int(proportion * work_width * work_height)
             
             # Случайное размещение точек с радиальным приоритетом
             positions_placed = 0
@@ -292,8 +320,9 @@ class ColorGridControlNet:
                 x = int(center_x + radius * math.cos(angle))
                 y = int(center_y + radius * math.sin(angle))
                 
-                # Проверяем границы
-                if 0 <= x < width and 0 <= y < height:
+                # Проверяем границы рабочей области
+                if (margin_x <= x < margin_x + work_width and 
+                    margin_y <= y < margin_y + work_height):
                     # Проверяем, что позиция свободна
                     if pixels[x, y] == (255, 255, 255, 0):
                         pixels[x, y] = color_rgb
@@ -313,7 +342,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Единая версия модели для логов
-MODEL_VERSION = "v4.5.01"
+MODEL_VERSION = "v4.5.02"
 
 # Переменные окружения для оптимизации
 os.environ["HF_HOME"] = "/tmp/hf_home"
@@ -731,7 +760,7 @@ class Predictor(BasePredictor):
         
         return full_prompt
     
-    def _create_optimized_colormap(self, prompt: str, size: tuple = (1024, 1024)) -> Image.Image:
+    def _create_optimized_colormap(self, prompt: str, size: tuple = (1024, 1024), pattern_type: str = "random", granule_size: str = "medium") -> Image.Image:
         """Создает оптимизированный colormap для ControlNet с точными пропорциями"""
         try:
             # Парсим цвета из промпта
@@ -740,24 +769,19 @@ class Predictor(BasePredictor):
                 logger.warning("⚠️ Не удалось распарсить цвета, создаем базовый colormap")
                 return Image.new('RGBA', size, (255, 255, 255, 0))  # Прозрачный фон
             
-            # Определяем оптимальный паттерн на основе количества цветов
-            color_count = len(colors)
-            if color_count == 1:
-                pattern_type = "random"  # Простой случай
-            elif color_count == 2:
-                pattern_type = "granular"  # Имитация резиновой крошки
-            elif color_count == 3:
-                pattern_type = "granular"  # Сложная крошка
-            else:  # 4+ цветов
-                pattern_type = "granular"  # Максимальная сложность
+            # Если паттерн не указан, определяем оптимальный на основе количества цветов
+            if pattern_type == "random":
+                color_count = len(colors)
+                if color_count == 1:
+                    pattern_type = "random"  # Простой случай
+                elif color_count == 2:
+                    pattern_type = "granular"  # Имитация резиновой крошки
+                elif color_count == 3:
+                    pattern_type = "granular"  # Сложная крошка
+                else:  # 4+ цветов
+                    pattern_type = "granular"  # Максимальная сложность
             
-            # Определяем размер гранул на основе сложности
-            if color_count <= 2:
-                granule_size = "medium"
-            else:
-                granule_size = "small"  # Меньшие гранулы для сложных комбинаций
-            
-            logger.info(f"🎨 Создание colormap: {color_count} цветов, паттерн: {pattern_type}, гранулы: {granule_size}")
+            logger.info(f"🎨 Создание colormap: {len(colors)} цветов, паттерн: {pattern_type}, гранулы: {granule_size}")
             
             # Обновляем статистику использования
             self.color_grid_stats["patterns_used"][pattern_type] += 1
@@ -869,7 +893,8 @@ class Predictor(BasePredictor):
                 # Проверяем RGB каналы непрозрачных пикселей
                 opaque_rgb = rgb_array[opaque_pixels]
                 if len(opaque_rgb) > 0:
-                    gray_pixels = np.all(opaque_rgb == [127, 127, 127], axis=1)
+                    # Сравниваем каждый пиксель с серым цветом
+                    gray_pixels = np.all(opaque_rgb == np.array([127, 127, 127]), axis=1)
                     if np.all(gray_pixels):
                         logger.warning("⚠️ Colormap полностью серый в непрозрачных областях")
                         return False
@@ -915,14 +940,15 @@ class Predictor(BasePredictor):
             # Fallback: простой серый colormap
             return Image.new('RGBA', size, (127, 127, 127, 255))  # Непрозрачный серый фон
     
-    def predict(self, prompt: str = Input(description="Описание цветов резиновой плитки", default="100% red"), 
-                negative_prompt: Optional[str] = Input(description="Негативный промпт", default=None), 
-                seed: int = Input(description="Сид для воспроизводимости", default=-1),
-                steps: int = Input(description="Число шагов", default=20),
-                guidance: float = Input(description="Guidance scale", default=7.0),
-                lora_scale: float = Input(description="Сила LoRA (0.0-1.0)", default=0.7),
-                use_controlnet: bool = Input(description="Включить ControlNet SoftEdge (требует control_image)", default=False),
-                control_image: Optional[Path] = Input(description="Контрольное изображение (опц.) для SoftEdge", default=None)) -> Iterator[Path]:
+    def predict(self, prompt: str = Input(description="Промпт для генерации резиновой плитки (должен содержать ohwx_rubber_tile <s0><s1>)", default="ohwx_rubber_tile <s0><s1> 100% red rubber tile"), 
+                negative_prompt: Optional[str] = Input(description="Негативный промпт", default=""), 
+                seed: int = Input(description="Seed для воспроизводимости результатов", default=12345),
+                num_inference_steps: int = Input(description="Количество шагов инференса", default=25),
+                guidance_scale: float = Input(description="Масштаб guidance", default=7.5),
+                colormap: str = Input(description="Тип паттерна colormap", default="random"),
+                granule_size: str = Input(description="Размер гранул", default="medium"),
+                use_controlnet: bool = Input(description="Включить ControlNet", default=False),
+                control_image: Optional[Path] = Input(description="Контрольное изображение (опц.)", default=None)) -> Iterator[Path]:
         """Генерация изображения резиновой плитки с использованием НАШЕЙ обученной модели."""
         
         try:
@@ -939,9 +965,10 @@ class Predictor(BasePredictor):
             logger.info(f"🎯 Prompt: {prompt}")
             logger.info(f"🚫 Negative Prompt: {negative_prompt}")
             logger.info(f"🎲 Seed: {seed}")
-            logger.info(f"📊 Steps: {steps} (базовый)")
-            logger.info(f"🎚️ Guidance: {guidance} (базовый)")
-            logger.info(f"🔧 LoRA Scale: {lora_scale} (базовый)")
+            logger.info(f"📊 Steps: {num_inference_steps} (базовый)")
+            logger.info(f"🎚️ Guidance: {guidance_scale} (базовый)")
+            logger.info(f"🎨 Colormap: {colormap}")
+            logger.info(f"🔧 Granule Size: {granule_size}")
             logger.info(f"🎨 Адаптивные параметры будут рассчитаны на основе количества цветов")
             logger.info("🚀 STARTUP_SNAPSHOT_END")
             
@@ -997,23 +1024,23 @@ class Predictor(BasePredictor):
             # Адаптивные настройки на основе количества цветов (как в v45)
             if color_count == 1:
                 # Один цвет - простой промпт, как в успешном тесте 4
-                adaptive_steps = 20
-                adaptive_guidance = 7.0
+                adaptive_steps = max(20, num_inference_steps)
+                adaptive_guidance = max(7.0, guidance_scale)
                 logger.info("🎯 Адаптивные параметры для 1 цвета: steps=20, guidance=7.0")
             elif color_count == 2:
                 # Два цвета - средняя сложность
-                adaptive_steps = 25
-                adaptive_guidance = 7.5
+                adaptive_steps = max(25, num_inference_steps)
+                adaptive_guidance = max(7.5, guidance_scale)
                 logger.info("🎯 Адаптивные параметры для 2 цветов: steps=25, guidance=7.5")
             elif color_count == 3:
                 # Три цвета - высокая сложность
-                adaptive_steps = 30
-                adaptive_guidance = 8.0
+                adaptive_steps = max(30, num_inference_steps)
+                adaptive_guidance = max(8.0, guidance_scale)
                 logger.info("🎯 Адаптивные параметры для 3 цветов: steps=30, guidance=8.0")
             else:
                 # 4+ цвета - максимальная сложность
-                adaptive_steps = 35
-                adaptive_guidance = 8.5
+                adaptive_steps = max(35, num_inference_steps)
+                adaptive_guidance = max(8.5, guidance_scale)
                 logger.info("🎯 Адаптивные параметры для 4+ цветов: steps=35, guidance=8.5")
             
             # Генерация изображения с адаптивными параметрами
@@ -1091,9 +1118,9 @@ class Predictor(BasePredictor):
             if (use_controlnet or auto_controlnet) and ControlNetModel is not None and StableDiffusionXLControlNetPipeline is not None:
                 try:
                     if self.controlnet is None:
-                        logger.info("🔗 Загрузка ControlNet SoftEdge для SDXL...")
+                        logger.info("🔗 Загрузка ControlNet для SDXL...")
                         self.controlnet = ControlNetModel.from_pretrained(
-                            "diffusers/controlnet-softedge-sdxl-1.0", torch_dtype=torch.float16
+                            "thibaud/controlnet-openpose-sdxl-1.0", torch_dtype=torch.float16
                         )
                     if self.pipe_cn is None:
                         self.pipe_cn = StableDiffusionXLControlNetPipeline(
@@ -1122,7 +1149,7 @@ class Predictor(BasePredictor):
                             if selected_controlnets and len(selected_controlnets) > 1:
                                 # Добавляем автоматически созданные карты для дополнительных ControlNet
                                 for i in range(1, len(selected_controlnets)):
-                                    additional_hint = self._create_optimized_colormap(prompt, size=(1024, 1024))
+                                    additional_hint = self._create_optimized_colormap(prompt, size=(1024, 1024), pattern_type=colormap, granule_size=granule_size)
                                     additional_hint = additional_hint.convert('L').filter(ImageFilter.EDGE_ENHANCE)
                                     control_images.append(additional_hint)
                         else:
@@ -1131,7 +1158,7 @@ class Predictor(BasePredictor):
                             control_images = []
                             
                             # Основная цветовая карта
-                            color_control_image = self._create_optimized_colormap(prompt, size=(1024, 1024))
+                            color_control_image = self._create_optimized_colormap(prompt, size=(1024, 1024), pattern_type=colormap, granule_size=granule_size)
                             
                             # Валидация colormap против промпта
                             if not self._validate_colormap_against_prompt(color_control_image, prompt):
@@ -1146,7 +1173,7 @@ class Predictor(BasePredictor):
                             # Создаем дополнительные контрольные карты для мультимодальности
                             if selected_controlnets and len(selected_controlnets) > 1:
                                 for i in range(1, len(selected_controlnets)):
-                                    additional_hint = self._create_optimized_colormap(prompt, size=(1024, 1024))
+                                    additional_hint = self._create_optimized_colormap(prompt, size=(1024, 1024), pattern_type=colormap, granule_size=granule_size)
                                     additional_hint = additional_hint.convert('L').filter(ImageFilter.EDGE_ENHANCE)
                                     control_images.append(additional_hint)
                         
@@ -1197,7 +1224,7 @@ class Predictor(BasePredictor):
             colormap_path = "/tmp/colormap.png"
             try:
                 # Используем наш оптимизированный Color Grid Adapter
-                colormap_image = self._create_optimized_colormap(prompt, size=(1024, 1024))
+                colormap_image = self._create_optimized_colormap(prompt, size=(1024, 1024), pattern_type=colormap, granule_size=granule_size)
                 
                 # Валидация colormap против промпта
                 if not self._validate_colormap_against_prompt(colormap_image, prompt):
@@ -1244,9 +1271,10 @@ class Predictor(BasePredictor):
                     "full_prompt": full_prompt,
                     "negative_prompt": negative_prompt,
                     "seed": seed,
-                    "steps": steps,
-                    "guidance": guidance,
-                    "lora_scale": lora_scale,
+                    "num_inference_steps": num_inference_steps,
+                    "guidance_scale": guidance_scale,
+                    "colormap": colormap,
+                    "granule_size": granule_size,
                     "device": self.device,
                     "image_size": final_image.size,
                     "generation_time": time.time() if 'time' in globals() else None,

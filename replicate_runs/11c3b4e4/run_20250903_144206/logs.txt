@@ -1,0 +1,60 @@
+=== GENERATION START: 2025-09-03 14:42:06 ===
+INFO:coglet:prediction started: id=jq8mnm2mcxrg80cs1xh8xwcszg
+WARNING unknown input field ignored: description
+INFO:predict:🚀 STARTUP_SNAPSHOT_START
+INFO:predict:🧭 MODEL_START v4.4.61 | device=cuda | diffusers=0.21.4 | torch=2.1.0+cu121
+INFO:predict:📊 GPU: Tesla T4
+INFO:predict:💾 GPU Memory: 14.6 GB
+INFO:predict:🔧 SDXL Base: unknown
+INFO:predict:🎨 LoRA: unknown (rank: 32)
+INFO:predict:🔤 TI: unknown (tokens: <s0><s1>)
+INFO:predict:⚙️ Scheduler: DPMSolverMultistepScheduler
+INFO:predict:🎭 VAE: AutoencoderKL
+INFO:predict:🎯 Prompt: 60% red, 40% white
+INFO:predict:🚫 Negative Prompt: None
+INFO:predict:🎲 Seed: 12345
+INFO:predict:📊 Steps: 35 (базовый)
+INFO:predict:🎚️ Guidance: 8.0 (базовый)
+INFO:predict:🔧 LoRA Scale: 0.75 (базовый)
+INFO:predict:🎨 Адаптивные параметры будут рассчитаны на основе количества цветов
+INFO:predict:🚀 STARTUP_SNAPSHOT_END
+INFO:predict:🎨 Начало генерации изображения...
+INFO:predict:📝 Входной промпт: 60% red, 40% white
+INFO:predict:🚫 Входной негативный промпт: None
+INFO:predict:🎲 Входной сид: 12345
+INFO:predict:🔧 Установлен стандартный негативный промпт: object, text, watermark, logo, signature, blur, blurry, low quality, distorted, mosaic, checkerboard, grid, patchwork, tiled, seams
+INFO:predict:🎨 Генерация изображения...
+INFO:predict:📝 Полный промпт: ohwx_rubber_tile <s0><s1>, 60% red, 40% white, photorealistic rubber tile, high quality, detailed texture, professional photography, sharp focus
+INFO:predict:🚫 Финальный негативный промпт: object, text, watermark, logo, signature, blur, blurry, low quality, distorted, mosaic, checkerboard, grid, patchwork, tiled, seams
+INFO:predict:🎲 Финальный сид: 12345
+INFO:predict:🔧 Устройство: cuda
+INFO:predict:🎨 Анализ сложности промпта для адаптивных параметров...
+INFO:predict:🎨 Обнаружено цветов в промпте: 2
+INFO:predict:🎯 Адаптивные параметры для 2 цветов: steps=25, guidance=7.5
+INFO:predict:🚀 Запуск pipeline для генерации с адаптивными параметрами...
+ERROR:predict:❌ Ошибка генерации: 'Predictor' object has no attribute 'select_optimal_controlnet'
+ERROR:predict:📊 Тип ошибки: AttributeError
+ERROR:predict:📊 Детали ошибки: 'Predictor' object has no attribute 'select_optimal_controlnet'
+Traceback (most recent call last):
+  File "/root/.pyenv/versions/3.11.13/lib/python3.11/site-packages/coglet/file_runner.py", line 218, in _predict
+    async for o in self.runner.predict_iter(req_in):
+  File "/root/.pyenv/versions/3.11.13/lib/python3.11/site-packages/coglet/runner.py", line 150, in predict_iter
+    for x in self.predictor.predict(**kwargs):
+  File "/src/predict.py", line 1262, in predict
+    raise e
+  File "/src/predict.py", line 1063, in predict
+    selected_controlnets = self.select_optimal_controlnet(color_count)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Predictor' object has no attribute 'select_optimal_controlnet'
+ERROR:coglet:prediction failed: id=jq8mnm2mcxrg80cs1xh8xwcszg 'Predictor' object has no attribute 'select_optimal_controlnet'
+Traceback (most recent call last):
+  File "/root/.pyenv/versions/3.11.13/lib/python3.11/site-packages/coglet/file_runner.py", line 218, in _predict
+    async for o in self.runner.predict_iter(req_in):
+  File "/root/.pyenv/versions/3.11.13/lib/python3.11/site-packages/coglet/runner.py", line 150, in predict_iter
+    for x in self.predictor.predict(**kwargs):
+  File "/src/predict.py", line 1262, in predict
+    raise e
+  File "/src/predict.py", line 1063, in predict
+    selected_controlnets = self.select_optimal_controlnet(color_count)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Predictor' object has no attribute 'select_optimal_controlnet'

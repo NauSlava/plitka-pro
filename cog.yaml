@@ -1,5 +1,5 @@
 # cog.yaml
-# Version: v4.5.01 - RUBBER TILE GENERATION MODEL (Critical Architecture Fixes)
+# Version: v4.5.02 - RUBBER TILE GENERATION MODEL (Critical Architecture Fixes + Colormap Pattern Fix)
 # Description: Модель для генерации изображений резиновой плитки с кардинальными исправлениями архитектуры
 # Changes:
 # - КРИТИЧЕСКОЕ ИСПРАВЛЕНИЕ: AttributeError для методов ControlNet - перемещены внутрь класса Predictor
@@ -22,4 +22,4 @@ build:
 
 predict: "predict.py:Predictor"
 
-image: "r8.im/nauslava/plitka-pro-project:v4.5.01"
+image: "r8.im/nauslava/plitka-pro-project:v4.5.02"
