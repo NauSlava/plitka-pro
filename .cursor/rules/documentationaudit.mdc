@@ -1,0 +1,35 @@
+---
+description: "Defines the mandatory 'Documentation Consistency Audit' and provides a comprehensive checklist of all project documents to be reviewed after each task."
+globs: []
+alwaysApply: true
+---
+### **Project Rule: Documentation Consistency Audit**
+
+*   **Rule:** This rule defines the scope of documentation that must be kept synchronized with the project's codebase and current version.
+
+*   **Trigger:** This audit is a mandatory part of **"Phase 3: Execution, Verification & Documentation"** of the master protocol.
+
+*   **Action:** After a technical change is complete, you must review the nature of the change and update **all affected documents** from the checklist below.
+
+---
+
+#### **Documentation Checklist**
+
+**Core Documents (High-Frequency Updates):**
+-   `docs/README.md`: Update if overall project scope, version, or key features change.
+-   `docs/Project.md`: Update if architecture, tech stack, or API contract changes.
+-   `docs/Changelog.md`: **Always update** with a new version entry.
+-   `docs/TaskTracker.md`: **Always update** with the status of the completed task.
+
+**Guides & Examples (Update if API or usage changes):**
+-   `docs/QuickStart.md`: Update if API parameters, endpoints, or basic usage examples change.
+-   `docs/WebInterfaceExamples.md`: Update with new, relevant JSON examples.
+-   `docs/ReplicateDeployment.md`: Update if the deployment process (`cog` commands, configuration) changes.
+
+**Architectural & Knowledge Base (Update on significant findings):**
+-   `docs/Project_Architecture_Synthesis.md`: Update if a major architectural decision is made.
+-   `docs/QA.md`: Add new questions and answers if new, non-obvious knowledge is gained.
+-   `docs/Diary.md`: Add a new entry for significant technical challenges and their solutions.
+
+**Reports (Update with results of the current task):**
+-   `docs/reports/`: Create new reports or test files relevant to the completed task.

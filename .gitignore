@@ -1,83 +1,9 @@
-# Python
-.cog/
-replicate-prediction-4/
-docs/model_v45/
-model_v45/
-references/
-.cursor/
-.cursorrules/
 __pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-MANIFEST
-
-# PyTorch and ML models
-*.safetensors
-*.bin
-*.ckpt
-*.pth
-*.pt
-model_files/
-refs/
-
-# Environment variables
+*.pyc
+.venv/
 .env
-.venv
-env/
-venv/
-ENV/
-env.bak/
-venv.bak/
-
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
-
-# OS
+replicate_runs/
+.cog/tmp/
 .DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
-
-# Logs
-*.log
-logs/
-
-# Temporary files
-/tmp/
-*.tmp
-*.temp
-
-# Docker
-.dockerignore
-Dockerfile
-
-# Cog
-.cog/
-
-# Testing
-test_outputs/
-generated_images/
+.idea/
+.vscode/

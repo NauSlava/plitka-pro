@@ -1,0 +1,30 @@
+---
+description: "The single source of truth for the 'rubber-tile-lora-v4' model. Defines its hybrid architecture, training environment, dataset, and critical usage parameters."
+globs: []
+alwaysApply: true
+---
+### **Model Profile: `rubber-tile-lora-v4`**
+
+This document contains the verified technical specifications of the trained model. It is the primary source of truth for all tasks involving model interaction, debugging, or optimization.
+
+#### **1. Core Architecture: Hybrid Model**
+*   **Type:** A hybrid of **LoRA** and **Textual Inversion (TI)**.
+*   **LoRA (`..._lora.safetensors`):** Contains the *style* (texture, lighting).
+*   **TI (`..._embeddings.safetensors`):** Contains the *concept* (the definition of "rubber tile" linked to `<s0><s1>`).
+*   **Mandatory Action:** Both components **MUST** be loaded and activated simultaneously for correct operation.
+
+#### **2. Training Environment**
+*   **Trainer:** `edenartlab/sdxl-lora-trainer` on Replicate.com.
+*   **Base Model:** Custom `Eden_SDXL.safetensors` (not the standard SDXL base).
+
+#### **3. Key Hyperparameters & Directives**
+*   **Resolution:** `1024x1024`.
+*   **LoRA Rank:** `32`.
+*   **TI Tokens:** `2` (`<s0>`, `<s1>`).
+*   **CRITICAL USAGE PARAMETER:** The optimal LoRA weight, proven during validation, is **`0.75`**. This value should be used by default.
+
+#### **4. Actionable Directives for Interaction**
+*   **Activation:** Prompts **MUST** contain the trigger phrase `ohwx_rubber_tile` and the TI tokens `<s0><s1>`.
+*   **Prompting Strategy:** Prompts should be based on the simple, proven examples from the model's validation logs, **not** the complex training captions.
+
+*   **Impact on Protocol:** This profile is the primary reference for **"Phase 1: Analysis & Planning"** and any **"Correction Loop"** related to generation quality or model errors.

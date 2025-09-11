@@ -1,0 +1,1 @@
+ohwx_rubber_tile <s0><s1>, 85% black, 15% white

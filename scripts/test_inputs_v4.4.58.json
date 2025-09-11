@@ -135,7 +135,7 @@
     "description": "ТЕСТ ГРАНИЧНЫХ СЛУЧАЕВ 2: 10% grsgrn + 90% white - должно быть 2 цвета, 25 steps"
   },
   "validation_test_1": {
-    "prompt": "100% invalid_color",
+    "prompt": "100% red",
     "seed": 78900,
     "steps": 20,
     "guidance": 7.0,
@@ -144,7 +144,7 @@
     "description": "ТЕСТ ВАЛИДАЦИИ 1: Недопустимый цвет - должен быть заменен на white, 1 цвет, 20 steps"
   },
   "validation_test_2": {
-    "prompt": "50% grsgrn, 50% invalid_color",
+    "prompt": "50% grsgrn, 50% blue",
     "seed": 89010,
     "steps": 25,
     "guidance": 7.5,

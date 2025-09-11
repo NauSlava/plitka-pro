@@ -90,8 +90,8 @@
   },
 
   "🔧 CONTROLNET SHUFFLE TEST": {
-    "prompt": "ohwx_rubber_tile <s0><s1> 40% red, 40% blue, 20% green rubber tile, random pattern, shuffled colors",
-    "negative_prompt": "missing red, missing blue, missing green, blurry, low quality, organized",
+    "prompt": "ohwx_rubber_tile <s0><s1> 40% red, 40% blue, 20% grsgrn rubber tile, random pattern, shuffled colors",
+    "negative_prompt": "missing red, missing blue, missing grsgrn, blurry, low quality, organized",
     "num_inference_steps": 30,
     "guidance_scale": 8.0,
     "seed": 404,

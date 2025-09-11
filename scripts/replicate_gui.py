@@ -521,6 +521,66 @@ class ReplicateWorker:
         self._status = "canceled"
         return 10
 
+    def _extract_color_codes(self, prompt: str) -> str:
+        """Извлекает кодовые названия цветов из промпта для упрощенного названия colormap"""
+        # Таблица соответствий цветов (основные коды)
+        color_mapping = {
+            'red': 'RED',
+            'blue': 'BLUE', 
+            'green': 'GRSGRN',
+            'white': 'WHITE',
+            'black': 'BLACK',
+            'yellow': 'YELLOW',
+            'brown': 'BROWN',
+            'gray': 'GRAY',
+            'grey': 'GRAY',
+            'grngrn': 'GRSGRN',
+            'ltgreen': 'LTGREEN',
+            'dkgreen': 'DKGREEN',
+            'pearl': 'PEARL',
+            'salmon': 'SALMON',
+            'whtgrn': 'WHTGRN',
+            'orange': 'ORANGE',
+            'pink': 'PINK',
+            'violet': 'VIOLET',
+            'turqse': 'TURQSE',
+            'skyblue': 'SKYBLUE',
+            'emerald': 'EMERALD',
+            'lilac': 'LILAC',
+            'khaki': 'KHAKI',
+            'tercot': 'TERCOT',
+            'sand': 'SAND',
+            'limegrn': 'LIMEGRN',
+            'dkblue': 'DKBLUE',
+            'ltgray': 'LTGRAY',
+            'dkgray': 'DKGRAY',
+            'beige': 'BEIGE',
+            'grnapl': 'GRNAPL'
+        }
+        
+        # Извлекаем цвета из промпта
+        colors_found = []
+        prompt_lower = prompt.lower()
+        
+        # Ищем кодовые названия цветов (уже в верхнем регистре)
+        import re
+        color_codes = re.findall(r'\b[A-Z]{3,8}\b', prompt)
+        for code in color_codes:
+            if code in color_mapping.values():
+                colors_found.append(code)
+        
+        # Ищем обычные названия цветов и конвертируем в коды
+        for color_name, color_code in color_mapping.items():
+            if color_name in prompt_lower:
+                if color_code not in colors_found:
+                    colors_found.append(color_code)
+        
+        # Создаем упрощенное название
+        if colors_found:
+            return '_'.join(colors_found[:3])  # Максимум 3 цвета
+        else:
+            return "unknown"
+    
     def _save_outputs(self, pred, logs: str) -> None:
         self.log("🔄 _save_outputs вызван\n")
         
@@ -632,12 +692,24 @@ class ReplicateWorker:
                 
                 # Создаем детальные названия файлов (ВАРИАНТ Б)
                 prompt = ""
+                colormap_prompt = ""
                 if hasattr(pred, 'input') and isinstance(pred.input, dict):
-                    prompt = str(pred.input.get('prompt', '')).replace(' ', '_').replace('%', 'pct')[:50]
+                    raw_prompt = str(pred.input.get('prompt', ''))
+                    # Убираем токены и триггеры из названия файла
+                    clean_prompt = raw_prompt.replace('ohwx_rubber_tile', '').replace('<s0><s1>', '').strip()
+                    # Убираем запятые и другие нежелательные символы
+                    prompt = clean_prompt.replace(',', '').replace(' ', '_').replace('%', 'pct')[:50]
+                    
+                    # Создаем упрощенное название для colormap с кодовыми названиями цветов
+                    colormap_prompt = self._extract_color_codes(clean_prompt)
+                    
                     if not prompt:
                         prompt = "unknown"
+                    if not colormap_prompt:
+                        colormap_prompt = "unknown"
                 else:
                     prompt = "unknown"
+                    colormap_prompt = "unknown"
                 
                 self.log(f"📝 Промпт для именования: '{prompt}'\n")
                 
@@ -686,8 +758,8 @@ class ReplicateWorker:
                         self.log(f"⚠️ Ошибка маппинга final.png: {e}\n")
                 if len(files) >= 2:
                     try:
-                        # Формат: {timestamp}_{prompt}_{type}_{hash}.png
-                        colormap_name = f"{timestamp}_{prompt}_colormap_{forced_hash}.png"
+                        # Формат для colormap: {timestamp}_{color_codes}_colormap_{hash}.png
+                        colormap_name = f"{timestamp}_{colormap_prompt}_colormap_{forced_hash}.png"
                         colormap_path = os.path.join(run_dir, colormap_name)
                         os.replace(files[1], colormap_path)
                         self.log(f"🎨 COLORMAP saved as: {colormap_name}\n")
@@ -756,7 +828,7 @@ class App:
         print("🔄 Инициализация App...")
         self.root = root
         root.title("Replicate Test Runner - версия определяется автоматически")
-        root.geometry("1600x1000")  # Делаем окно еще шире и выше для лучшего отображения
+        root.geometry("1800x1200")  # Увеличиваем размер окна для лучшего отображения всех элементов
         print("✅ Основные параметры окна установлены")
 
         self.ui_queue: "queue.Queue[str]" = queue.Queue()
@@ -772,36 +844,36 @@ class App:
         top = ttk.Frame(root)
         top.pack(fill=tk.X, padx=8, pady=8)
 
-        ttk.Label(top, text="Model:").grid(row=0, column=0, sticky=tk.W)
+        ttk.Label(top, text="Model:", font=("Arial", 12)).grid(row=0, column=0, sticky=tk.W)
         self.model_var = tk.StringVar(value="nauslava/plitka-pro-project")
-        self.model_entry = ttk.Entry(top, textvariable=self.model_var, width=60)
+        self.model_entry = ttk.Entry(top, textvariable=self.model_var, width=60, font=("Arial", 12))
         self.model_entry.grid(row=0, column=1, sticky=tk.W, padx=6)
 
-        ttk.Label(top, text="Version ID:").grid(row=0, column=2, sticky=tk.W)
+        ttk.Label(top, text="Version ID:", font=("Arial", 12)).grid(row=0, column=2, sticky=tk.W)
         self.version_var = tk.StringVar(value="")
-        ttk.Entry(top, textvariable=self.version_var, width=80)
-        self.version_entry = ttk.Entry(top, textvariable=self.version_var, width=80)
+        ttk.Entry(top, textvariable=self.version_var, width=80, font=("Arial", 12))
+        self.version_entry = ttk.Entry(top, textvariable=self.version_var, width=80, font=("Arial", 12))
         self.version_entry.grid(row=0, column=3, columnspan=2, sticky=tk.W, padx=6)
 
-        ttk.Label(top, text="Poll (s):").grid(row=1, column=0, sticky=tk.W)
+        ttk.Label(top, text="Poll (s):", font=("Arial", 12)).grid(row=1, column=0, sticky=tk.W)
         self.poll_var = tk.IntVar(value=6)
-        ttk.Entry(top, textvariable=self.poll_var, width=6).grid(row=1, column=1, sticky=tk.W, padx=6)
+        ttk.Entry(top, textvariable=self.poll_var, width=6, font=("Arial", 12)).grid(row=1, column=1, sticky=tk.W, padx=6)
 
-        ttk.Label(top, text="Startup (s):").grid(row=1, column=2, sticky=tk.W)
+        ttk.Label(top, text="Startup (s):", font=("Arial", 12)).grid(row=1, column=2, sticky=tk.W)
         self.startup_var = tk.IntVar(value=7 * 60)
-        ttk.Entry(top, textvariable=self.startup_var, width=8).grid(row=1, column=3, sticky=tk.W, padx=6)
+        ttk.Entry(top, textvariable=self.startup_var, width=8, font=("Arial", 12)).grid(row=1, column=3, sticky=tk.W, padx=6)
 
-        ttk.Label(top, text="Total (s):").grid(row=1, column=4, sticky=tk.W)
+        ttk.Label(top, text="Total (s):", font=("Arial", 12)).grid(row=1, column=4, sticky=tk.W)
         self.total_var = tk.IntVar(value=25 * 60)
-        ttk.Entry(top, textvariable=self.total_var, width=8).grid(row=1, column=5, sticky=tk.W, padx=6)
+        ttk.Entry(top, textvariable=self.total_var, width=8, font=("Arial", 12)).grid(row=1, column=5, sticky=tk.W, padx=6)
         
         # Информация о текущей версии
-        ttk.Label(top, text="Current Version:").grid(row=2, column=0, sticky=tk.W)
-        self.version_label = ttk.Label(top, text=self.current_version, font=("Arial", 10, "bold"), foreground="blue")
+        ttk.Label(top, text="Current Version:", font=("Arial", 12)).grid(row=2, column=0, sticky=tk.W)
+        self.version_label = ttk.Label(top, text=self.current_version, font=("Arial", 15, "bold"), foreground="blue")
         self.version_label.grid(row=2, column=1, sticky=tk.W, padx=6)
         
-        ttk.Label(top, text="Hash:").grid(row=2, column=2, sticky=tk.W)
-        self.hash_label = ttk.Label(top, text=self.current_hash, font=("Arial", 10, "bold"), foreground="green")
+        ttk.Label(top, text="Hash:", font=("Arial", 12)).grid(row=2, column=2, sticky=tk.W)
+        self.hash_label = ttk.Label(top, text=self.current_hash, font=("Arial", 15, "bold"), foreground="green")
         self.hash_label.grid(row=2, column=3, sticky=tk.W, padx=6)
         
         # Кнопка обновления версии
@@ -820,13 +892,13 @@ class App:
         left = ttk.Frame(mid)
         left.pack(side=tk.LEFT, fill=tk.Y)
 
-        ttk.Label(left, text="Presets").pack(anchor=tk.W)
-        self.listbox = tk.Listbox(left, selectmode=tk.EXTENDED, height=15, width=60, font=("Arial", 9))
+        ttk.Label(left, text="Presets", font=("Arial", 12)).pack(anchor=tk.W)
+        self.listbox = tk.Listbox(left, selectmode=tk.EXTENDED, height=12, width=60, font=("Arial", 14))
         self.listbox.pack(fill=tk.Y, expand=False)
         
         # Область отображения параметров выбранного пресета
-        ttk.Label(left, text="Preset Parameters", font=("Arial", 10, "bold")).pack(anchor=tk.W, pady=(8,2))
-        self.preset_params_text = tk.Text(left, height=30, width=60, wrap=tk.WORD, state=tk.DISABLED, font=("Arial", 8))
+        ttk.Label(left, text="Preset Parameters", font=("Arial", 15, "bold")).pack(anchor=tk.W, pady=(8,2))
+        self.preset_params_text = tk.Text(left, height=20, width=60, wrap=tk.WORD, state=tk.DISABLED, font=("Arial", 12))
         self.preset_params_text.pack(fill=tk.X, expand=False, pady=(0,6))
 
         # Buttons
@@ -844,27 +916,27 @@ class App:
         # Status + timer
         status_row = ttk.Frame(right)
         status_row.pack(fill=tk.X)
-        ttk.Label(status_row, text="Status:").pack(side=tk.LEFT)
+        ttk.Label(status_row, text="Status:", font=("Arial", 12)).pack(side=tk.LEFT)
         self.status_var = tk.StringVar(value="idle")
-        self.status_label = ttk.Label(status_row, textvariable=self.status_var)
+        self.status_label = ttk.Label(status_row, textvariable=self.status_var, font=("Arial", 12))
         self.status_label.pack(side=tk.LEFT, padx=6)
-        ttk.Label(status_row, text="Elapsed:").pack(side=tk.LEFT, padx=12)
+        ttk.Label(status_row, text="Elapsed:", font=("Arial", 12)).pack(side=tk.LEFT, padx=12)
         self.elapsed_var = tk.StringVar(value="00:00")
-        self.elapsed_label = ttk.Label(status_row, textvariable=self.elapsed_var)
+        self.elapsed_label = ttk.Label(status_row, textvariable=self.elapsed_var, font=("Arial", 12))
         self.elapsed_label.pack(side=tk.LEFT)
 
         # Preview area
         img_frame = ttk.Frame(right)
         img_frame.pack(fill=tk.X, pady=(6,4))
-        self.preview_label = ttk.Label(img_frame, text="Preview")
+        self.preview_label = ttk.Label(img_frame, text="Preview", font=("Arial", 12))
         self.preview_label.pack(side=tk.LEFT, padx=6)
-        self.final_label = ttk.Label(img_frame, text="Final")
+        self.final_label = ttk.Label(img_frame, text="Final", font=("Arial", 12))
         self.final_label.pack(side=tk.LEFT, padx=6)
-        self.colormap_label = ttk.Label(img_frame, text="Colormap")
+        self.colormap_label = ttk.Label(img_frame, text="Colormap", font=("Arial", 12))
         self.colormap_label.pack(side=tk.LEFT, padx=6)
 
-        ttk.Label(right, text="Logs").pack(anchor=tk.W, pady=(6,0))
-        self.text = tk.Text(right, wrap=tk.WORD, state=tk.DISABLED)
+        ttk.Label(right, text="Logs", font=("Arial", 12)).pack(anchor=tk.W, pady=(6,0))
+        self.text = tk.Text(right, wrap=tk.WORD, state=tk.DISABLED, font=("Arial", 12))
         self.text.pack(fill=tk.BOTH, expand=True)
 
         # Проверяем существование папки replicate_runs
@@ -940,9 +1012,9 @@ class App:
         # Token entry
         token_frame = ttk.Frame(root)
         token_frame.pack(fill=tk.X, padx=8)
-        ttk.Label(token_frame, text="API Token:").pack(side=tk.LEFT)
+        ttk.Label(token_frame, text="API Token:", font=("Arial", 12)).pack(side=tk.LEFT)
         self.token_var = tk.StringVar(value=token or "")
-        self.token_entry = ttk.Entry(token_frame, textvariable=self.token_var, width=60, show="*")
+        self.token_entry = ttk.Entry(token_frame, textvariable=self.token_var, width=60, show="*", font=("Arial", 12))
         self.token_entry.pack(side=tk.LEFT, padx=6, fill=tk.X, expand=True)
         # Создаем worker
         self.worker = ReplicateWorker(

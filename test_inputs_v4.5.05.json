@@ -1,0 +1,174 @@
+{
+  "single_color_examples": {
+    "100% RED": {
+      "prompt": "ohwx_rubber_tile <s0><s1> 100% RED",
+      "negative_prompt": "object, text, watermark, logo, signature, blur, blurry, low quality, distorted, mosaic, checkerboard, grid, patchwork, tiled, seams",
+      "seed": 12345,
+      "num_inference_steps": 25,
+      "guidance_scale": 7.5,
+      "colormap": "random",
+      "granule_size": "medium",
+      "use_controlnet": false
+    },
+    "100% EMERALD": {
+      "prompt": "ohwx_rubber_tile <s0><s1> 100% EMERALD",
+      "negative_prompt": "object, text, watermark, logo, signature, blur, blurry, low quality, distorted, mosaic, checkerboard, grid, patchwork, tiled, seams",
+      "seed": 12346,
+      "num_inference_steps": 25,
+      "guidance_scale": 7.5,
+      "colormap": "random",
+      "granule_size": "medium",
+      "use_controlnet": false
+    },
+    "100% GRSGRN": {
+      "prompt": "ohwx_rubber_tile <s0><s1> 100% GRSGRN",
+      "negative_prompt": "object, text, watermark, logo, signature, blur, blurry, low quality, distorted, mosaic, checkerboard, grid, patchwork, tiled, seams",
+      "seed": 12347,
+      "num_inference_steps": 25,
+      "guidance_scale": 7.5,
+      "colormap": "random",
+      "granule_size": "medium",
+      "use_controlnet": false
+    }
+  },
+  "two_color_examples": {
+    "70% RED, 30% BLUE": {
+      "prompt": "ohwx_rubber_tile <s0><s1> 70% RED, 30% BLUE",
+      "negative_prompt": "object, text, watermark, logo, signature, blur, blurry, low quality, distorted, mosaic, checkerboard, grid, patchwork, tiled, seams",
+      "seed": 12348,
+      "num_inference_steps": 25,
+      "guidance_scale": 7.5,
+      "colormap": "granular",
+      "granule_size": "medium",
+      "use_controlnet": true
+    },
+    "60% GRSGRN, 40% YELLOW": {
+      "prompt": "ohwx_rubber_tile <s0><s1> 60% GRSGRN, 40% YELLOW",
+      "negative_prompt": "object, text, watermark, logo, signature, blur, blurry, low quality, distorted, mosaic, checkerboard, grid, patchwork, tiled, seams",
+      "seed": 12349,
+      "num_inference_steps": 25,
+      "guidance_scale": 7.5,
+      "colormap": "granular",
+      "granule_size": "medium",
+      "use_controlnet": true
+    },
+    "50% WHITE, 50% GRAY": {
+      "prompt": "ohwx_rubber_tile <s0><s1> 50% WHITE, 50% GRAY",
+      "negative_prompt": "object, text, watermark, logo, signature, blur, blurry, low quality, distorted, mosaic, checkerboard, grid, patchwork, tiled, seams",
+      "seed": 12350,
+      "num_inference_steps": 25,
+      "guidance_scale": 7.5,
+      "colormap": "granular",
+      "granule_size": "medium",
+      "use_controlnet": true
+    }
+  },
+  "three_color_examples": {
+    "50% WHITE, 30% GRAY, 20% BLACK": {
+      "prompt": "ohwx_rubber_tile <s0><s1> 50% WHITE, 30% GRAY, 20% BLACK",
+      "negative_prompt": "object, text, watermark, logo, signature, blur, blurry, low quality, distorted, mosaic, checkerboard, grid, patchwork, tiled, seams",
+      "seed": 12351,
+      "num_inference_steps": 30,
+      "guidance_scale": 8.0,
+      "colormap": "granular",
+      "granule_size": "medium",
+      "use_controlnet": true
+    },
+    "40% RED, 35% BLUE, 25% YELLOW": {
+      "prompt": "ohwx_rubber_tile <s0><s1> 40% RED, 35% BLUE, 25% YELLOW",
+      "negative_prompt": "object, text, watermark, logo, signature, blur, blurry, low quality, distorted, mosaic, checkerboard, grid, patchwork, tiled, seams",
+      "seed": 12352,
+      "num_inference_steps": 30,
+      "guidance_scale": 8.0,
+      "colormap": "granular",
+      "granule_size": "medium",
+      "use_controlnet": true
+    },
+    "33% GRSGRN, 33% YELLOW, 34% ORANGE": {
+      "prompt": "ohwx_rubber_tile <s0><s1> 33% GRSGRN, 33% YELLOW, 34% ORANGE",
+      "negative_prompt": "object, text, watermark, logo, signature, blur, blurry, low quality, distorted, mosaic, checkerboard, grid, patchwork, tiled, seams",
+      "seed": 12353,
+      "num_inference_steps": 30,
+      "guidance_scale": 8.0,
+      "colormap": "granular",
+      "granule_size": "medium",
+      "use_controlnet": true
+    }
+  },
+  "four_color_examples": {
+    "25% RED, 25% BLUE, 25% GRSGRN, 25% YELLOW": {
+      "prompt": "ohwx_rubber_tile <s0><s1> 25% RED, 25% BLUE, 25% GRSGRN, 25% YELLOW",
+      "negative_prompt": "object, text, watermark, logo, signature, blur, blurry, low quality, distorted, mosaic, checkerboard, grid, patchwork, tiled, seams",
+      "seed": 12354,
+      "num_inference_steps": 35,
+      "guidance_scale": 8.5,
+      "colormap": "granular",
+      "granule_size": "small",
+      "use_controlnet": true
+    },
+    "20% WHITE, 20% GRAY, 20% BLACK, 20% RED, 20% BLUE": {
+      "prompt": "ohwx_rubber_tile <s0><s1> 20% WHITE, 20% GRAY, 20% BLACK, 20% RED, 20% BLUE",
+      "negative_prompt": "object, text, watermark, logo, signature, blur, blurry, low quality, distorted, mosaic, checkerboard, grid, patchwork, tiled, seams",
+      "seed": 12355,
+      "num_inference_steps": 35,
+      "guidance_scale": 8.5,
+      "colormap": "granular",
+      "granule_size": "small",
+      "use_controlnet": true
+    }
+  },
+  "special_colors": {
+    "50% TURQSE, 50% VIOLET": {
+      "prompt": "ohwx_rubber_tile <s0><s1> 50% TURQSE, 50% VIOLET",
+      "negative_prompt": "object, text, watermark, logo, signature, blur, blurry, low quality, distorted, mosaic, checkerboard, grid, patchwork, tiled, seams",
+      "seed": 12356,
+      "num_inference_steps": 25,
+      "guidance_scale": 7.5,
+      "colormap": "granular",
+      "granule_size": "medium",
+      "use_controlnet": true
+    },
+    "60% PEARL, 40% LILAC": {
+      "prompt": "ohwx_rubber_tile <s0><s1> 60% PEARL, 40% LILAC",
+      "negative_prompt": "object, text, watermark, logo, signature, blur, blurry, low quality, distorted, mosaic, checkerboard, grid, patchwork, tiled, seams",
+      "seed": 12357,
+      "num_inference_steps": 25,
+      "guidance_scale": 7.5,
+      "colormap": "granular",
+      "granule_size": "medium",
+      "use_controlnet": true
+    },
+    "70% SAND, 30% KHAKI": {
+      "prompt": "ohwx_rubber_tile <s0><s1> 70% SAND, 30% KHAKI",
+      "negative_prompt": "object, text, watermark, logo, signature, blur, blurry, low quality, distorted, mosaic, checkerboard, grid, patchwork, tiled, seams",
+      "seed": 12358,
+      "num_inference_steps": 25,
+      "guidance_scale": 7.5,
+      "colormap": "granular",
+      "granule_size": "medium",
+      "use_controlnet": true
+    }
+  },
+  "fallback_examples": {
+    "70% red, 30% blue (fallback)": {
+      "prompt": "ohwx_rubber_tile <s0><s1> 70% red, 30% blue",
+      "negative_prompt": "object, text, watermark, logo, signature, blur, blurry, low quality, distorted, mosaic, checkerboard, grid, patchwork, tiled, seams",
+      "seed": 12359,
+      "num_inference_steps": 25,
+      "guidance_scale": 7.5,
+      "colormap": "granular",
+      "granule_size": "medium",
+      "use_controlnet": true
+    },
+    "60% green, 40% yellow (fallback)": {
+      "prompt": "ohwx_rubber_tile <s0><s1> 60% green, 40% yellow",
+      "negative_prompt": "object, text, watermark, logo, signature, blur, blurry, low quality, distorted, mosaic, checkerboard, grid, patchwork, tiled, seams",
+      "seed": 12360,
+      "num_inference_steps": 25,
+      "guidance_scale": 7.5,
+      "colormap": "granular",
+      "granule_size": "medium",
+      "use_controlnet": true
+    }
+  }
+}
