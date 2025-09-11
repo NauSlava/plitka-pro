@@ -171,7 +171,7 @@
     "granule_size": "medium"
   },
   "🧪 FOUR-COLOR TESTS v4.4.59": {
-    "prompt": "ohwx_rubber_tile <s0><s1> 25% red, 25% blue, 25% yellow, 25% green rubber tile, quad-color pattern, complex design",
+    "prompt": "ohwx_rubber_tile <s0><s1> 25% red, 25% blue, 25% yellow, 25% grsgrn rubber tile, quad-color pattern, complex design",
     "negative_prompt": "missing red, missing blue, missing yellow, missing green, blurry, low quality",
     "num_inference_steps": 35,
     "guidance_scale": 8.5,
@@ -288,7 +288,7 @@
     "granule_size": "medium"
   },
   "🔴🔵🟡 CONTROLNET COMPLEX": {
-    "prompt": "ohwx_rubber_tile <s0><s1> 25% red, 25% blue, 25% yellow, 25% green rubber tile, complex quad pattern, ControlNet precision",
+    "prompt": "ohwx_rubber_tile <s0><s1> 25% red, 25% blue, 25% yellow, 25% grsgrn rubber tile, complex quad pattern, ControlNet precision",
     "negative_prompt": "missing red, missing blue, missing yellow, missing green, blurry, low quality",
     "num_inference_steps": 35,
     "guidance_scale": 8.5,

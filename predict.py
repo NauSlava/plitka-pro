@@ -19,114 +19,28 @@ import numpy as np
 from PIL import Image, ImageDraw, ImageFilter
 import random
 
-class ColorManager:
-    """Централизованное управление цветами для устранения рассинхронизации модулей"""
-    
-    def __init__(self):
-        # Таблица соответствий русских и английских названий цветов
-        self.color_table = {
-            "Бежевый": "BEIGE",
-            "Бело-зеленый": "WHTGRN", 
-            "Белый": "WHITE",
-            "Бирюзовый": "TURQSE",
-            "Голубой": "SKYBLUE",
-            "Желтый": "YELLOW",
-            "Жемчужный": "PEARL",
-            "Зеленая трава": "GRSGRN",
-            "Зеленое яблоко": "GRNAPL",
-            "Изумрудный": "EMERALD",
-            "Коричневый": "BROWN",
-            "Красный": "RED",
-            "Лосось": "SALMON",
-            "Оранжевый": "ORANGE",
-            "Песочный": "SAND",
-            "Розовый": "PINK",
-            "Салатовый": "LIMEGRN",
-            "Светло-зеленый": "LTGREEN",
-            "Светло-серый": "LTGRAY",
-            "Серый": "GRAY",
-            "Синий": "BLUE",
-            "Сиреневый": "LILAC",
-            "Темно-зеленый": "DKGREEN",
-            "Темно-серый": "DKGRAY",
-            "Темно-синий": "DKBLUE",
-            "Терракот": "TERCOT",
-            "Фиолетовый": "VIOLET",
-            "Хаки": "KHAKI",
-            "Чёрный": "BLACK"
-        }
-        
-        # Допустимые названия цветов (в нижнем регистре)
-        self.valid_colors = {color.lower() for color in self.color_table.values()}
-        
-        # RGB значения для всех цветов
-        self.color_rgb_map = {
-            "black": (0, 0, 0),
-            "white": (255, 255, 255),
-            "red": (255, 0, 0),
-            "blue": (0, 0, 255),
-            "yellow": (255, 255, 0),
-            "gray": (128, 128, 128),
-            "grey": (128, 128, 128),
-            "brown": (139, 69, 19),
-            "orange": (255, 165, 0),
-            "pink": (255, 192, 203),
-            "beige": (245, 245, 220),
-            "dkblue": (0, 0, 139),
-            "dkgray": (64, 64, 64),
-            "dkgreen": (0, 100, 0),
-            "emerald": (0, 128, 0),
-            "grnapl": (0, 128, 0),
-            "grsgrn": (34, 139, 34),
-            "khaki": (240, 230, 140),
-            "lilac": (200, 162, 200),
-            "limegrn": (50, 205, 50),
-            "ltgray": (192, 192, 192),
-            "ltgreen": (144, 238, 144),
-            "pearl": (240, 248, 255),
-            "salmon": (250, 128, 114),
-            "sand": (244, 164, 96),
-            "skyblue": (135, 206, 235),
-            "tercot": (205, 92, 92),
-            "turqse": (64, 224, 208),
-            "violet": (238, 130, 238),
-            "whtgrn": (240, 255, 240)
-        }
-    
-    def extract_colors_from_prompt(self, prompt: str) -> List[str]:
-        """Единая функция для извлечения цветов из промпта"""
-        colors = []
-        words = prompt.lower().split()
-        
-        for word in words:
-            # Убираем знаки препинания и проценты
-            clean_word = word.strip('%,.!?()[]{}')
-            if clean_word in self.valid_colors:
-                colors.append(clean_word)
-        
-        return colors
-    
-    def get_color_rgb(self, color_name: str) -> tuple:
-        """Получение RGB значения для цвета"""
-        return self.color_rgb_map.get(color_name.lower(), (127, 127, 127))
-    
-    def validate_colors(self, colors: List[str]) -> bool:
-        """Валидация списка цветов"""
-        return all(color in self.valid_colors for color in colors)
-    
-    def get_color_count(self, prompt: str) -> int:
-        """Получение количества цветов в промпте"""
-        return len(self.extract_colors_from_prompt(prompt))
+# Импортируем ColorManager из отдельного модуля
+from color_manager import ColorManager
 
 class ColorGridControlNet:
     """Улучшенный Color Grid Adapter для точного контроля цветовых пропорций"""
     
     def __init__(self):
         self.patterns = ["random", "grid", "radial", "granular"]
+        # Динамические размеры гранул на основе калибровки с референсными изображениями
         self.granule_sizes = {
-            "small": {"size_range": (2, 4), "density": 0.9},
-            "medium": {"size_range": (3, 6), "density": 0.8},
-            "large": {"size_range": (5, 8), "density": 0.7}
+            "small": {"min_size": 2, "max_size": 4, "density": 0.9, "variation": 0.3},
+            "medium": {"min_size": 3, "max_size": 6, "density": 0.8, "variation": 0.4},
+            "large": {"min_size": 5, "max_size": 8, "density": 0.7, "variation": 0.5}
+        }
+        
+        # Калиброванные параметры для реалистичных гранул
+        self.granule_calibration = {
+            "min_granule_size": 2,  # Минимальный размер в пикселях
+            "max_granule_size": 8,  # Максимальный размер в пикселях
+            "size_variation": 0.4,  # Вариативность размера (0.0-1.0)
+            "form_complexity": 0.6,  # Сложность формы (0.0-1.0)
+            "organic_factor": 0.7   # Фактор органичности (0.0-1.0)
         }
         
         # Инициализация централизованного менеджера цветов
@@ -161,10 +75,15 @@ class ColorGridControlNet:
         work_width = width - 2 * margin_x
         work_height = height - 2 * margin_y
         
-        # Параметры гранул
+        # Параметры гранул с динамическим диапазоном
         granule_params = self.granule_sizes[granule_size]
-        min_size, max_size = granule_params["size_range"]
+        min_size = granule_params["min_size"]
+        max_size = granule_params["max_size"]
         density = granule_params["density"]
+        variation = granule_params["variation"]
+        
+        # Калиброванные параметры для реалистичности
+        calibration = self.granule_calibration
         
         # Нормализация пропорций для рабочей области
         total_proportion = sum(color.get("proportion", 0) for color in colors)
@@ -178,7 +97,7 @@ class ColorGridControlNet:
                 "pixels_needed": int(proportion * work_width * work_height * density)
             })
         
-        # Создание гранул - случайные точки в рабочей области
+        # Создание гранул с вариативными размерами и органическими формами
         pixels_placed = {i: 0 for i in range(len(normalized_colors))}
         
         # Создаем список позиций только в рабочей области и перемешиваем
@@ -196,10 +115,149 @@ class ColorGridControlNet:
                 
                 # Проверяем, что пиксель еще прозрачный
                 if pixels[x, y] == (255, 255, 255, 0):
-                    pixels[x, y] = color_info["color"]
-                    placed += 1
+                    # Создаем гранулу с вариативным размером
+                    granule_size = self._generate_variable_granule_size(min_size, max_size, variation, calibration)
+                    
+                    # Создаем органическую форму гранулы
+                    actual_pixels_placed = self._draw_organic_granule(pixels, x, y, granule_size, color_info["color"], 
+                                                                    work_width, work_height, margin_x, margin_y, calibration)
+                    
+                    placed += actual_pixels_placed  # Учитываем фактически размещенные пиксели
         
         return canvas
+    
+    def _generate_variable_granule_size(self, min_size: int, max_size: int, variation: float, calibration: dict) -> int:
+        """Генерирует вариативный размер гранулы на основе калиброванных параметров"""
+        import random
+        
+        # Базовый размер с вариацией
+        base_size = random.randint(min_size, max_size)
+        
+        # Применяем вариацию для создания неоднородности
+        variation_factor = 1.0 + (random.random() - 0.5) * variation * 2
+        variable_size = int(base_size * variation_factor)
+        
+        # Ограничиваем размер калиброванными параметрами
+        variable_size = max(calibration["min_granule_size"], 
+                           min(calibration["max_granule_size"], variable_size))
+        
+        return variable_size
+    
+    def _draw_organic_granule(self, pixels, center_x: int, center_y: int, size: int, color: tuple, 
+                             work_width: int, work_height: int, margin_x: int, margin_y: int, calibration: dict) -> int:
+        """Рисует органическую гранулу с неправильной формой и возвращает количество размещенных пикселей"""
+        import random
+        import math
+        
+        # Параметры органичности
+        organic_factor = calibration["organic_factor"]
+        form_complexity = calibration["form_complexity"]
+        
+        # Определяем форму гранулы на основе сложности
+        if random.random() < form_complexity:
+            # Сложная органическая форма
+            return self._draw_complex_organic_granule(pixels, center_x, center_y, size, color, 
+                                                    work_width, work_height, margin_x, margin_y, organic_factor)
+        else:
+            # Простая форма с небольшими искажениями
+            return self._draw_simple_organic_granule(pixels, center_x, center_y, size, color, 
+                                                   work_width, work_height, margin_x, margin_y, organic_factor)
+    
+    def _draw_simple_organic_granule(self, pixels, center_x: int, center_y: int, size: int, color: tuple,
+                                   work_width: int, work_height: int, margin_x: int, margin_y: int, organic_factor: float) -> int:
+        """Рисует простую органическую гранулу с небольшими искажениями и возвращает количество размещенных пикселей"""
+        import random
+        import math
+        
+        # Базовый радиус с небольшими вариациями
+        base_radius = size // 2
+        pixels_placed = 0
+        
+        for dx in range(-base_radius, base_radius + 1):
+            for dy in range(-base_radius, base_radius + 1):
+                x, y = center_x + dx, center_y + dy
+                
+                # Проверяем границы
+                if (margin_x <= x < work_width + margin_x and 
+                    margin_y <= y < work_height + margin_y):
+                    
+                    # Вычисляем расстояние от центра
+                    distance = math.sqrt(dx*dx + dy*dy)
+                    
+                    # Добавляем органические искажения
+                    organic_distortion = 1.0 + (random.random() - 0.5) * organic_factor * 0.3
+                    effective_radius = base_radius * organic_distortion
+                    
+                    # Рисуем пиксель, если он внутри искаженного круга
+                    if distance <= effective_radius:
+                        pixels[x, y] = color
+                        pixels_placed += 1
+        
+        return pixels_placed
+    
+    def _draw_complex_organic_granule(self, pixels, center_x: int, center_y: int, size: int, color: tuple,
+                                    work_width: int, work_height: int, margin_x: int, margin_y: int, organic_factor: float) -> int:
+        """Рисует сложную органическую гранулу с неправильной формой и возвращает количество размещенных пикселей"""
+        import random
+        import math
+        
+        # Создаем несколько точек для сложной формы
+        num_points = max(3, size // 2)
+        points = []
+        
+        for i in range(num_points):
+            angle = (2 * math.pi * i) / num_points
+            # Добавляем случайные отклонения для органичности
+            radius_variation = 1.0 + (random.random() - 0.5) * organic_factor
+            point_radius = (size // 2) * radius_variation
+            
+            px = center_x + int(point_radius * math.cos(angle))
+            py = center_y + int(point_radius * math.sin(angle))
+            points.append((px, py))
+        
+        # Рисуем гранулу, используя точки как основу для формы
+        pixels_placed = 0
+        for dx in range(-size, size + 1):
+            for dy in range(-size, size + 1):
+                x, y = center_x + dx, center_y + dy
+                
+                # Проверяем границы
+                if (margin_x <= x < work_width + margin_x and 
+                    margin_y <= y < work_height + margin_y):
+                    
+                    # Проверяем, находится ли точка внутри сложной формы
+                    if self._point_in_complex_shape(x, y, points, organic_factor):
+                        pixels[x, y] = color
+                        pixels_placed += 1
+        
+        return pixels_placed
+    
+    def _point_in_complex_shape(self, x: int, y: int, points: list, organic_factor: float) -> bool:
+        """Проверяет, находится ли точка внутри сложной органической формы"""
+        import random
+        import math
+        
+        # Используем алгоритм ray casting для проверки принадлежности к многоугольнику
+        n = len(points)
+        inside = False
+        
+        p1x, p1y = points[0]
+        for i in range(1, n + 1):
+            p2x, p2y = points[i % n]
+            if y > min(p1y, p2y):
+                if y <= max(p1y, p2y):
+                    if x <= max(p1x, p2x):
+                        if p1y != p2y:
+                            xinters = (y - p1y) * (p2x - p1x) / (p2y - p1y) + p1x
+                        if p1x == p2x or x <= xinters:
+                            inside = not inside
+            p1x, p1y = p2x, p2y
+        
+        # Добавляем органические искажения
+        if inside and random.random() < organic_factor * 0.2:
+            inside = not inside  # Случайно исключаем некоторые пиксели
+        
+        return inside
     
     def _create_random_pattern(self, colors, size):
         """Создает случайный паттерн с точными пропорциями и пустыми полями по краям"""
@@ -342,7 +400,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Единая версия модели для логов
-MODEL_VERSION = "v4.5.02"
+MODEL_VERSION = "v4.5.06"
 
 # Переменные окружения для оптимизации
 os.environ["HF_HOME"] = "/tmp/hf_home"
@@ -363,6 +421,15 @@ except Exception:
     StableDiffusionXLControlNetPipeline = None
 from transformers import CLIPTextModel, T5EncoderModel
 from cog import BasePredictor, Input
+
+# Специальные исключения для критических ошибок
+class ColormapGenerationError(Exception):
+    """Критическая ошибка генерации colormap"""
+    pass
+
+class ControlNetValidationError(Exception):
+    """Критическая ошибка валидации ControlNet"""
+    pass
 
 class Predictor(BasePredictor):
     def __init__(self):
@@ -686,52 +753,110 @@ class Predictor(BasePredictor):
         )
 
     def _parse_percent_colors(self, simple_prompt: str) -> List[Dict[str, Any]]:
-        """Простенький парсер строк вида '60% red, 40% white' → список цветов и долей [0..1]."""
-        parts = [p.strip() for p in simple_prompt.split(',') if p.strip()]
+        """Парсер строк вида '60% RED, 40% WHITE' → список цветов и долей [0..1]."""
+        import re
+        
+        # Создаем паттерн для поиска кодовых слов цветов
+        color_codes = '|'.join(self.color_manager.valid_colors)
+        
+        # Ищем паттерны: число% КОДОВОЕ_СЛОВО_ЦВЕТА
+        percent_pattern = rf'(\d+(?:\.\d+)?)\s*%\s*({color_codes})\b'
+        matches = re.findall(percent_pattern, simple_prompt, re.IGNORECASE)
+        
         result: List[Dict[str, Any]] = []
-        for p in parts:
+        for percent_str, color_code in matches:
             try:
-                percent_str, name = p.split('%', 1)
                 percent = float(percent_str.strip())
-                color_name = name.strip()
-                if color_name.lower().startswith(('of ', ' ')):
-                    color_name = color_name.split()[-1]
+                color_name = color_code.upper().strip()
                 
                 # Валидация цвета через ColorManager
                 if self.color_manager.validate_colors([color_name]):
                     result.append({"name": color_name, "proportion": max(0.0, min(1.0, percent / 100.0))})
+                    logger.info(f"✅ Найден цвет: {percent}% {color_name}")
                 else:
                     logger.warning(f"⚠️ Недопустимый цвет в промпте: {color_name}")
                     # Fallback: заменяем на белый
-                    result.append({"name": "white", "proportion": max(0.0, min(1.0, percent / 100.0))})
-            except Exception:
+                    result.append({"name": "WHITE", "proportion": max(0.0, min(1.0, percent / 100.0))})
+            except Exception as e:
+                logger.warning(f"⚠️ Ошибка парсинга '{percent_str}% {color_code}': {e}")
                 continue
+        
+        # Если не нашли кодовые слова, пробуем старый метод как fallback
+        if not result:
+            logger.info("🔄 Fallback: поиск цветов по словам...")
+            # Ищем части с процентами в промпте
+            percent_pattern = r'(\d+(?:\.\d+)?)\s*%\s*([^,]+)'
+            matches = re.findall(percent_pattern, simple_prompt)
+            
+            for percent_str, color_phrase in matches:
+                try:
+                    percent = float(percent_str.strip())
+                    color_name = color_phrase.strip()
+                    
+                    # Ищем кодовое слово в фразе
+                    words = color_name.lower().split()
+                    found_color = None
+                    for word in words:
+                        if word in self.color_manager.valid_colors:
+                            found_color = word.upper()
+                            break
+                    
+                    if found_color:
+                        color_name = found_color
+                        if self.color_manager.validate_colors([color_name]):
+                            result.append({"name": color_name, "proportion": max(0.0, min(1.0, percent / 100.0))})
+                            logger.info(f"✅ Fallback: найден цвет: {percent}% {color_name}")
+                        else:
+                            logger.warning(f"⚠️ Fallback: недопустимый цвет: {color_name}")
+                    else:
+                        logger.warning(f"⚠️ Fallback: неизвестный цвет в промпте: {color_phrase}")
+                except Exception as e:
+                    logger.warning(f"⚠️ Fallback: ошибка парсинга '{percent_str}% {color_phrase}': {e}")
+                    continue
+        
         # Нормализация, если сумма не 1.0
         total = sum(c["proportion"] for c in result) or 1.0
         for c in result:
             c["proportion"] = c["proportion"] / total
+        
+        logger.info(f"🎨 Итого найдено цветов: {len(result)}")
         return result
 
     def _render_legend(self, colors: List[Dict[str, Any]], size: int = 256) -> Image.Image:
-        """Строим простую легенду/colormap из входных пропорций (горизонтальные полосы)."""
-        img = Image.new('RGBA', (size, size), color=(255, 255, 255, 255))  # Непрозрачный белый
-        draw = ImageDraw.Draw(img)
-        y = 0
-        for c in colors:
-            h = max(1, int(size * c["proportion"]))
+        """Создает colormap со случайным распределением точек вместо полос (исправленный fallback)."""
+        import random
+        
+        # Создаем прозрачный фон
+        img = Image.new('RGBA', (size, size), color=(255, 255, 255, 0))
+        pixels = img.load()
+        
+        total_pixels = size * size
+        
+        for color_data in colors:
             try:
-                rgb = ImageColor.getrgb(c["name"])  # распознает стандартные цвета
+                rgb = ImageColor.getrgb(color_data["name"])  # распознает стандартные цвета
             except Exception:
                 rgb = (200, 200, 200)
-            draw.rectangle([0, y, size, min(size, y + h)], fill=rgb)
-            y += h
-        # Подгоняем последнюю полосу до края
-        if y < size and colors:
-            try:
-                rgb_last = ImageColor.getrgb(colors[-1]["name"])
-            except Exception:
-                rgb_last = (200, 200, 200)
-            draw.rectangle([0, y, size, size], fill=rgb_last)
+            
+            # Вычисляем количество пикселей для этого цвета
+            pixels_per_color = int(total_pixels * color_data["proportion"])
+            
+            # Случайно размещаем пиксели этого цвета
+            placed_pixels = 0
+            max_attempts = pixels_per_color * 3  # Ограничиваем количество попыток
+            attempts = 0
+            
+            while placed_pixels < pixels_per_color and attempts < max_attempts:
+                x = random.randint(0, size - 1)
+                y = random.randint(0, size - 1)
+                
+                # Проверяем, что пиксель еще не занят
+                if pixels[x, y] == (255, 255, 255, 0):  # Прозрачный пиксель
+                    pixels[x, y] = rgb
+                    placed_pixels += 1
+                
+                attempts += 1
+        
         return img
     
     def _build_prompt_from_simple(self, simple_prompt: str) -> str:
@@ -759,6 +884,67 @@ class Predictor(BasePredictor):
         full_prompt += ", " + ", ".join(quality_descriptors)
         
         return full_prompt
+    
+    def _strengthen_color_tokens(self, prompt: str) -> str:
+        """Усиливает токены цветов в промпте для предотвращения их потери attention mechanism"""
+        try:
+            # Извлекаем цвета из промпта
+            colors = self.color_manager.extract_colors_from_prompt(prompt)
+            if not colors:
+                return prompt
+            
+            # Создаем усиленные токены цветов
+            strengthened_prompt = prompt
+            
+            for color_data in colors:
+                color_name = color_data["name"].lower()
+                proportion = color_data["proportion"]
+                
+                # Создаем усиленные токены для каждого цвета
+                if color_name in ["red", "blue", "green", "yellow", "white", "black", "brown", "gray", "grey"]:
+                    # Основные цвета - добавляем повторения и усиления
+                    color_tokens = f"{color_name} {color_name} {color_name}"
+                    strengthened_prompt = strengthened_prompt.replace(f"{proportion*100:.0f}% {color_name}", 
+                                                                    f"{color_tokens} {proportion*100:.0f}% {color_name}")
+                
+                elif color_name in ["dkgreen", "ltgreen", "grngrn", "whtgrn"]:
+                    # Специальные цвета - добавляем описания
+                    if color_name == "dkgreen":
+                        color_tokens = "dark green dark green"
+                    elif color_name == "ltgreen":
+                        color_tokens = "light green light green"
+                    elif color_name == "grngrn":
+                        color_tokens = "green green"
+                    elif color_name == "whtgrn":
+                        color_tokens = "white green white green"
+                    
+                    strengthened_prompt = strengthened_prompt.replace(f"{proportion*100:.0f}% {color_name}", 
+                                                                    f"{color_tokens} {proportion*100:.0f}% {color_name}")
+                
+                elif color_name in ["pearl", "salmon", "orange", "pink", "violet", "turqse"]:
+                    # Декоративные цвета - добавляем описания
+                    if color_name == "pearl":
+                        color_tokens = "pearl white pearl white"
+                    elif color_name == "salmon":
+                        color_tokens = "salmon pink salmon pink"
+                    elif color_name == "orange":
+                        color_tokens = "orange orange"
+                    elif color_name == "pink":
+                        color_tokens = "pink pink"
+                    elif color_name == "violet":
+                        color_tokens = "violet purple violet purple"
+                    elif color_name == "turqse":
+                        color_tokens = "turquoise blue turquoise blue"
+                    
+                    strengthened_prompt = strengthened_prompt.replace(f"{proportion*100:.0f}% {color_name}", 
+                                                                    f"{color_tokens} {proportion*100:.0f}% {color_name}")
+            
+            logger.info(f"🔧 Усилены токены цветов в промпте")
+            return strengthened_prompt
+            
+        except Exception as e:
+            logger.warning(f"⚠️ Ошибка усиления токенов цветов: {e}")
+            return prompt
     
     def _create_optimized_colormap(self, prompt: str, size: tuple = (1024, 1024), pattern_type: str = "random", granule_size: str = "medium") -> Image.Image:
         """Создает оптимизированный colormap для ControlNet с точными пропорциями"""
@@ -894,7 +1080,9 @@ class Predictor(BasePredictor):
                 opaque_rgb = rgb_array[opaque_pixels]
                 if len(opaque_rgb) > 0:
                     # Сравниваем каждый пиксель с серым цветом
-                    gray_pixels = np.all(opaque_rgb == np.array([127, 127, 127]), axis=1)
+                    gray_color = np.array([127, 127, 127])
+                    # Исправляем broadcasting: сравниваем каждый пиксель с серым цветом
+                    gray_pixels = np.all(opaque_rgb == gray_color, axis=1)
                     if np.all(gray_pixels):
                         logger.warning("⚠️ Colormap полностью серый в непрозрачных областях")
                         return False
@@ -904,6 +1092,73 @@ class Predictor(BasePredictor):
             
         except Exception as e:
             logger.error(f"❌ Ошибка валидации colormap: {e}")
+            return False
+    
+    def _validate_controlnet_map(self, colormap: Image, prompt: str) -> bool:
+        """Валидация ControlNet карты перед передачей в ControlNet"""
+        try:
+            # Извлекаем ожидаемые цвета из промпта
+            expected_colors = self.color_manager.extract_colors_from_prompt(prompt)
+            if not expected_colors:
+                logger.warning("⚠️ Не удалось извлечь цвета из промпта для валидации ControlNet")
+                return False
+            
+            # Конвертируем colormap в массив для анализа
+            colormap_array = np.array(colormap)
+            
+            # Подсчитываем уникальные цвета в colormap
+            if len(colormap_array.shape) == 4:  # RGBA
+                # Берем только RGB каналы и альфа
+                rgb_array = colormap_array[:, :, :3]
+                alpha_array = colormap_array[:, :, 3]
+                
+                # Находим непрозрачные пиксели
+                opaque_mask = alpha_array > 128  # Порог прозрачности
+                if not np.any(opaque_mask):
+                    logger.warning("⚠️ ControlNet карта полностью прозрачна")
+                    return False
+                
+                # Получаем RGB значения непрозрачных пикселей
+                opaque_rgb = rgb_array[opaque_mask]
+                
+            elif len(colormap_array.shape) == 3:  # RGB
+                opaque_rgb = colormap_array.reshape(-1, 3)
+            else:
+                logger.warning("⚠️ Неподдерживаемый формат ControlNet карты")
+                return False
+            
+            # Находим уникальные цвета (с допуском на вариации)
+            unique_colors = []
+            for pixel in opaque_rgb:
+                # Проверяем, есть ли уже похожий цвет
+                is_unique = True
+                for existing_color in unique_colors:
+                    if np.allclose(pixel, existing_color, atol=10):  # Допуск 10 единиц
+                        is_unique = False
+                        break
+                if is_unique:
+                    unique_colors.append(pixel)
+            
+            # Проверяем количество уникальных цветов
+            expected_count = len(expected_colors)
+            actual_count = len(unique_colors)
+            
+            logger.info(f"🔍 ControlNet валидация: ожидается {expected_count} цветов, найдено {actual_count}")
+            
+            # Допускаем небольшое отклонение (например, если один цвет представлен несколькими оттенками)
+            if actual_count < expected_count * 0.5:  # Менее 50% ожидаемых цветов
+                logger.warning(f"⚠️ ControlNet карта содержит слишком мало цветов: {actual_count} из {expected_count}")
+                return False
+            
+            if actual_count > expected_count * 2:  # Более чем в 2 раза больше ожидаемых
+                logger.warning(f"⚠️ ControlNet карта содержит слишком много цветов: {actual_count} из {expected_count}")
+                return False
+            
+            logger.info(f"✅ ControlNet карта валидна: {actual_count} уникальных цветов")
+            return True
+            
+        except Exception as e:
+            logger.error(f"❌ Ошибка валидации ControlNet карты: {e}")
             return False
     
     def _force_rebuild_colormap(self, prompt: str, size: tuple = (1024, 1024)) -> Image:
@@ -918,27 +1173,42 @@ class Predictor(BasePredictor):
                 # Fallback: простой серый colormap
                 return Image.new('RGBA', size, (127, 127, 127, 255))  # Непрозрачный серый фон
             
-            # Создаем простой colormap с правильными цветами
+            # Создаем colormap со случайным распределением точек вместо полос
             colormap = Image.new('RGBA', size, (255, 255, 255, 0))  # Прозрачный фон
             pixels = colormap.load()
             
-            # Размещаем цвета в простом паттерне
+            # Создаем случайное распределение цветных точек
+            import random
+            total_pixels = size[0] * size[1]
+            
             for i, color in enumerate(colors):
                 rgb = self.color_manager.get_color_rgb(color)
-                # Разделяем изображение на секции по цветам
-                start_x = (i * size[0]) // len(colors)
-                end_x = ((i + 1) * size[0]) // len(colors)
-                for x in range(start_x, end_x):
-                    for y in range(size[1]):
+                # Вычисляем количество пикселей для этого цвета (примерно равномерно)
+                pixels_per_color = total_pixels // len(colors)
+                
+                # Случайно размещаем пиксели этого цвета
+                placed_pixels = 0
+                max_attempts = pixels_per_color * 3  # Ограничиваем количество попыток
+                attempts = 0
+                
+                while placed_pixels < pixels_per_color and attempts < max_attempts:
+                    x = random.randint(0, size[0] - 1)
+                    y = random.randint(0, size[1] - 1)
+                    
+                    # Проверяем, что пиксель еще не занят
+                    if pixels[x, y] == (255, 255, 255, 0):  # Прозрачный пиксель
                         pixels[x, y] = rgb
+                        placed_pixels += 1
+                    
+                    attempts += 1
             
             logger.info(f"✅ Colormap пересобран для цветов: {colors}")
             return colormap
             
         except Exception as e:
             logger.error(f"❌ Критическая ошибка пересборки colormap: {e}")
-            # Fallback: простой серый colormap
-            return Image.new('RGBA', size, (127, 127, 127, 255))  # Непрозрачный серый фон
+            # Прерываем генерацию при критических ошибках
+            raise ColormapGenerationError(f"Невозможно создать корректный colormap: {e}")
     
     def predict(self, prompt: str = Input(description="Промпт для генерации резиновой плитки (должен содержать ohwx_rubber_tile <s0><s1>)", default="ohwx_rubber_tile <s0><s1> 100% red rubber tile"), 
                 negative_prompt: Optional[str] = Input(description="Негативный промпт", default=""), 
@@ -1008,8 +1278,12 @@ class Predictor(BasePredictor):
             # Преобразование простого промпта в полный формат с НАШИМИ токенами
             full_prompt = self._build_prompt_from_simple(prompt)
             
+            # Усиление токенов цветов для предотвращения потери attention mechanism
+            strengthened_prompt = self._strengthen_color_tokens(full_prompt)
+            
             logger.info(f"🎨 Генерация изображения...")
             logger.info(f"📝 Полный промпт: {full_prompt}")
+            logger.info(f"🔧 Усиленный промпт: {strengthened_prompt}")
             logger.info(f"🚫 Финальный негативный промпт: {negative_prompt}")
             logger.info(f"🎲 Финальный сид: {seed}")
             logger.info(f"🔧 Устройство: {self.device}")
@@ -1047,7 +1321,7 @@ class Predictor(BasePredictor):
             logger.info("🚀 Запуск pipeline для генерации с адаптивными параметрами...")
             pipe_to_use = self.pipe
             pipe_kwargs = dict(
-                prompt=full_prompt,
+                prompt=strengthened_prompt,  # Используем усиленный промпт
                 negative_prompt=negative_prompt,
                 num_inference_steps=max(5, int(adaptive_steps)),
                 guidance_scale=float(adaptive_guidance),
@@ -1139,7 +1413,6 @@ class Predictor(BasePredictor):
                     try:
                         if control_image is not None:
                             # Если пользователь предоставил контрольное изображение
-                            from PIL import ImageFilter
                             user_hint = Image.open(control_image).convert('L').resize((1024, 1024), Image.Resampling.LANCZOS)
                             user_hint = user_hint.filter(ImageFilter.EDGE_ENHANCE)
                             logger.info("✅ ControlNet использует пользовательское контрольное изображение")
@@ -1165,6 +1438,17 @@ class Predictor(BasePredictor):
                                 logger.warning("⚠️ Colormap не соответствует промпту, пересоздаем...")
                                 color_control_image = self._force_rebuild_colormap(prompt, size=(1024, 1024))
                             
+                            # Валидация ControlNet карты перед передачей в ControlNet
+                            if not self._validate_controlnet_map(color_control_image, prompt):
+                                logger.warning("⚠️ ControlNet карта не прошла валидацию, пересоздаем...")
+                                color_control_image = self._force_rebuild_colormap(prompt, size=(1024, 1024))
+                                
+                                # Повторная валидация после пересоздания
+                                if not self._validate_controlnet_map(color_control_image, prompt):
+                                    logger.error("❌ Критическая ошибка: ControlNet карта не может быть создана корректно")
+                                    # Прерываем генерацию с ошибкой
+                                    raise ControlNetValidationError("ControlNet карта не прошла валидацию после пересоздания")
+                            
                             # Преобразуем в grayscale для ControlNet
                             main_hint = color_control_image.convert('L')
                             main_hint = main_hint.filter(ImageFilter.EDGE_ENHANCE)
@@ -1186,18 +1470,21 @@ class Predictor(BasePredictor):
                             else:
                                 # Fallback к основной карте
                                 pipe_kwargs["image"] = control_images[0]
-                                logger.info("✅ ControlNet активирован с основной контрольной картой (fallback)")
+                                pipe_kwargs["controlnet_conditioning_scale"] = 1.0  # Усиленное влияние ControlNet
+                                logger.info("✅ ControlNet активирован с основной контрольной картой (fallback, усиленное влияние)")
                         else:
                             # Обычный режим с одной картой
                             pipe_kwargs["image"] = control_images[0]
-                            logger.info("✅ ControlNet активирован с контрольной картой")
+                            pipe_kwargs["controlnet_conditioning_scale"] = 1.0  # Усиленное влияние ControlNet
+                            logger.info("✅ ControlNet активирован с контрольной картой (усиленное влияние)")
                         
                     except Exception as e:
                         logger.warning(f"⚠️ Ошибка подготовки мультимодального ControlNet: {e}")
                         # Fallback: простая контрольная карта
                         hint = Image.new('L', (1024, 1024), color=255)
                         pipe_kwargs["image"] = hint
-                        logger.info("✅ ControlNet активирован с fallback картой")
+                        pipe_kwargs["controlnet_conditioning_scale"] = 0.8  # Умеренное влияние для fallback
+                        logger.info("✅ ControlNet активирован с fallback картой (умеренное влияние)")
                 except Exception as e:
                     logger.warning(f"⚠️ ControlNet недоступен: {e}")
 
@@ -1302,6 +1589,20 @@ class Predictor(BasePredictor):
             yield Path(colormap_path)
             yield Path(legend_path)
             
+        except (ColormapGenerationError, ControlNetValidationError) as e:
+            logger.error(f"🚨 КРИТИЧЕСКАЯ ОШИБКА: {e}")
+            logger.error(f"📊 Тип ошибки: {type(e).__name__}")
+            logger.error("🛑 Генерация прервана для предотвращения некорректных результатов")
+            # Возвращаем информативное сообщение об ошибке
+            error_path = "/tmp/error_message.txt"
+            with open(error_path, "w", encoding="utf-8") as f:
+                f.write(f"Критическая ошибка генерации: {e}\n")
+                f.write(f"Тип ошибки: {type(e).__name__}\n")
+                f.write("Генерация прервана для предотвращения некорректных результатов.\n")
+                f.write("Пожалуйста, проверьте промпт и попробуйте снова.\n")
+            yield Path(error_path)
+            return
+            
         except Exception as e:
             logger.error(f"❌ Ошибка генерации: {e}")
             logger.error(f"📊 Тип ошибки: {type(e).__name__}")
@@ -1333,13 +1634,13 @@ class Predictor(BasePredictor):
             for i, controlnet_type in enumerate(controlnets):
                 if controlnet_type == "t2i_color":
                     pipe_kwargs["image"] = control_images[i] if i < len(control_images) else combined_hint
-                    pipe_kwargs["controlnet_conditioning_scale"] = 0.8
+                    pipe_kwargs["controlnet_conditioning_scale"] = 1.0  # Усилено с 0.8 до 1.0
                 elif controlnet_type == "color_grid":
                     pipe_kwargs["image"] = control_images[i] if i < len(control_images) else combined_hint
-                    pipe_kwargs["controlnet_conditioning_scale"] = 0.9
+                    pipe_kwargs["controlnet_conditioning_scale"] = 1.1  # Усилено с 0.9 до 1.1
                 elif controlnet_type == "shuffle":
                     pipe_kwargs["image"] = control_images[i] if i < len(control_images) else combined_hint
-                    pipe_kwargs["controlnet_conditioning_scale"] = 0.7
+                    pipe_kwargs["controlnet_conditioning_scale"] = 0.9  # Усилено с 0.7 до 0.9
             
             return pipe_kwargs
         except Exception as e:

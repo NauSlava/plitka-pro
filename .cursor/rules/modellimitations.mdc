@@ -1,0 +1,18 @@
+---
+description: "Defines the critical generation limitations of the trained model, derived from its training profile."
+globs: []
+alwaysApply: true
+---
+### **Critical Model Limitations**
+
+This rule defines what the model, based on its training profile, **cannot do**.
+
+*   **Rule 1: Single-Angle Generation**
+    *   **Limitation:** Generation is **strictly limited to a top-down view (angle 0°)**.
+    *   **Reason:** The training dataset contained no images from other angles.
+    *   **Action:** All requests for other angles must be rejected or re-scoped during **Phase 1**.
+
+*   **Rule 2: Hybrid Dependency**
+    *   **Limitation:** The model will produce nonsensical results if **either the LoRA or the Textual Inversion component is missing**.
+    *   **Reason:** The style and concept are separated into two different files.
+    *   **Action:** During **Phase 1**, any plan must include steps to load both `.safetensors` artifacts.

@@ -1,0 +1,1 @@
+ohwx_rubber_tile <s0><s1>, 25% blue, 25% dark green, 25% red, 25% yellow
