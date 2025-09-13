@@ -1,0 +1,746 @@
+=== GUI Real-time Logs Session ===
+Session ID: session_v4.5.10_143937bc_20250913_093008
+Version: v4.5.10
+Hash: 143937bc
+Start Time: 2025-09-13 09:30:08
+========================================
+
+[2025-09-13T09:30:08.968356] [INFO] 🔄 Версия обновлена: v4.5.10
+[2025-09-13T09:30:08.968931] [INFO] ✅ Новый хеш (гибридный): 143937bc
+[2025-09-13T09:30:08.970427] [INFO] ✅ Логи перемещены из временной папки
+[2025-09-13T09:30:08.970763] [INFO] 📁 Логи GUI: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/gui_logs
+[2025-09-13T09:30:15.816739] [INFO] 📋 Выбран пресет: v4.5.10_Test_01_LoRA_Loading_Fix_Mono ✅
+[2025-09-13T09:30:22.675957] [INFO] 📋 Выбрано пресетов: 5
+[2025-09-13T09:30:22.676372] [INFO] • v4.5.10_Test_01_LoRA_Loading_Fix_Mono
+[2025-09-13T09:30:22.676682] [INFO] • v4.5.10_Test_02_LoRA_Stability_Duo
+[2025-09-13T09:30:22.676955] [INFO] • v4.5.10_Test_03_Textual_Inversion_Loading
+[2025-09-13T09:30:22.677184] [INFO] • v4.5.10_Test_04_Safetensors_Validation
+[2025-09-13T09:30:22.677410] [INFO] • v4.5.10_Test_05_Git_LFS_Pointer_Check
+[2025-09-13T09:30:24.943905] [INFO] 🔄 on_start() вызван
+[2025-09-13T09:30:24.944345] [INFO] [GUI] Starting tests...
+[2025-09-13T09:30:24.944650] [INFO] 🚀 Запуск с версией: v4.5.10
+[2025-09-13T09:30:24.944890] [INFO] 🔐 Хеш папки: 143937bc
+[2025-09-13T09:30:24.945110] [INFO] 📁 Ожидаемая папка: replicate_runs/143937bc/
+[2025-09-13T09:30:24.945403] [INFO] 🔍 Текущий рабочий каталог: /home/papaandrey/plitka-pro-project
+[2025-09-13T09:30:24.945632] [INFO] 📁 Полный путь: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc
+[2025-09-13T09:30:24.945864] [INFO] 📁 Абсолютный путь: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc
+[2025-09-13T09:30:24.946092] [INFO] --------------------------------------------------
+[2025-09-13T09:30:25.083246] [INFO] 🔄 run_presets() вызван
+[2025-09-13T09:30:25.083718] [INFO] ################ PRESET: v4.5.10_Test_01_LoRA_Loading_Fix_Mono ################
+[2025-09-13T09:30:25.083977] [INFO] 🔄 _run_single() вызван
+[2025-09-13T09:30:25.084558] [INFO] === Creating prediction: nauslava/plitka-pro-project (version: v4.5.10)
+Inputs: {"prompt": "ohwx_rubber_tile <s0><s1> 100% red rubber tile", "negative_prompt": "blurry, low quality, distorted", "seed": 12345, "num_inference_steps": 25, "guidance_scale": 7.5, "colormap": "random", "granule_size": "medium", "use_controlnet": false, "description": "Тест моно-цвета для проверки исправления загрузки LoRA адаптеров"}
+[2025-09-13T09:30:25.084975] [INFO] 🔄 Worker.start() вызван, поток запущен
+[2025-09-13T09:30:25.985925] [INFO] 🔄 Получение модели: nauslava/plitka-pro-project
+[2025-09-13T09:30:26.286761] [INFO] ✅ Модель получена
+[2025-09-13T09:30:26.287334] [INFO] 🔄 Получение версии модели...
+[2025-09-13T09:30:26.588073] [INFO] ✅ Версия получена: 143937bcbd00359172e19854757bc9ba27cf3cbbcb9186422b30a50aa3390f76
+[2025-09-13T09:30:26.588578] [INFO] 🔄 Создание предсказания...
+[2025-09-13T09:30:27.189591] [INFO] ✅ Предсказание создано: jt464ymnqnrgc0cs872809az5m
+[2025-09-13T09:30:27.190278] [ERROR] ⚠️ Ошибка запуска логирования модели: 'ReplicateWorker' object has no attribute '_get_current_hash'
+[2025-09-13T09:30:27.190745] [INFO] Prediction id: jt464ymnqnrgc0cs872809az5m
+[2025-09-13T09:30:27.191238] [INFO] 🔍 Начинаем создание папки для результатов...
+[2025-09-13T09:30:27.191694] [INFO] 🔍 Текущий рабочий каталог: /home/papaandrey/plitka-pro-project
+[2025-09-13T09:30:27.192162] [INFO] 🔍 Используем версию и хеш из App:
+[2025-09-13T09:30:27.192562] [INFO] 🔍 version_id: v4.5.10
+[2025-09-13T09:30:27.192993] [INFO] 🔍 pred.version: 143937bcbd00359172e19854757bc9ba27cf3cbbcb9186422b30a50aa3390f76
+[2025-09-13T09:30:27.193403] [INFO] 🔍 ver_for_hash: v4.5.10
+[2025-09-13T09:30:27.193801] [INFO] 🔐 Хеш из App: 143937bc
+[2025-09-13T09:30:27.194231] [INFO] 🔄 Папка создана: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_093026
+[2025-09-13T09:30:27.194647] [INFO] 🔄 _current_run_dir установлен: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_093026
+[2025-09-13T09:30:27.195119] [INFO] 🔐 Создаем папку с хешем: 143937bc
+[2025-09-13T09:30:27.195550] [INFO] 📁 Создана папка: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_093026
+[2025-09-13T09:30:27.195969] [INFO] 🔐 Хеш версии: 143937bc
+[2025-09-13T09:30:27.196402] [INFO] 🔍 Базовая папка: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc
+[2025-09-13T09:30:27.196833] [INFO] 🔍 Полный путь: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_093026
+[2025-09-13T09:30:27.197273] [INFO] ✅ Папка успешно создана и существует
+[2025-09-13T09:37:31.492779] [ERROR] ❌ Startup timeout exceeded. Cancelling prediction...
+[2025-09-13T09:37:31.493447] [INFO] ################ PRESET: v4.5.10_Test_02_LoRA_Stability_Duo ################
+[2025-09-13T09:37:31.493909] [INFO] 🔄 _run_single() вызван
+[2025-09-13T09:37:31.494485] [INFO] === Creating prediction: nauslava/plitka-pro-project (version: 143937bcbd00359172e19854757bc9ba27cf3cbbcb9186422b30a50aa3390f76)
+Inputs: {"prompt": "ohwx_rubber_tile <s0><s1> 60% red, 40% blue rubber tile", "negative_prompt": "blurry, low quality, distorted", "seed": 54321, "num_inference_steps": 25, "guidance_scale": 7.5, "colormap": "grid", "granule_size": "medium", "use_controlnet": false, "description": "Тест дуо-цветов для проверки стабильности LoRA после исправления"}
+[2025-09-13T09:37:31.795496] [INFO] Prediction id: 45pfvzrh0xrgc0cs875v8df7f8
+[2025-09-13T09:37:31.796071] [INFO] 🔍 Начинаем создание папки для результатов...
+[2025-09-13T09:37:31.796560] [INFO] 🔍 Текущий рабочий каталог: /home/papaandrey/plitka-pro-project
+[2025-09-13T09:37:31.797132] [INFO] 🔍 Используем версию и хеш из App:
+[2025-09-13T09:37:31.797737] [INFO] 🔍 version_id: 143937bcbd00359172e19854757bc9ba27cf3cbbcb9186422b30a50aa3390f76
+[2025-09-13T09:37:31.798246] [INFO] 🔍 pred.version: 143937bcbd00359172e19854757bc9ba27cf3cbbcb9186422b30a50aa3390f76
+[2025-09-13T09:37:31.798742] [INFO] 🔍 ver_for_hash: v4.5.10
+[2025-09-13T09:37:31.799250] [INFO] 🔐 Хеш из App: 143937bc
+[2025-09-13T09:37:31.799729] [INFO] 🔄 Папка создана: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_093731
+[2025-09-13T09:37:31.800260] [INFO] 🔄 _current_run_dir установлен: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_093731
+[2025-09-13T09:37:31.800775] [INFO] 🔐 Создаем папку с хешем: 143937bc
+[2025-09-13T09:37:31.801348] [INFO] 📁 Создана папка: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_093731
+[2025-09-13T09:37:31.801856] [INFO] 🔐 Хеш версии: 143937bc
+[2025-09-13T09:37:31.802368] [INFO] 🔍 Базовая папка: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc
+[2025-09-13T09:37:31.802886] [INFO] 🔍 Полный путь: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_093731
+[2025-09-13T09:37:31.803390] [INFO] ✅ Папка успешно создана и существует
+[2025-09-13T09:40:22.276602] [WARNING] INFO:coglet:prediction started: id=45pfvzrh0xrgc0cs875v8df7f8
+WARNING unknown input field ignored: description
+[2025-09-13T09:40:22.277136] [INFO] ✅ Startup phase completed. Proceeding to completion...
+[2025-09-13T09:40:47.610220] [INFO] INFO:predict:🚀 STARTUP_SNAPSHOT_START
+INFO:predict:🧭 MODEL_START v4.5.07 | device=cuda | diffusers=0.21.4 | torch=2.1.0+cu121
+INFO:predict:📊 GPU: Tesla T4
+INFO:predict:💾 GPU Memory: 14.6 GB
+INFO:predict:🔧 SDXL Base: unknown
+INFO:predict:🎨 LoRA: unknown (rank: 32)
+INFO:predict:🔤 TI: unknown (tokens: <s0><s1>)
+INFO:predict:⚙️ Scheduler: DPMSolverMultistepScheduler
+INFO:predict:🎭 VAE: AutoencoderKL
+INFO:predict:🎯 Prompt: ohwx_rubber_tile <s0><s1> 60% red, 40% blue rubber tile
+INFO:predict:🚫 Negative Prompt: blurry, low quality, distorted
+INFO:predict:🎲 Seed: 54321
+INFO:predict:📊 Steps: 25 (базовый)
+INFO:predict:🎚️ Guidance: 7.5 (базовый)
+INFO:predict:🎨 Colormap: grid
+INFO:predict:🔧 Granule Size: medium
+INFO:predict:🎨 Адаптивные параметры будут рассчитаны на основе количества цветов
+INFO:predict:🚀 STARTUP_SNAPSHOT_END
+INFO:predict:🎨 Начало генерации изображения...
+INFO:predict:📝 Входной промпт: ohwx_rubber_tile <s0><s1> 60% red, 40% blue rubber tile
+INFO:predict:🚫 Входной негативный промпт: blurry, low quality, distorted
+INFO:predict:🎲 Входной сид: 54321
+INFO:predict:🔧 Усилены токены цветов в промпте
+INFO:predict:🎨 Генерация изображения...
+INFO:predict:📝 Полный промпт: ohwx_rubber_tile <s0><s1> 60% red, 40% blue rubber tile, photorealistic rubber tile, high quality, detailed texture, professional photography, sharp focus
+INFO:predict:🔧 Усиленный промпт: ohwx_rubber_tile <s0><s1> red red red 60%, blue blue blue 40% rubber tile, photorealistic rubber tile, high quality, detailed texture, professional photography, sharp focus
+INFO:predict:🚫 Финальный негативный промпт: blurry, low quality, distorted
+INFO:predict:🎲 Финальный сид: 54321
+INFO:predict:🔧 Устройство: cuda
+INFO:predict:🎨 Анализ сложности промпта для адаптивных параметров...
+INFO:predict:🎨 Обнаружено цветов в промпте: 2
+INFO:predict:🎯 Адаптивные параметры для 2 цветов: steps=25, guidance=7.5
+INFO:predict:🚀 Запуск pipeline для генерации с адаптивными параметрами...
+INFO:predict:🎯 Автоматически включаем мультимодальный ControlNet для 2 цветов: ['t2i_color']
+INFO:predict:🔗 Загрузка ControlNet для SDXL...
+INFO:predict:🎨 Создание множественных контрольных карт для мультимодального ControlNet
+[2025-09-13T09:40:54.216778] [INFO] INFO:predict:✅ Найден цвет: 60.0% RED
+INFO:predict:✅ Найден цвет: 40.0% BLUE
+INFO:predict:🎨 Итого найдено цветов: 2
+INFO:predict:🎨 Создание colormap: 2 цветов, паттерн: grid, гранулы: medium
+INFO:predict:✅ Оптимизированный colormap создан: (1024, 1024)
+[2025-09-13T09:41:00.830708] [ERROR] INFO:predict:📊 Статистика паттернов: {'random': 0, 'grid': 1, 'radial': 0, 'granular': 0}
+INFO:predict:📊 Статистика размеров гранул: {'small': 0, 'medium': 1, 'large': 0}
+ERROR:predict:❌ Ошибка валидации colormap: operands could not be broadcast together with shapes (1024,1024,4) (3,) 
+WARNING:predict:⚠️ Colormap не соответствует промпту, пересоздаем...
+INFO:predict:🔧 Принудительная пересборка colormap...
+INFO:predict:✅ Colormap пересобран для цветов: ['red', 'blue']
+[2025-09-13T09:41:07.158722] [ERROR] ERROR:predict:❌ Ошибка валидации ControlNet карты: cannot reshape array of size 4194304 into shape (3)
+WARNING:predict:⚠️ ControlNet карта не прошла валидацию, пересоздаем...
+INFO:predict:🔧 Принудительная пересборка colormap...
+INFO:predict:✅ Colormap пересобран для цветов: ['red', 'blue']
+ERROR:predict:❌ Ошибка валидации ControlNet карты: cannot reshape array of size 4194304 into shape (3)
+ERROR:predict:❌ Критическая ошибка: ControlNet карта не может быть создана корректно
+WARNING:predict:⚠️ Ошибка подготовки мультимодального ControlNet: ControlNet карта не прошла валидацию после пересоздания
+INFO:predict:✅ ControlNet активирован с fallback картой (умеренное влияние)
+INFO:predict:🚀 Финальный сегмент: единый проход без callback
+
+  0%|          | 0/25 [00:00<?, ?it/s]
+[2025-09-13T09:41:13.488317] [INFO] 4%|▍         | 1/25 [00:05<02:05,  5.21s/it]
+  8%|▊         | 2/25 [00:06<01:06,  2.91s/it]
+ 12%|█▏        | 3/25 [00:07<00:48,  2.19s/it]
+ 16%|█▌        | 4/25 [00:09<00:38,  1.85s/it]
+ 20%|██        | 5/25 [00:10<00:33,  1.66s/it]
+[2025-09-13T09:41:19.494560] [INFO] 24%|██▍       | 6/25 [00:11<00:29,  1.56s/it]
+ 28%|██▊       | 7/25 [00:13<00:26,  1.49s/it]
+ 32%|███▏      | 8/25 [00:14<00:24,  1.45s/it]
+ 36%|███▌      | 9/25 [00:15<00:22,  1.43s/it]
+[2025-09-13T09:41:25.806351] [INFO] 40%|████      | 10/25 [00:17<00:21,  1.42s/it]
+ 44%|████▍     | 11/25 [00:18<00:19,  1.41s/it]
+ 48%|████▊     | 12/25 [00:20<00:18,  1.41s/it]
+ 52%|█████▏    | 13/25 [00:21<00:16,  1.41s/it]
+ 56%|█████▌    | 14/25 [00:22<00:15,  1.41s/it]
+[2025-09-13T09:41:32.133805] [INFO] 60%|██████    | 15/25 [00:24<00:14,  1.42s/it]
+ 64%|██████▍   | 16/25 [00:25<00:12,  1.43s/it]
+ 68%|██████▊   | 17/25 [00:27<00:11,  1.44s/it]
+ 72%|███████▏  | 18/25 [00:28<00:10,  1.44s/it]
+[2025-09-13T09:41:38.486385] [INFO] 76%|███████▌  | 19/25 [00:30<00:08,  1.44s/it]
+ 80%|████████  | 20/25 [00:31<00:07,  1.45s/it]
+ 84%|████████▍ | 21/25 [00:33<00:05,  1.45s/it]
+ 88%|████████▊ | 22/25 [00:34<00:04,  1.46s/it]
+[2025-09-13T09:41:44.542570] [INFO] 92%|█████████▏| 23/25 [00:36<00:02,  1.46s/it]
+ 96%|█████████▌| 24/25 [00:37<00:01,  1.47s/it]
+[2025-09-13T09:52:34.710940] [INFO] 100%|██████████| 25/25 [00:39<00:00,  1.48s/it]
+100%|██████████| 25/25 [00:39<00:00,  1.56s/it]
+INFO:predict:✅ Финальная генерация завершена
+[2025-09-13T09:52:41.018698] [ERROR] INFO:predict:📊 Размер сгенерированного изображения: (1024, 1024)
+INFO:predict:🟡 PREVIEW_READY /tmp/preview.png
+INFO:predict:✅ FINAL_READY /tmp/final.png
+INFO:predict:✅ Найден цвет: 60.0% RED
+INFO:predict:✅ Найден цвет: 40.0% BLUE
+INFO:predict:🎨 Итого найдено цветов: 2
+INFO:predict:🎨 Создание colormap: 2 цветов, паттерн: grid, гранулы: medium
+INFO:predict:✅ Оптимизированный colormap создан: (1024, 1024)
+INFO:predict:📊 Статистика паттернов: {'random': 0, 'grid': 2, 'radial': 0, 'granular': 0}
+INFO:predict:📊 Статистика размеров гранул: {'small': 0, 'medium': 2, 'large': 0}
+ERROR:predict:❌ Ошибка валидации colormap: operands could not be broadcast together with shapes (1024,1024,4) (3,) 
+WARNING:predict:⚠️ Colormap не соответствует промпту, пересоздаем...
+INFO:predict:🔧 Принудительная пересборка colormap...
+INFO:predict:✅ Colormap пересобран для цветов: ['red', 'blue']
+INFO:predict:🎨 ОПТИМИЗИРОВАННЫЙ COLORMAP_READY /tmp/colormap.png
+INFO:predict:📊 Размер colormap: (1024, 1024)
+INFO:predict:📋 ЛЕГЕНДА_READY /tmp/legend.png
+INFO:predict:🧹 Память очищена
+INFO:predict:📄 JSON_READY /tmp/generation_data.json
+INFO:predict:✅ Изображение успешно сгенерировано!
+INFO:predict:📊 Color Grid Adapter статистика:
+INFO:predict:   - Всего генераций: 1
+INFO:predict:   - ControlNet использован: 1 (100.0%)
+INFO:predict:   - Популярный паттерн: grid
+INFO:predict:   - Популярный размер гранул: medium
+INFO:coglet:prediction completed: id=45pfvzrh0xrgc0cs875v8df7f8
+[2025-09-13T09:52:41.019410] [INFO] 🔄 Загрузка изображения 0: https://replicate.delivery/czjl/K6gzaGeJtUwvAinhMBLf1WX0ZS8TN8EDfw6g8CuzA75u1YpqA/preview.png
+[2025-09-13T09:52:41.920869] [INFO] ✅ Изображение сохранено: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_093731/out_0.png
+[2025-09-13T09:52:41.921769] [INFO] 🔄 Загрузка изображения 1: https://replicate.delivery/czjl/szyqeHK6CM2GSK1SNzbGPKuF7zAaupdxnNNnzjsO0dubNWqKA/final.png
+[2025-09-13T09:52:42.823027] [INFO] ✅ Изображение сохранено: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_093731/out_1.png
+[2025-09-13T09:52:42.823633] [INFO] 🔄 Загрузка изображения 2: https://replicate.delivery/czjl/5efXvGMlxfCPOofZDDm5e0YgTvuIcamIwFxXvZhyRrI5WjlqC/colormap.png
+[2025-09-13T09:52:43.424931] [INFO] ✅ Изображение сохранено: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_093731/out_2.png
+[2025-09-13T09:52:43.425784] [INFO] 🔄 Загрузка изображения 3: https://replicate.delivery/czjl/eehG4afg1SUfcQWWXXqVhp4sxh2A9hmSJb6bsaA9A63fWjlqC/legend.png
+[2025-09-13T09:52:44.327352] [INFO] ✅ Изображение сохранено: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_093731/out_3.png
+[2025-09-13T09:52:44.327968] [INFO] === Final status: succeeded
+[2025-09-13T09:52:44.328490] [INFO] 📊 Логирование модели завершено
+[2025-09-13T09:52:44.329037] [INFO] [
+  "https://replicate.delivery/czjl/K6gzaGeJtUwvAinhMBLf1WX0ZS8TN8EDfw6g8CuzA75u1YpqA/preview.png",
+  "https://replicate.delivery/czjl/szyqeHK6CM2GSK1SNzbGPKuF7zAaupdxnNNnzjsO0dubNWqKA/final.png",
+  "https://replicate.delivery/czjl/5efXvGMlxfCPOofZDDm5e0YgTvuIcamIwFxXvZhyRrI5WjlqC/colormap.png",
+  "https://replicate.delivery/czjl/eehG4afg1SUfcQWWXXqVhp4sxh2A9hmSJb6bsaA9A63fWjlqC/legend.png"
+]
+[2025-09-13T09:52:44.329540] [INFO] 🔄 _save_outputs вызван
+[2025-09-13T09:52:44.330051] [INFO] 💾 Сохраняем результаты в папку: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_093731
+[2025-09-13T09:52:44.330647] [INFO] 🔐 ПРИНУДИТЕЛЬНО используем хеш: 89fdd926
+[2025-09-13T09:52:44.331224] [INFO] ✅ Используем подготовленную папку: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_093731
+[2025-09-13T09:52:44.331893] [INFO] 🔄 Начинаем обработку 4 выходных файлов...
+[2025-09-13T09:52:44.332446] [INFO] 📁 Папка для сохранения: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_093731
+[2025-09-13T09:52:44.633456] [INFO] 📥 Скачан файл 0: out_0.png
+[2025-09-13T09:52:45.835587] [INFO] 📥 Скачан файл 1: out_1.png
+[2025-09-13T09:52:46.136796] [INFO] 📥 Скачан файл 2: out_2.png
+[2025-09-13T09:52:46.439982] [INFO] 📥 Скачан файл 3: out_3.png
+[2025-09-13T09:52:46.440605] [INFO] 📁 Найдено файлов для переименования: 4
+[2025-09-13T09:52:46.441192] [INFO] 📝 Промпт для именования: '60pct_red_40pct_blue_rubber_tile'
+[2025-09-13T09:52:46.441681] [INFO] ⏰ Временная метка из папки: 20250913_093731
+[2025-09-13T09:52:46.442194] [INFO] 🔐 Используем хеш из App: 143937bc
+[2025-09-13T09:52:46.442708] [INFO] ✅ FINAL saved as: 20250913_093731_60pct_red_40pct_blue_rubber_tile_final_143937bc.png
+[2025-09-13T09:52:46.443201] [INFO] 📁 Путь: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_093731/20250913_093731_60pct_red_40pct_blue_rubber_tile_final_143937bc.png
+[2025-09-13T09:52:46.443737] [INFO] 🎨 COLORMAP saved as: 20250913_093731_RED_BLUE_colormap_143937bc.png
+[2025-09-13T09:52:46.444261] [INFO] 📁 Путь: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_093731/20250913_093731_RED_BLUE_colormap_143937bc.png
+[2025-09-13T09:52:46.444745] [INFO] ################ PRESET: v4.5.10_Test_03_Textual_Inversion_Loading ################
+[2025-09-13T09:52:46.445304] [INFO] 🔄 _run_single() вызван
+[2025-09-13T09:52:46.445977] [INFO] === Creating prediction: nauslava/plitka-pro-project (version: 143937bcbd00359172e19854757bc9ba27cf3cbbcb9186422b30a50aa3390f76)
+Inputs: {"prompt": "ohwx_rubber_tile <s0><s1> 50% red, 30% blue, 20% yellow rubber tile", "negative_prompt": "blurry, low quality, distorted", "seed": 98765, "num_inference_steps": 30, "guidance_scale": 8.0, "colormap": "radial", "granule_size": "large", "use_controlnet": false, "description": "Тест три-цветов для проверки загрузки Textual Inversion эмбеддингов"}
+[2025-09-13T09:52:47.048507] [INFO] Prediction id: af43nhg7qdrga0cs87ct249ekg
+[2025-09-13T09:52:47.049119] [INFO] 🔍 Начинаем создание папки для результатов...
+[2025-09-13T09:52:47.049618] [INFO] 🔍 Текущий рабочий каталог: /home/papaandrey/plitka-pro-project
+[2025-09-13T09:52:47.050141] [INFO] 🔍 Используем версию и хеш из App:
+[2025-09-13T09:52:47.050633] [INFO] 🔍 version_id: 143937bcbd00359172e19854757bc9ba27cf3cbbcb9186422b30a50aa3390f76
+[2025-09-13T09:52:47.051138] [INFO] 🔍 pred.version: 143937bcbd00359172e19854757bc9ba27cf3cbbcb9186422b30a50aa3390f76
+[2025-09-13T09:52:47.051624] [INFO] 🔍 ver_for_hash: v4.5.10
+[2025-09-13T09:52:47.052270] [INFO] 🔐 Хеш из App: 143937bc
+[2025-09-13T09:52:47.052782] [INFO] 🔄 Папка создана: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_095246
+[2025-09-13T09:52:47.053318] [INFO] 🔄 _current_run_dir установлен: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_095246
+[2025-09-13T09:52:47.053831] [INFO] 🔐 Создаем папку с хешем: 143937bc
+[2025-09-13T09:52:47.054306] [INFO] 📁 Создана папка: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_095246
+[2025-09-13T09:52:47.054782] [INFO] 🔐 Хеш версии: 143937bc
+[2025-09-13T09:52:47.055264] [INFO] 🔍 Базовая папка: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc
+[2025-09-13T09:52:47.055750] [INFO] 🔍 Полный путь: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_095246
+[2025-09-13T09:52:47.056242] [INFO] ✅ Папка успешно создана и существует
+[2025-09-13T09:52:47.056718] [WARNING] INFO:coglet:prediction started: id=af43nhg7qdrga0cs87ct249ekg
+WARNING unknown input field ignored: description
+[2025-09-13T09:52:47.057198] [INFO] ✅ Startup phase completed. Proceeding to completion...
+[2025-09-13T09:53:00.350053] [ERROR] INFO:predict:🚀 STARTUP_SNAPSHOT_START
+INFO:predict:🧭 MODEL_START v4.5.07 | device=cuda | diffusers=0.21.4 | torch=2.1.0+cu121
+INFO:predict:📊 GPU: Tesla T4
+INFO:predict:💾 GPU Memory: 14.6 GB
+INFO:predict:🔧 SDXL Base: unknown
+INFO:predict:🎨 LoRA: unknown (rank: 32)
+INFO:predict:🔤 TI: unknown (tokens: <s0><s1>)
+INFO:predict:⚙️ Scheduler: DPMSolverMultistepScheduler
+INFO:predict:🎭 VAE: AutoencoderKL
+INFO:predict:🎯 Prompt: ohwx_rubber_tile <s0><s1> 50% red, 30% blue, 20% yellow rubber tile
+INFO:predict:🚫 Negative Prompt: blurry, low quality, distorted
+INFO:predict:🎲 Seed: 98765
+INFO:predict:📊 Steps: 30 (базовый)
+INFO:predict:🎚️ Guidance: 8.0 (базовый)
+INFO:predict:🎨 Colormap: radial
+INFO:predict:🔧 Granule Size: large
+INFO:predict:🎨 Адаптивные параметры будут рассчитаны на основе количества цветов
+INFO:predict:🚀 STARTUP_SNAPSHOT_END
+INFO:predict:🎨 Начало генерации изображения...
+INFO:predict:📝 Входной промпт: ohwx_rubber_tile <s0><s1> 50% red, 30% blue, 20% yellow rubber tile
+INFO:predict:🚫 Входной негативный промпт: blurry, low quality, distorted
+INFO:predict:🎲 Входной сид: 98765
+INFO:predict:🔧 Усилены токены цветов в промпте
+INFO:predict:🎨 Генерация изображения...
+INFO:predict:📝 Полный промпт: ohwx_rubber_tile <s0><s1> 50% red, 30% blue, 20% yellow rubber tile, photorealistic rubber tile, high quality, detailed texture, professional photography, sharp focus
+INFO:predict:🔧 Усиленный промпт: ohwx_rubber_tile <s0><s1> red red red 50%, blue blue blue 30%, yellow yellow yellow 20% rubber tile, photorealistic rubber tile, high quality, detailed texture, professional photography, sharp focus
+INFO:predict:🚫 Финальный негативный промпт: blurry, low quality, distorted
+INFO:predict:🎲 Финальный сид: 98765
+INFO:predict:🔧 Устройство: cuda
+INFO:predict:🎨 Анализ сложности промпта для адаптивных параметров...
+INFO:predict:🎨 Обнаружено цветов в промпте: 3
+INFO:predict:🎯 Адаптивные параметры для 3 цветов: steps=30, guidance=8.0
+INFO:predict:🚀 Запуск pipeline для генерации с адаптивными параметрами...
+INFO:predict:🎯 Автоматически включаем мультимодальный ControlNet для 3 цветов: ['t2i_color', 'shuffle']
+INFO:predict:🎨 Создание множественных контрольных карт для мультимодального ControlNet
+INFO:predict:✅ Найден цвет: 50.0% RED
+INFO:predict:✅ Найден цвет: 30.0% BLUE
+INFO:predict:✅ Найден цвет: 20.0% YELLOW
+INFO:predict:🎨 Итого найдено цветов: 3
+INFO:predict:🎨 Создание colormap: 3 цветов, паттерн: radial, гранулы: large
+INFO:predict:✅ Оптимизированный colormap создан: (1024, 1024)
+INFO:predict:📊 Статистика паттернов: {'random': 0, 'grid': 2, 'radial': 1, 'granular': 0}
+INFO:predict:📊 Статистика размеров гранул: {'small': 0, 'medium': 2, 'large': 1}
+ERROR:predict:❌ Ошибка валидации colormap: operands could not be broadcast together with shapes (1024,1024,4) (3,) 
+WARNING:predict:⚠️ Colormap не соответствует промпту, пересоздаем...
+INFO:predict:🔧 Принудительная пересборка colormap...
+INFO:predict:✅ Colormap пересобран для цветов: ['yellow', 'red', 'blue']
+[2025-09-13T09:53:05.771041] [ERROR] ERROR:predict:❌ Ошибка валидации ControlNet карты: cannot reshape array of size 4194304 into shape (3)
+WARNING:predict:⚠️ ControlNet карта не прошла валидацию, пересоздаем...
+INFO:predict:🔧 Принудительная пересборка colormap...
+INFO:predict:✅ Colormap пересобран для цветов: ['yellow', 'red', 'blue']
+ERROR:predict:❌ Ошибка валидации ControlNet карты: cannot reshape array of size 4194304 into shape (3)
+ERROR:predict:❌ Критическая ошибка: ControlNet карта не может быть создана корректно
+WARNING:predict:⚠️ Ошибка подготовки мультимодального ControlNet: ControlNet карта не прошла валидацию после пересоздания
+INFO:predict:✅ ControlNet активирован с fallback картой (умеренное влияние)
+INFO:predict:🚀 Финальный сегмент: единый проход без callback
+
+  0%|          | 0/30 [00:00<?, ?it/s]
+  3%|▎         | 1/30 [00:01<00:45,  1.56s/it]
+[2025-09-13T09:53:12.410183] [INFO] 7%|▋         | 2/30 [00:03<00:43,  1.55s/it]
+ 10%|█         | 3/30 [00:04<00:42,  1.56s/it]
+ 13%|█▎        | 4/30 [00:06<00:40,  1.57s/it]
+ 17%|█▋        | 5/30 [00:07<00:39,  1.58s/it]
+[2025-09-13T09:53:18.756900] [INFO] 20%|██        | 6/30 [00:09<00:38,  1.60s/it]
+ 23%|██▎       | 7/30 [00:11<00:37,  1.61s/it]
+ 27%|██▋       | 8/30 [00:12<00:35,  1.62s/it]
+ 30%|███       | 9/30 [00:14<00:34,  1.63s/it]
+[2025-09-13T09:53:25.081341] [INFO] 33%|███▎      | 10/30 [00:16<00:32,  1.65s/it]
+ 37%|███▋      | 11/30 [00:17<00:31,  1.66s/it]
+ 40%|████      | 12/30 [00:19<00:30,  1.67s/it]
+[2025-09-13T09:53:32.010094] [INFO] 43%|████▎     | 13/30 [00:21<00:28,  1.69s/it]
+ 47%|████▋     | 14/30 [00:22<00:27,  1.70s/it]
+ 50%|█████     | 15/30 [00:24<00:25,  1.71s/it]
+ 53%|█████▎    | 16/30 [00:26<00:23,  1.71s/it]
+[2025-09-13T09:53:37.730377] [INFO] 57%|█████▋    | 17/30 [00:28<00:22,  1.70s/it]
+ 60%|██████    | 18/30 [00:29<00:20,  1.70s/it]
+ 63%|██████▎   | 19/30 [00:31<00:18,  1.69s/it]
+ 67%|██████▋   | 20/30 [00:33<00:16,  1.68s/it]
+[2025-09-13T09:53:44.067790] [INFO] 70%|███████   | 21/30 [00:34<00:14,  1.67s/it]
+ 73%|███████▎  | 22/30 [00:36<00:13,  1.66s/it]
+ 77%|███████▋  | 23/30 [00:37<00:11,  1.64s/it]
+ 80%|████████  | 24/30 [00:39<00:09,  1.63s/it]
+[2025-09-13T09:53:50.409266] [INFO] 83%|████████▎ | 25/30 [00:41<00:08,  1.62s/it]
+ 87%|████████▋ | 26/30 [00:42<00:06,  1.61s/it]
+ 90%|█████████ | 27/30 [00:44<00:04,  1.60s/it]
+ 93%|█████████▎| 28/30 [00:45<00:03,  1.58s/it]
+[2025-09-13T09:53:56.737847] [INFO] 97%|█████████▋| 29/30 [00:47<00:01,  1.57s/it]
+100%|██████████| 30/30 [00:48<00:00,  1.57s/it]
+100%|██████████| 30/30 [00:48<00:00,  1.63s/it]
+INFO:predict:✅ Финальная генерация завершена
+[2025-09-13T09:54:09.074398] [ERROR] INFO:predict:📊 Размер сгенерированного изображения: (1024, 1024)
+INFO:predict:🟡 PREVIEW_READY /tmp/preview.png
+INFO:predict:✅ FINAL_READY /tmp/final.png
+INFO:predict:✅ Найден цвет: 50.0% RED
+INFO:predict:✅ Найден цвет: 30.0% BLUE
+INFO:predict:✅ Найден цвет: 20.0% YELLOW
+INFO:predict:🎨 Итого найдено цветов: 3
+INFO:predict:🎨 Создание colormap: 3 цветов, паттерн: radial, гранулы: large
+INFO:predict:✅ Оптимизированный colormap создан: (1024, 1024)
+INFO:predict:📊 Статистика паттернов: {'random': 0, 'grid': 2, 'radial': 2, 'granular': 0}
+INFO:predict:📊 Статистика размеров гранул: {'small': 0, 'medium': 2, 'large': 2}
+ERROR:predict:❌ Ошибка валидации colormap: operands could not be broadcast together with shapes (1024,1024,4) (3,) 
+WARNING:predict:⚠️ Colormap не соответствует промпту, пересоздаем...
+INFO:predict:🔧 Принудительная пересборка colormap...
+INFO:predict:✅ Colormap пересобран для цветов: ['yellow', 'red', 'blue']
+INFO:predict:🎨 ОПТИМИЗИРОВАННЫЙ COLORMAP_READY /tmp/colormap.png
+INFO:predict:📊 Размер colormap: (1024, 1024)
+INFO:predict:📋 ЛЕГЕНДА_READY /tmp/legend.png
+INFO:predict:🧹 Память очищена
+INFO:predict:📄 JSON_READY /tmp/generation_data.json
+INFO:predict:✅ Изображение успешно сгенерировано!
+INFO:predict:📊 Color Grid Adapter статистика:
+INFO:predict:   - Всего генераций: 2
+INFO:predict:   - ControlNet использован: 2 (100.0%)
+INFO:predict:   - Популярный паттерн: grid
+INFO:predict:   - Популярный размер гранул: medium
+INFO:coglet:prediction completed: id=af43nhg7qdrga0cs87ct249ekg
+[2025-09-13T09:54:09.075008] [INFO] 🔄 Загрузка изображения 0: https://replicate.delivery/czjl/2I33VfTcf3s4PE6C1TVH1wOGCq9gSoAr9sjGdORhAO6PcsUVA/preview.png
+[2025-09-13T09:54:10.276379] [INFO] ✅ Изображение сохранено: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_095246/out_0.png
+[2025-09-13T09:54:10.277037] [INFO] 🔄 Загрузка изображения 1: https://replicate.delivery/czjl/gaIETqeEZQSWcqx78nOxDfDxNxMd26xU1aV4RzlLtM9PcsUVA/final.png
+[2025-09-13T09:54:11.178182] [INFO] ✅ Изображение сохранено: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_095246/out_1.png
+[2025-09-13T09:54:11.178820] [INFO] 🔄 Загрузка изображения 2: https://replicate.delivery/czjl/lQBHLYhFFTLZGxW1RiMZzq8uMieOIP4JYMEafcMdczmPcsUVA/colormap.png
+[2025-09-13T09:54:12.080067] [INFO] ✅ Изображение сохранено: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_095246/out_2.png
+[2025-09-13T09:54:12.080674] [INFO] 🔄 Загрузка изображения 3: https://replicate.delivery/czjl/YAHC0UmSRu4HPpe3PrefSXPieRiLWb91LbuUpkrZgiH8wxSVB/legend.png
+[2025-09-13T09:54:12.681902] [INFO] ✅ Изображение сохранено: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_095246/out_3.png
+[2025-09-13T09:54:12.682535] [INFO] === Final status: succeeded
+[2025-09-13T09:54:12.683079] [INFO] 📊 Логирование модели завершено
+[2025-09-13T09:54:12.683643] [INFO] [
+  "https://replicate.delivery/czjl/2I33VfTcf3s4PE6C1TVH1wOGCq9gSoAr9sjGdORhAO6PcsUVA/preview.png",
+  "https://replicate.delivery/czjl/gaIETqeEZQSWcqx78nOxDfDxNxMd26xU1aV4RzlLtM9PcsUVA/final.png",
+  "https://replicate.delivery/czjl/lQBHLYhFFTLZGxW1RiMZzq8uMieOIP4JYMEafcMdczmPcsUVA/colormap.png",
+  "https://replicate.delivery/czjl/YAHC0UmSRu4HPpe3PrefSXPieRiLWb91LbuUpkrZgiH8wxSVB/legend.png"
+]
+[2025-09-13T09:54:12.684203] [INFO] 🔄 _save_outputs вызван
+[2025-09-13T09:54:12.684686] [INFO] 💾 Сохраняем результаты в папку: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_095246
+[2025-09-13T09:54:12.685179] [INFO] 🔐 ПРИНУДИТЕЛЬНО используем хеш: 89fdd926
+[2025-09-13T09:54:12.685693] [INFO] ✅ Используем подготовленную папку: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_095246
+[2025-09-13T09:54:12.686188] [INFO] 🔄 Начинаем обработку 4 выходных файлов...
+[2025-09-13T09:54:12.686676] [INFO] 📁 Папка для сохранения: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_095246
+[2025-09-13T09:54:12.987436] [INFO] 📥 Скачан файл 0: out_0.png
+[2025-09-13T09:54:13.889252] [INFO] 📥 Скачан файл 1: out_1.png
+[2025-09-13T09:54:14.190134] [INFO] 📥 Скачан файл 2: out_2.png
+[2025-09-13T09:54:14.791771] [INFO] 📥 Скачан файл 3: out_3.png
+[2025-09-13T09:54:14.792375] [INFO] 📁 Найдено файлов для переименования: 4
+[2025-09-13T09:54:14.792932] [INFO] 📝 Промпт для именования: '50pct_red_30pct_blue_20pct_yellow_rubber_tile'
+[2025-09-13T09:54:14.793436] [INFO] ⏰ Временная метка из папки: 20250913_095246
+[2025-09-13T09:54:14.793938] [INFO] 🔐 Используем хеш из App: 143937bc
+[2025-09-13T09:54:14.794473] [INFO] ✅ FINAL saved as: 20250913_095246_50pct_red_30pct_blue_20pct_yellow_rubber_tile_final_143937bc.png
+[2025-09-13T09:54:14.794995] [INFO] 📁 Путь: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_095246/20250913_095246_50pct_red_30pct_blue_20pct_yellow_rubber_tile_final_143937bc.png
+[2025-09-13T09:54:14.795488] [INFO] 🎨 COLORMAP saved as: 20250913_095246_RED_BLUE_YELLOW_colormap_143937bc.png
+[2025-09-13T09:54:14.796063] [INFO] 📁 Путь: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_095246/20250913_095246_RED_BLUE_YELLOW_colormap_143937bc.png
+[2025-09-13T09:54:14.796557] [INFO] ################ PRESET: v4.5.10_Test_04_Safetensors_Validation ################
+[2025-09-13T09:54:14.797045] [INFO] 🔄 _run_single() вызван
+[2025-09-13T09:54:14.797703] [INFO] === Creating prediction: nauslava/plitka-pro-project (version: 143937bcbd00359172e19854757bc9ba27cf3cbbcb9186422b30a50aa3390f76)
+Inputs: {"prompt": "ohwx_rubber_tile <s0><s1> 40% red, 30% blue, 20% yellow, 10% green rubber tile", "negative_prompt": "blurry, low quality, distorted", "seed": 11111, "num_inference_steps": 35, "guidance_scale": 8.5, "colormap": "granular", "granule_size": "small", "use_controlnet": false, "description": "Тест четырех цветов для проверки валидации safetensors файлов"}
+[2025-09-13T09:54:15.098918] [INFO] Prediction id: gbjabnb02srg80cs87d8gndf4m
+[2025-09-13T09:54:15.099609] [INFO] 🔍 Начинаем создание папки для результатов...
+[2025-09-13T09:54:15.100161] [INFO] 🔍 Текущий рабочий каталог: /home/papaandrey/plitka-pro-project
+[2025-09-13T09:54:15.100695] [INFO] 🔍 Используем версию и хеш из App:
+[2025-09-13T09:54:15.101252] [INFO] 🔍 version_id: 143937bcbd00359172e19854757bc9ba27cf3cbbcb9186422b30a50aa3390f76
+[2025-09-13T09:54:15.101782] [INFO] 🔍 pred.version: 143937bcbd00359172e19854757bc9ba27cf3cbbcb9186422b30a50aa3390f76
+[2025-09-13T09:54:15.102308] [INFO] 🔍 ver_for_hash: v4.5.10
+[2025-09-13T09:54:15.102812] [INFO] 🔐 Хеш из App: 143937bc
+[2025-09-13T09:54:15.103349] [INFO] 🔄 Папка создана: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_095414
+[2025-09-13T09:54:15.103907] [INFO] 🔄 _current_run_dir установлен: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_095414
+[2025-09-13T09:54:15.104467] [INFO] 🔐 Создаем папку с хешем: 143937bc
+[2025-09-13T09:54:15.104981] [INFO] 📁 Создана папка: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_095414
+[2025-09-13T09:54:15.105491] [INFO] 🔐 Хеш версии: 143937bc
+[2025-09-13T09:54:15.106040] [INFO] 🔍 Базовая папка: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc
+[2025-09-13T09:54:15.106555] [INFO] 🔍 Полный путь: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_095414
+[2025-09-13T09:54:15.107056] [INFO] ✅ Папка успешно создана и существует
+[2025-09-13T09:54:15.407878] [WARNING] INFO:coglet:prediction started: id=gbjabnb02srg80cs87d8gndf4m
+WARNING unknown input field ignored: description
+[2025-09-13T09:54:15.408493] [INFO] ✅ Startup phase completed. Proceeding to completion...
+[2025-09-13T09:54:40.405808] [ERROR] INFO:predict:🚀 STARTUP_SNAPSHOT_START
+INFO:predict:🧭 MODEL_START v4.5.07 | device=cuda | diffusers=0.21.4 | torch=2.1.0+cu121
+INFO:predict:📊 GPU: Tesla T4
+INFO:predict:💾 GPU Memory: 14.6 GB
+INFO:predict:🔧 SDXL Base: unknown
+INFO:predict:🎨 LoRA: unknown (rank: 32)
+INFO:predict:🔤 TI: unknown (tokens: <s0><s1>)
+INFO:predict:⚙️ Scheduler: DPMSolverMultistepScheduler
+INFO:predict:🎭 VAE: AutoencoderKL
+INFO:predict:🎯 Prompt: ohwx_rubber_tile <s0><s1> 40% red, 30% blue, 20% yellow, 10% green rubber tile
+INFO:predict:🚫 Negative Prompt: blurry, low quality, distorted
+INFO:predict:🎲 Seed: 11111
+INFO:predict:📊 Steps: 35 (базовый)
+INFO:predict:🎚️ Guidance: 8.5 (базовый)
+INFO:predict:🎨 Colormap: granular
+INFO:predict:🔧 Granule Size: small
+INFO:predict:🎨 Адаптивные параметры будут рассчитаны на основе количества цветов
+INFO:predict:🚀 STARTUP_SNAPSHOT_END
+INFO:predict:🎨 Начало генерации изображения...
+INFO:predict:📝 Входной промпт: ohwx_rubber_tile <s0><s1> 40% red, 30% blue, 20% yellow, 10% green rubber tile
+INFO:predict:🚫 Входной негативный промпт: blurry, low quality, distorted
+INFO:predict:🎲 Входной сид: 11111
+INFO:predict:🔧 Усилены токены цветов в промпте
+INFO:predict:🎨 Генерация изображения...
+INFO:predict:📝 Полный промпт: ohwx_rubber_tile <s0><s1> 40% red, 30% blue, 20% yellow, 10% green rubber tile, photorealistic rubber tile, high quality, detailed texture, professional photography, sharp focus
+INFO:predict:🔧 Усиленный промпт: ohwx_rubber_tile <s0><s1> red red red 40%, blue blue blue 30%, yellow yellow yellow 20%, 10% green rubber tile, photorealistic rubber tile, high quality, detailed texture, professional photography, sharp focus
+INFO:predict:🚫 Финальный негативный промпт: blurry, low quality, distorted
+INFO:predict:🎲 Финальный сид: 11111
+INFO:predict:🔧 Устройство: cuda
+INFO:predict:🎨 Анализ сложности промпта для адаптивных параметров...
+INFO:predict:🎨 Обнаружено цветов в промпте: 3
+INFO:predict:🎯 Адаптивные параметры для 3 цветов: steps=30, guidance=8.0
+INFO:predict:🚀 Запуск pipeline для генерации с адаптивными параметрами...
+INFO:predict:🎯 Автоматически включаем мультимодальный ControlNet для 3 цветов: ['t2i_color', 'shuffle']
+INFO:predict:🎨 Создание множественных контрольных карт для мультимодального ControlNet
+INFO:predict:✅ Найден цвет: 40.0% RED
+INFO:predict:✅ Найден цвет: 30.0% BLUE
+INFO:predict:✅ Найден цвет: 20.0% YELLOW
+INFO:predict:🎨 Итого найдено цветов: 3
+INFO:predict:🎨 Создание colormap: 3 цветов, паттерн: granular, гранулы: small
+INFO:predict:✅ Оптимизированный colormap создан: (1024, 1024)
+INFO:predict:📊 Статистика паттернов: {'random': 0, 'grid': 2, 'radial': 2, 'granular': 1}
+INFO:predict:📊 Статистика размеров гранул: {'small': 1, 'medium': 2, 'large': 2}
+ERROR:predict:❌ Ошибка валидации colormap: operands could not be broadcast together with shapes (1024,1024,4) (3,) 
+WARNING:predict:⚠️ Colormap не соответствует промпту, пересоздаем...
+INFO:predict:🔧 Принудительная пересборка colormap...
+INFO:predict:✅ Colormap пересобран для цветов: ['yellow', 'red', 'blue']
+[2025-09-13T09:54:46.732061] [ERROR] ERROR:predict:❌ Ошибка валидации ControlNet карты: cannot reshape array of size 4194304 into shape (3)
+WARNING:predict:⚠️ ControlNet карта не прошла валидацию, пересоздаем...
+INFO:predict:🔧 Принудительная пересборка colormap...
+INFO:predict:✅ Colormap пересобран для цветов: ['yellow', 'red', 'blue']
+ERROR:predict:❌ Ошибка валидации ControlNet карты: cannot reshape array of size 4194304 into shape (3)
+ERROR:predict:❌ Критическая ошибка: ControlNet карта не может быть создана корректно
+WARNING:predict:⚠️ Ошибка подготовки мультимодального ControlNet: ControlNet карта не прошла валидацию после пересоздания
+INFO:predict:✅ ControlNet активирован с fallback картой (умеренное влияние)
+INFO:predict:🚀 Финальный сегмент: единый проход без callback
+
+  0%|          | 0/35 [00:00<?, ?it/s]
+  3%|▎         | 1/35 [00:01<00:50,  1.47s/it]
+  6%|▌         | 2/35 [00:02<00:48,  1.46s/it]
+[2025-09-13T09:54:53.348410] [INFO] 9%|▊         | 3/35 [00:04<00:46,  1.46s/it]
+ 11%|█▏        | 4/35 [00:05<00:45,  1.47s/it]
+ 14%|█▍        | 5/35 [00:07<00:44,  1.48s/it]
+ 17%|█▋        | 6/35 [00:08<00:43,  1.49s/it]
+[2025-09-13T09:54:59.684595] [INFO] 20%|██        | 7/35 [00:10<00:42,  1.50s/it]
+ 23%|██▎       | 8/35 [00:11<00:40,  1.51s/it]
+ 26%|██▌       | 9/35 [00:13<00:39,  1.53s/it]
+ 29%|██▊       | 10/35 [00:15<00:38,  1.54s/it]
+[2025-09-13T09:55:05.133586] [INFO] 31%|███▏      | 11/35 [00:16<00:37,  1.55s/it]
+ 34%|███▍      | 12/35 [00:18<00:35,  1.56s/it]
+ 37%|███▋      | 13/35 [00:19<00:34,  1.58s/it]
+[2025-09-13T09:55:11.774963] [INFO] 40%|████      | 14/35 [00:21<00:33,  1.59s/it]
+ 43%|████▎     | 15/35 [00:23<00:32,  1.60s/it]
+ 46%|████▌     | 16/35 [00:24<00:30,  1.61s/it]
+ 49%|████▊     | 17/35 [00:26<00:29,  1.63s/it]
+[2025-09-13T09:55:18.126765] [INFO] 51%|█████▏    | 18/35 [00:28<00:27,  1.64s/it]
+ 54%|█████▍    | 19/35 [00:29<00:26,  1.65s/it]
+ 57%|█████▋    | 20/35 [00:31<00:24,  1.66s/it]
+ 60%|██████    | 21/35 [00:33<00:23,  1.67s/it]
+[2025-09-13T09:55:24.472788] [INFO] 63%|██████▎   | 22/35 [00:34<00:21,  1.68s/it]
+ 66%|██████▌   | 23/35 [00:36<00:20,  1.68s/it]
+ 69%|██████▊   | 24/35 [00:38<00:18,  1.69s/it]
+ 71%|███████▏  | 25/35 [00:39<00:16,  1.69s/it]
+[2025-09-13T09:55:30.805137] [INFO] 74%|███████▍  | 26/35 [00:41<00:15,  1.69s/it]
+ 77%|███████▋  | 27/35 [00:43<00:13,  1.68s/it]
+ 80%|████████  | 28/35 [00:44<00:11,  1.67s/it]
+ 83%|████████▎ | 29/35 [00:46<00:09,  1.66s/it]
+[2025-09-13T09:55:36.527844] [INFO] 86%|████████▌ | 30/35 [00:48<00:08,  1.65s/it]
+ 89%|████████▊ | 31/35 [00:49<00:06,  1.63s/it]
+ 91%|█████████▏| 32/35 [00:51<00:04,  1.62s/it]
+[2025-09-13T09:55:42.859998] [INFO] 94%|█████████▍| 33/35 [00:52<00:03,  1.61s/it]
+ 97%|█████████▋| 34/35 [00:54<00:01,  1.60s/it]
+100%|██████████| 35/35 [00:56<00:00,  1.59s/it]
+100%|██████████| 35/35 [00:56<00:00,  1.60s/it]
+INFO:predict:✅ Финальная генерация завершена
+[2025-09-13T09:56:08.219880] [ERROR] INFO:predict:📊 Размер сгенерированного изображения: (1024, 1024)
+INFO:predict:🟡 PREVIEW_READY /tmp/preview.png
+INFO:predict:✅ FINAL_READY /tmp/final.png
+INFO:predict:✅ Найден цвет: 40.0% RED
+INFO:predict:✅ Найден цвет: 30.0% BLUE
+INFO:predict:✅ Найден цвет: 20.0% YELLOW
+INFO:predict:🎨 Итого найдено цветов: 3
+INFO:predict:🎨 Создание colormap: 3 цветов, паттерн: granular, гранулы: small
+INFO:predict:✅ Оптимизированный colormap создан: (1024, 1024)
+INFO:predict:📊 Статистика паттернов: {'random': 0, 'grid': 2, 'radial': 2, 'granular': 2}
+INFO:predict:📊 Статистика размеров гранул: {'small': 2, 'medium': 2, 'large': 2}
+ERROR:predict:❌ Ошибка валидации colormap: operands could not be broadcast together with shapes (1024,1024,4) (3,) 
+WARNING:predict:⚠️ Colormap не соответствует промпту, пересоздаем...
+INFO:predict:🔧 Принудительная пересборка colormap...
+INFO:predict:✅ Colormap пересобран для цветов: ['yellow', 'red', 'blue']
+INFO:predict:🎨 ОПТИМИЗИРОВАННЫЙ COLORMAP_READY /tmp/colormap.png
+INFO:predict:📊 Размер colormap: (1024, 1024)
+INFO:predict:📋 ЛЕГЕНДА_READY /tmp/legend.png
+INFO:predict:🧹 Память очищена
+INFO:predict:📄 JSON_READY /tmp/generation_data.json
+INFO:predict:✅ Изображение успешно сгенерировано!
+INFO:predict:📊 Color Grid Adapter статистика:
+INFO:predict:   - Всего генераций: 3
+INFO:predict:   - ControlNet использован: 3 (100.0%)
+INFO:predict:   - Популярный паттерн: grid
+INFO:predict:   - Популярный размер гранул: small
+INFO:coglet:prediction completed: id=gbjabnb02srg80cs87d8gndf4m
+[2025-09-13T09:56:08.220787] [INFO] 🔄 Загрузка изображения 0: https://replicate.delivery/czjl/SGDhpks0X87xI5UWb7lr6mcst4VvBKS0RE8P3nBg2DvhHLVF/preview.png
+[2025-09-13T09:56:09.125128] [INFO] ✅ Изображение сохранено: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_095414/out_0.png
+[2025-09-13T09:56:09.125826] [INFO] 🔄 Загрузка изображения 1: https://replicate.delivery/czjl/aijsbFLIzAJGLNOR4KS0EkAQj6stoJER2yyXzN3XbclhHLVF/final.png
+[2025-09-13T09:56:10.630314] [INFO] ✅ Изображение сохранено: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_095414/out_1.png
+[2025-09-13T09:56:10.630931] [INFO] 🔄 Загрузка изображения 2: https://replicate.delivery/czjl/FitYXYCbqi7sGZ3oDkEHv7ORP5nIhjYk9tRdSx072FrhHLVF/colormap.png
+[2025-09-13T09:56:11.535703] [INFO] ✅ Изображение сохранено: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_095414/out_2.png
+[2025-09-13T09:56:11.536390] [INFO] 🔄 Загрузка изображения 3: https://replicate.delivery/czjl/cuJ8m3lb5f01Zip8yufXo8g215DPmSQpiRP82xYRC4sHeYpqA/legend.png
+[2025-09-13T09:56:12.140680] [INFO] ✅ Изображение сохранено: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_095414/out_3.png
+[2025-09-13T09:56:12.141404] [INFO] === Final status: succeeded
+[2025-09-13T09:56:12.141972] [INFO] 📊 Логирование модели завершено
+[2025-09-13T09:56:12.142487] [INFO] [
+  "https://replicate.delivery/czjl/SGDhpks0X87xI5UWb7lr6mcst4VvBKS0RE8P3nBg2DvhHLVF/preview.png",
+  "https://replicate.delivery/czjl/aijsbFLIzAJGLNOR4KS0EkAQj6stoJER2yyXzN3XbclhHLVF/final.png",
+  "https://replicate.delivery/czjl/FitYXYCbqi7sGZ3oDkEHv7ORP5nIhjYk9tRdSx072FrhHLVF/colormap.png",
+  "https://replicate.delivery/czjl/cuJ8m3lb5f01Zip8yufXo8g215DPmSQpiRP82xYRC4sHeYpqA/legend.png"
+]
+[2025-09-13T09:56:12.142975] [INFO] 🔄 _save_outputs вызван
+[2025-09-13T09:56:12.143449] [INFO] 💾 Сохраняем результаты в папку: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_095414
+[2025-09-13T09:56:12.143956] [INFO] 🔐 ПРИНУДИТЕЛЬНО используем хеш: 89fdd926
+[2025-09-13T09:56:12.144575] [INFO] ✅ Используем подготовленную папку: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_095414
+[2025-09-13T09:56:12.145236] [INFO] 🔄 Начинаем обработку 4 выходных файлов...
+[2025-09-13T09:56:12.145847] [INFO] 📁 Папка для сохранения: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_095414
+[2025-09-13T09:56:12.748592] [INFO] 📥 Скачан файл 0: out_0.png
+[2025-09-13T09:56:13.655134] [INFO] 📥 Скачан файл 1: out_1.png
+[2025-09-13T09:56:14.258324] [INFO] 📥 Скачан файл 2: out_2.png
+[2025-09-13T09:56:14.563287] [INFO] 📥 Скачан файл 3: out_3.png
+[2025-09-13T09:56:14.563953] [INFO] 📁 Найдено файлов для переименования: 4
+[2025-09-13T09:56:14.564503] [INFO] 📝 Промпт для именования: '40pct_red_30pct_blue_20pct_yellow_10pct_green_rubb'
+[2025-09-13T09:56:14.565015] [INFO] ⏰ Временная метка из папки: 20250913_095414
+[2025-09-13T09:56:14.565480] [INFO] 🔐 Используем хеш из App: 143937bc
+[2025-09-13T09:56:14.565972] [INFO] ✅ FINAL saved as: 20250913_095414_40pct_red_30pct_blue_20pct_yellow_10pct_green_rubb_final_143937bc.png
+[2025-09-13T09:56:14.566466] [INFO] 📁 Путь: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_095414/20250913_095414_40pct_red_30pct_blue_20pct_yellow_10pct_green_rubb_final_143937bc.png
+[2025-09-13T09:56:14.566992] [INFO] 🎨 COLORMAP saved as: 20250913_095414_RED_BLUE_GRSGRN_colormap_143937bc.png
+[2025-09-13T09:56:14.567501] [INFO] 📁 Путь: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_095414/20250913_095414_RED_BLUE_GRSGRN_colormap_143937bc.png
+[2025-09-13T09:56:14.567989] [INFO] ################ PRESET: v4.5.10_Test_05_Git_LFS_Pointer_Check ################
+[2025-09-13T09:56:14.568473] [INFO] 🔄 _run_single() вызван
+[2025-09-13T09:56:14.569006] [INFO] === Creating prediction: nauslava/plitka-pro-project (version: 143937bcbd00359172e19854757bc9ba27cf3cbbcb9186422b30a50aa3390f76)
+Inputs: {"prompt": "ohwx_rubber_tile <s0><s1> 70% red, 30% blue rubber tile, random pattern", "negative_prompt": "blurry, low quality, distorted", "seed": 22222, "num_inference_steps": 25, "guidance_scale": 7.5, "colormap": "random", "granule_size": "medium", "use_controlnet": false, "description": "Тест для проверки обработки Git LFS указателей"}
+[2025-09-13T09:56:14.871022] [INFO] Prediction id: 7qv930hmehrga0cs87eazftab4
+[2025-09-13T09:56:14.872008] [INFO] 🔍 Начинаем создание папки для результатов...
+[2025-09-13T09:56:14.873000] [INFO] 🔍 Текущий рабочий каталог: /home/papaandrey/plitka-pro-project
+[2025-09-13T09:56:14.874023] [INFO] 🔍 Используем версию и хеш из App:
+[2025-09-13T09:56:14.875006] [INFO] 🔍 version_id: 143937bcbd00359172e19854757bc9ba27cf3cbbcb9186422b30a50aa3390f76
+[2025-09-13T09:56:14.875686] [INFO] 🔍 pred.version: 143937bcbd00359172e19854757bc9ba27cf3cbbcb9186422b30a50aa3390f76
+[2025-09-13T09:56:14.876237] [INFO] 🔍 ver_for_hash: v4.5.10
+[2025-09-13T09:56:14.876816] [INFO] 🔐 Хеш из App: 143937bc
+[2025-09-13T09:56:14.877369] [INFO] 🔄 Папка создана: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_095614
+[2025-09-13T09:56:14.877923] [INFO] 🔄 _current_run_dir установлен: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_095614
+[2025-09-13T09:56:14.878532] [INFO] 🔐 Создаем папку с хешем: 143937bc
+[2025-09-13T09:56:14.879372] [INFO] 📁 Создана папка: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_095614
+[2025-09-13T09:56:14.880465] [INFO] 🔐 Хеш версии: 143937bc
+[2025-09-13T09:56:14.881707] [INFO] 🔍 Базовая папка: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc
+[2025-09-13T09:56:14.882962] [INFO] 🔍 Полный путь: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_095614
+[2025-09-13T09:56:14.884253] [INFO] ✅ Папка успешно создана и существует
+[2025-09-13T09:56:15.188271] [WARNING] INFO:coglet:prediction started: id=7qv930hmehrga0cs87eazftab4
+WARNING unknown input field ignored: description
+[2025-09-13T09:56:15.188865] [INFO] ✅ Startup phase completed. Proceeding to completion...
+[2025-09-13T09:56:34.509432] [ERROR] INFO:predict:🚀 STARTUP_SNAPSHOT_START
+INFO:predict:🧭 MODEL_START v4.5.07 | device=cuda | diffusers=0.21.4 | torch=2.1.0+cu121
+INFO:predict:📊 GPU: Tesla T4
+INFO:predict:💾 GPU Memory: 14.6 GB
+INFO:predict:🔧 SDXL Base: unknown
+INFO:predict:🎨 LoRA: unknown (rank: 32)
+INFO:predict:🔤 TI: unknown (tokens: <s0><s1>)
+INFO:predict:⚙️ Scheduler: DPMSolverMultistepScheduler
+INFO:predict:🎭 VAE: AutoencoderKL
+INFO:predict:🎯 Prompt: ohwx_rubber_tile <s0><s1> 70% red, 30% blue rubber tile, random pattern
+INFO:predict:🚫 Negative Prompt: blurry, low quality, distorted
+INFO:predict:🎲 Seed: 22222
+INFO:predict:📊 Steps: 25 (базовый)
+INFO:predict:🎚️ Guidance: 7.5 (базовый)
+INFO:predict:🎨 Colormap: random
+INFO:predict:🔧 Granule Size: medium
+INFO:predict:🎨 Адаптивные параметры будут рассчитаны на основе количества цветов
+INFO:predict:🚀 STARTUP_SNAPSHOT_END
+INFO:predict:🎨 Начало генерации изображения...
+INFO:predict:📝 Входной промпт: ohwx_rubber_tile <s0><s1> 70% red, 30% blue rubber tile, random pattern
+INFO:predict:🚫 Входной негативный промпт: blurry, low quality, distorted
+INFO:predict:🎲 Входной сид: 22222
+INFO:predict:🔧 Усилены токены цветов в промпте
+INFO:predict:🎨 Генерация изображения...
+INFO:predict:📝 Полный промпт: ohwx_rubber_tile <s0><s1> 70% red, 30% blue rubber tile, random pattern, photorealistic rubber tile, high quality, detailed texture, professional photography, sharp focus
+INFO:predict:🔧 Усиленный промпт: ohwx_rubber_tile <s0><s1> red red red 70%, blue blue blue 30% rubber tile, random pattern, photorealistic rubber tile, high quality, detailed texture, professional photography, sharp focus
+INFO:predict:🚫 Финальный негативный промпт: blurry, low quality, distorted
+INFO:predict:🎲 Финальный сид: 22222
+INFO:predict:🔧 Устройство: cuda
+INFO:predict:🎨 Анализ сложности промпта для адаптивных параметров...
+INFO:predict:🎨 Обнаружено цветов в промпте: 2
+INFO:predict:🎯 Адаптивные параметры для 2 цветов: steps=25, guidance=7.5
+INFO:predict:🚀 Запуск pipeline для генерации с адаптивными параметрами...
+INFO:predict:🎯 Автоматически включаем мультимодальный ControlNet для 2 цветов: ['t2i_color']
+INFO:predict:🎨 Создание множественных контрольных карт для мультимодального ControlNet
+INFO:predict:✅ Найден цвет: 70.0% RED
+INFO:predict:✅ Найден цвет: 30.0% BLUE
+INFO:predict:🎨 Итого найдено цветов: 2
+INFO:predict:🎨 Создание colormap: 2 цветов, паттерн: granular, гранулы: medium
+INFO:predict:✅ Оптимизированный colormap создан: (1024, 1024)
+INFO:predict:📊 Статистика паттернов: {'random': 0, 'grid': 2, 'radial': 2, 'granular': 3}
+INFO:predict:📊 Статистика размеров гранул: {'small': 2, 'medium': 3, 'large': 2}
+ERROR:predict:❌ Ошибка валидации colormap: operands could not be broadcast together with shapes (1024,1024,4) (3,) 
+WARNING:predict:⚠️ Colormap не соответствует промпту, пересоздаем...
+INFO:predict:🔧 Принудительная пересборка colormap...
+INFO:predict:✅ Colormap пересобран для цветов: ['red', 'blue']
+[2025-09-13T09:56:40.816624] [ERROR] ERROR:predict:❌ Ошибка валидации ControlNet карты: cannot reshape array of size 4194304 into shape (3)
+WARNING:predict:⚠️ ControlNet карта не прошла валидацию, пересоздаем...
+INFO:predict:🔧 Принудительная пересборка colormap...
+INFO:predict:✅ Colormap пересобран для цветов: ['red', 'blue']
+ERROR:predict:❌ Ошибка валидации ControlNet карты: cannot reshape array of size 4194304 into shape (3)
+ERROR:predict:❌ Критическая ошибка: ControlNet карта не может быть создана корректно
+WARNING:predict:⚠️ Ошибка подготовки мультимодального ControlNet: ControlNet карта не прошла валидацию после пересоздания
+INFO:predict:✅ ControlNet активирован с fallback картой (умеренное влияние)
+INFO:predict:🚀 Финальный сегмент: единый проход без callback
+
+  0%|          | 0/25 [00:00<?, ?it/s]
+  4%|▍         | 1/25 [00:01<00:35,  1.49s/it]
+[2025-09-13T09:56:47.150989] [INFO] 8%|▊         | 2/25 [00:02<00:33,  1.47s/it]
+ 12%|█▏        | 3/25 [00:04<00:32,  1.47s/it]
+ 16%|█▌        | 4/25 [00:05<00:31,  1.48s/it]
+ 20%|██        | 5/25 [00:07<00:29,  1.49s/it]
+[2025-09-13T09:56:54.104993] [INFO] 24%|██▍       | 6/25 [00:08<00:28,  1.50s/it]
+ 28%|██▊       | 7/25 [00:10<00:27,  1.51s/it]
+ 32%|███▏      | 8/25 [00:12<00:25,  1.53s/it]
+ 36%|███▌      | 9/25 [00:13<00:24,  1.54s/it]
+[2025-09-13T09:57:00.440059] [INFO] 40%|████      | 10/25 [00:15<00:23,  1.55s/it]
+ 44%|████▍     | 11/25 [00:16<00:21,  1.57s/it]
+ 48%|████▊     | 12/25 [00:18<00:20,  1.58s/it]
+ 52%|█████▏    | 13/25 [00:20<00:19,  1.59s/it]
+[2025-09-13T09:57:06.204440] [INFO] 56%|█████▌    | 14/25 [00:21<00:17,  1.61s/it]
+ 60%|██████    | 15/25 [00:23<00:16,  1.62s/it]
+ 64%|██████▍   | 16/25 [00:24<00:14,  1.63s/it]
+ 68%|██████▊   | 17/25 [00:26<00:13,  1.64s/it]
+[2025-09-13T09:57:12.587748] [INFO] 72%|███████▏  | 18/25 [00:28<00:11,  1.65s/it]
+ 76%|███████▌  | 19/25 [00:30<00:09,  1.66s/it]
+ 80%|████████  | 20/25 [00:31<00:08,  1.67s/it]
+ 84%|████████▍ | 21/25 [00:33<00:06,  1.68s/it]
+[2025-09-13T09:57:18.945763] [INFO] 88%|████████▊ | 22/25 [00:35<00:05,  1.68s/it]
+ 92%|█████████▏| 23/25 [00:36<00:03,  1.68s/it]
+ 96%|█████████▌| 24/25 [00:38<00:01,  1.68s/it]
+[2025-09-13T09:57:25.308103] [INFO] 100%|██████████| 25/25 [00:40<00:00,  1.68s/it]
+100%|██████████| 25/25 [00:40<00:00,  1.60s/it]
+INFO:predict:✅ Финальная генерация завершена
+[2025-09-13T09:57:37.452780] [INFO] INFO:predict:📊 Размер сгенерированного изображения: (1024, 1024)
+INFO:predict:🟡 PREVIEW_READY /tmp/preview.png
+INFO:predict:✅ FINAL_READY /tmp/final.png
+INFO:predict:✅ Найден цвет: 70.0% RED
+INFO:predict:✅ Найден цвет: 30.0% BLUE
+INFO:predict:🎨 Итого найдено цветов: 2
+INFO:predict:🎨 Создание colormap: 2 цветов, паттерн: granular, гранулы: medium
+INFO:predict:✅ Оптимизированный colormap создан: (1024, 1024)
+[2025-09-13T09:57:43.804452] [ERROR] INFO:predict:📊 Статистика паттернов: {'random': 0, 'grid': 2, 'radial': 2, 'granular': 4}
+INFO:predict:📊 Статистика размеров гранул: {'small': 2, 'medium': 4, 'large': 2}
+ERROR:predict:❌ Ошибка валидации colormap: operands could not be broadcast together with shapes (1024,1024,4) (3,) 
+WARNING:predict:⚠️ Colormap не соответствует промпту, пересоздаем...
+INFO:predict:🔧 Принудительная пересборка colormap...
+INFO:predict:✅ Colormap пересобран для цветов: ['red', 'blue']
+INFO:predict:🎨 ОПТИМИЗИРОВАННЫЙ COLORMAP_READY /tmp/colormap.png
+INFO:predict:📊 Размер colormap: (1024, 1024)
+INFO:predict:📋 ЛЕГЕНДА_READY /tmp/legend.png
+INFO:predict:🧹 Память очищена
+INFO:predict:📄 JSON_READY /tmp/generation_data.json
+INFO:predict:✅ Изображение успешно сгенерировано!
+INFO:predict:📊 Color Grid Adapter статистика:
+INFO:predict:   - Всего генераций: 4
+INFO:predict:   - ControlNet использован: 4 (100.0%)
+INFO:predict:   - Популярный паттерн: granular
+INFO:predict:   - Популярный размер гранул: medium
+INFO:coglet:prediction completed: id=7qv930hmehrga0cs87eazftab4
+[2025-09-13T09:57:43.805019] [INFO] 🔄 Загрузка изображения 0: https://replicate.delivery/czjl/APyGgXSkq9reQyWSMuhWlBpR5FsL1TZAxL0fR24e5fDSejlqC/preview.png
+[2025-09-13T09:57:44.412077] [INFO] ✅ Изображение сохранено: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_095614/out_0.png
+[2025-09-13T09:57:44.412651] [INFO] 🔄 Загрузка изображения 1: https://replicate.delivery/czjl/47IyXCmTKS4KO1PtOFkIZwbEPwei4SEbwlDv4MOK4BPyPWqKA/final.png
+[2025-09-13T09:57:45.318484] [INFO] ✅ Изображение сохранено: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_095614/out_1.png
+[2025-09-13T09:57:45.319103] [INFO] 🔄 Загрузка изображения 2: https://replicate.delivery/czjl/O0G1dDa6lHoeBifnKlFGbD4ZRffLB8raBiu0ZTa9XvaRejlqC/colormap.png
+[2025-09-13T09:57:46.229834] [INFO] ✅ Изображение сохранено: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_095614/out_2.png
+[2025-09-13T09:57:46.230451] [INFO] 🔄 Загрузка изображения 3: https://replicate.delivery/czjl/eYqnYhwqvUVegk1njgUez92Ym68fLBw6urvvexpaY9Kk8jlqC/legend.png
+[2025-09-13T09:57:46.836718] [INFO] ✅ Изображение сохранено: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_095614/out_3.png
+[2025-09-13T09:57:46.837508] [INFO] === Final status: succeeded
+[2025-09-13T09:57:46.838135] [INFO] 📊 Логирование модели завершено
+[2025-09-13T09:57:46.838801] [INFO] [
+  "https://replicate.delivery/czjl/APyGgXSkq9reQyWSMuhWlBpR5FsL1TZAxL0fR24e5fDSejlqC/preview.png",
+  "https://replicate.delivery/czjl/47IyXCmTKS4KO1PtOFkIZwbEPwei4SEbwlDv4MOK4BPyPWqKA/final.png",
+  "https://replicate.delivery/czjl/O0G1dDa6lHoeBifnKlFGbD4ZRffLB8raBiu0ZTa9XvaRejlqC/colormap.png",
+  "https://replicate.delivery/czjl/eYqnYhwqvUVegk1njgUez92Ym68fLBw6urvvexpaY9Kk8jlqC/legend.png"
+]
+[2025-09-13T09:57:46.839372] [INFO] 🔄 _save_outputs вызван
+[2025-09-13T09:57:46.839975] [INFO] 💾 Сохраняем результаты в папку: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_095614
+[2025-09-13T09:57:46.840503] [INFO] 🔐 ПРИНУДИТЕЛЬНО используем хеш: 89fdd926
+[2025-09-13T09:57:46.841051] [INFO] ✅ Используем подготовленную папку: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_095614
+[2025-09-13T09:57:46.841561] [INFO] 🔄 Начинаем обработку 4 выходных файлов...
+[2025-09-13T09:57:46.842060] [INFO] 📁 Папка для сохранения: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_095614
+[2025-09-13T09:57:47.149014] [INFO] 📥 Скачан файл 0: out_0.png
+[2025-09-13T09:57:48.367145] [INFO] 📥 Скачан файл 1: out_1.png
+[2025-09-13T09:57:48.976142] [INFO] 📥 Скачан файл 2: out_2.png
+[2025-09-13T09:57:49.278419] [INFO] 📥 Скачан файл 3: out_3.png
+[2025-09-13T09:57:49.279011] [INFO] 📁 Найдено файлов для переименования: 4
+[2025-09-13T09:57:49.279574] [INFO] 📝 Промпт для именования: '70pct_red_30pct_blue_rubber_tile_random_pattern'
+[2025-09-13T09:57:49.280179] [INFO] ⏰ Временная метка из папки: 20250913_095614
+[2025-09-13T09:57:49.280658] [INFO] 🔐 Используем хеш из App: 143937bc
+[2025-09-13T09:57:49.281144] [INFO] ✅ FINAL saved as: 20250913_095614_70pct_red_30pct_blue_rubber_tile_random_pattern_final_143937bc.png
+[2025-09-13T09:57:49.281665] [INFO] 📁 Путь: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_095614/20250913_095614_70pct_red_30pct_blue_rubber_tile_random_pattern_final_143937bc.png
+[2025-09-13T09:57:49.282229] [INFO] 🎨 COLORMAP saved as: 20250913_095614_RED_BLUE_colormap_143937bc.png
+[2025-09-13T09:57:49.282721] [INFO] 📁 Путь: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_095614/20250913_095614_RED_BLUE_colormap_143937bc.png
+[2025-09-13T09:57:49.283217] [INFO] [GUI] Done.

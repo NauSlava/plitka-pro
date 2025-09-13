@@ -1,0 +1,196 @@
+[
+  {
+    "name": "Dynamic Version System Test - Basic Generation",
+    "description": "Тест базовой генерации с динамической системой версий",
+    "input": {
+      "prompt": "ohwx_rubber_tile <s0><s1> красная резиновая плитка с гранулами",
+      "negative_prompt": "дефекты, трещины, неровности",
+      "width": 1024,
+      "height": 1024,
+      "num_inference_steps": 25,
+      "guidance_scale": 7.5,
+      "seed": 42
+    },
+    "expected_results": {
+      "version_detection": "v4.5.07",
+      "generation_time": "< 30 seconds",
+      "no_duplication": true,
+      "no_hanging": true
+    }
+  },
+  {
+    "name": "Dynamic Version System Test - Complex Pattern",
+    "description": "Тест сложного паттерна с динамической системой версий",
+    "input": {
+      "prompt": "ohwx_rubber_tile <s0><s1> синяя резиновая плитка с органическими гранулами и текстурой",
+      "negative_prompt": "гладкая поверхность, без гранул",
+      "width": 1024,
+      "height": 1024,
+      "num_inference_steps": 25,
+      "guidance_scale": 8.0,
+      "seed": 123
+    },
+    "expected_results": {
+      "version_detection": "v4.5.07",
+      "generation_time": "< 30 seconds",
+      "no_duplication": true,
+      "no_hanging": true
+    }
+  },
+  {
+    "name": "Dynamic Version System Test - High Resolution",
+    "description": "Тест высокого разрешения с динамической системой версий",
+    "input": {
+      "prompt": "ohwx_rubber_tile <s0><s1> зеленая резиновая плитка с мелкими гранулами",
+      "negative_prompt": "крупные дефекты, неровные края",
+      "width": 1024,
+      "height": 1024,
+      "num_inference_steps": 30,
+      "guidance_scale": 7.0,
+      "seed": 456
+    },
+    "expected_results": {
+      "version_detection": "v4.5.07",
+      "generation_time": "< 35 seconds",
+      "no_duplication": true,
+      "no_hanging": true
+    }
+  },
+  {
+    "name": "Dynamic Version System Test - Different Colors",
+    "description": "Тест различных цветов с динамической системой версий",
+    "input": {
+      "prompt": "ohwx_rubber_tile <s0><s1> желтая резиновая плитка с разноцветными гранулами",
+      "negative_prompt": "одноцветная поверхность, без вариативности",
+      "width": 1024,
+      "height": 1024,
+      "num_inference_steps": 25,
+      "guidance_scale": 7.5,
+      "seed": 789
+    },
+    "expected_results": {
+      "version_detection": "v4.5.07",
+      "generation_time": "< 30 seconds",
+      "no_duplication": true,
+      "no_hanging": true
+    }
+  },
+  {
+    "name": "Dynamic Version System Test - Edge Case",
+    "description": "Тест граничного случая с динамической системой версий",
+    "input": {
+      "prompt": "ohwx_rubber_tile <s0><s1> черная резиновая плитка с минимальными гранулами",
+      "negative_prompt": "белая поверхность, крупные дефекты",
+      "width": 1024,
+      "height": 1024,
+      "num_inference_steps": 20,
+      "guidance_scale": 6.0,
+      "seed": 999
+    },
+    "expected_results": {
+      "version_detection": "v4.5.07",
+      "generation_time": "< 25 seconds",
+      "no_duplication": true,
+      "no_hanging": true
+    }
+  },
+  {
+    "name": "Dynamic Version System Test - Stress Test",
+    "description": "Стресс-тест с динамической системой версий",
+    "input": {
+      "prompt": "ohwx_rubber_tile <s0><s1> фиолетовая резиновая плитка с максимальными гранулами и сложной текстурой",
+      "negative_prompt": "простые формы, однородная поверхность",
+      "width": 1024,
+      "height": 1024,
+      "num_inference_steps": 35,
+      "guidance_scale": 9.0,
+      "seed": 111
+    },
+    "expected_results": {
+      "version_detection": "v4.5.07",
+      "generation_time": "< 40 seconds",
+      "no_duplication": true,
+      "no_hanging": true
+    }
+  },
+  {
+    "name": "Dynamic Version System Test - Version Detection",
+    "description": "Тест определения версии в GUI тестере",
+    "input": {
+      "prompt": "ohwx_rubber_tile <s0><s1> тестовая резиновая плитка",
+      "negative_prompt": "дефекты",
+      "width": 512,
+      "height": 512,
+      "num_inference_steps": 15,
+      "guidance_scale": 7.0,
+      "seed": 1
+    },
+    "expected_results": {
+      "version_detection": "v4.5.07",
+      "hash_detection": "6dd286d4",
+      "generation_time": "< 20 seconds",
+      "no_duplication": true,
+      "no_hanging": true
+    }
+  },
+  {
+    "name": "Dynamic Version System Test - Hash Validation",
+    "description": "Тест валидации хеша в GUI тестере",
+    "input": {
+      "prompt": "ohwx_rubber_tile <s0><s1> валидационная резиновая плитка",
+      "negative_prompt": "ошибки",
+      "width": 512,
+      "height": 512,
+      "num_inference_steps": 15,
+      "guidance_scale": 7.0,
+      "seed": 2
+    },
+    "expected_results": {
+      "version_detection": "v4.5.07",
+      "hash_validation": "6dd286d4bf36baeef4e5afd5d28191ad23793ea50c687104780cc8a56cd84a63",
+      "generation_time": "< 20 seconds",
+      "no_duplication": true,
+      "no_hanging": true
+    }
+  },
+  {
+    "name": "Dynamic Version System Test - Fallback Strategy",
+    "description": "Тест стратегии fallback в GUI тестере",
+    "input": {
+      "prompt": "ohwx_rubber_tile <s0><s1> fallback резиновая плитка",
+      "negative_prompt": "ошибки fallback",
+      "width": 512,
+      "height": 512,
+      "num_inference_steps": 15,
+      "guidance_scale": 7.0,
+      "seed": 3
+    },
+    "expected_results": {
+      "version_detection": "v4.5.07",
+      "fallback_working": true,
+      "generation_time": "< 20 seconds",
+      "no_duplication": true,
+      "no_hanging": true
+    }
+  },
+  {
+    "name": "Dynamic Version System Test - Performance",
+    "description": "Тест производительности с динамической системой версий",
+    "input": {
+      "prompt": "ohwx_rubber_tile <s0><s1> производительная резиновая плитка",
+      "negative_prompt": "медленная генерация",
+      "width": 1024,
+      "height": 1024,
+      "num_inference_steps": 25,
+      "guidance_scale": 7.5,
+      "seed": 4
+    },
+    "expected_results": {
+      "version_detection": "v4.5.07",
+      "generation_time": "< 30 seconds",
+      "memory_usage": "stable",
+      "no_duplication": true,
+      "no_hanging": true
+    }
+  }
+]

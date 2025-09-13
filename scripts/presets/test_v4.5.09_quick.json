@@ -1,0 +1,24 @@
+{
+  "v4.5.09_Quick_Test_Mono_Red": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 100% red rubber tile",
+    "negative_prompt": "blurry, low quality, distorted",
+    "seed": 42,
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "colormap": "random",
+    "granule_size": "medium",
+    "use_controlnet": false,
+    "description": "Быстрый тест моно-цвета для проверки стабильности v4.5.09"
+  },
+  "v4.5.09_Quick_Test_Duo_Colors": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 50% red, 50% blue rubber tile",
+    "negative_prompt": "blurry, low quality, distorted",
+    "seed": 123,
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "colormap": "grid",
+    "granule_size": "medium",
+    "use_controlnet": false,
+    "description": "Быстрый тест дуо-цветов для проверки синхронизации документации"
+  }
+}

@@ -16,7 +16,7 @@ from pathlib import Path
 
 # Добавляем импорты для Color Grid Adapter
 import numpy as np
-from PIL import Image, ImageDraw, ImageFilter
+from PIL import Image, ImageDraw, ImageFilter, ImageChops
 import random
 
 # Импортируем ColorManager из отдельного модуля
@@ -60,6 +60,20 @@ class ColorGridControlNet:
             return self._create_radial_pattern(colors, size)
         else:
             return self._create_granular_pattern(colors, size, "medium")
+
+    def create_optimized_colormap_and_hint(self, colors, size=(1024, 1024), 
+                                           pattern_type="granular", granule_size="medium"):
+        """Создает colormap (RGBA) и одноканальный L-хинт для ControlNet в один проход."""
+        if pattern_type == "granular":
+            return self._create_granular_pattern_with_hint(colors, size, granule_size)
+        elif pattern_type == "random":
+            return self._create_random_pattern_with_hint(colors, size)
+        elif pattern_type == "grid":
+            return self._create_grid_pattern_with_hint(colors, size)
+        elif pattern_type == "radial":
+            return self._create_radial_pattern_with_hint(colors, size)
+        else:
+            return self._create_granular_pattern_with_hint(colors, size, "medium")
     
     def _create_granular_pattern(self, colors, size, granule_size="medium"):
         """Создает паттерн, имитирующий резиновую крошку с пустыми полями по краям"""
@@ -125,6 +139,64 @@ class ColorGridControlNet:
                     placed += actual_pixels_placed  # Учитываем фактически размещенные пиксели
         
         return canvas
+
+    def _create_granular_pattern_with_hint(self, colors, size, granule_size="medium"):
+        """Генерирует RGBA colormap и L-хинт одновременно (без последующих конвертаций)."""
+        width, height = size
+        canvas = Image.new('RGBA', size, (255, 255, 255, 0))
+        hint = Image.new('L', size, 0)
+        pixels = canvas.load()
+        hp = hint.load()
+        
+        margin_x = int(width * 0.025)
+        margin_y = int(height * 0.025)
+        work_width = width - 2 * margin_x
+        work_height = height - 2 * margin_y
+        
+        granule_params = self.granule_sizes[granule_size]
+        min_size = granule_params["min_size"]
+        max_size = granule_params["max_size"]
+        variation = granule_params["variation"]
+        calibration = self.granule_calibration
+        
+        total_proportion = sum(color.get("proportion", 0) for color in colors)
+        normalized_colors = []
+        for color in colors:
+            proportion = color.get("proportion", 0) / max(1e-8, total_proportion)
+            color_rgb = self._name_to_rgb(color.get("name", "white"))
+            normalized_colors.append({
+                "color": color_rgb,
+                "proportion": proportion,
+                "pixels_needed": int(proportion * work_width * work_height * self.granule_sizes[granule_size]["density"])  # type: ignore
+            })
+        
+        all_positions = [(x + margin_x, y + margin_y) for x in range(work_width) for y in range(work_height)]
+        random.shuffle(all_positions)
+        
+        def luma(rgb):
+            r, g, b = rgb
+            return int(0.299 * r + 0.587 * g + 0.114 * b)
+        
+        pos_idx = 0
+        for _, color_info in enumerate(normalized_colors):
+            pixels_to_place = color_info["pixels_needed"]
+            placed = 0
+            while placed < pixels_to_place and pos_idx < len(all_positions):
+                x, y = all_positions[pos_idx]
+                pos_idx += 1
+                if pixels[x, y] == (255, 255, 255, 0):
+                    gsize = self._generate_variable_granule_size(min_size, max_size, variation, calibration)
+                    actual = self._draw_organic_granule(pixels, x, y, gsize, color_info["color"], work_width, work_height, margin_x, margin_y, calibration)
+                    # Заполняем hint там, где поставили цветные пиксели (пробегаем локально)
+                    half = max(1, gsize // 2)
+                    for dx in range(-half, half + 1):
+                        for dy in range(-half, half + 1):
+                            xx, yy = x + dx, y + dy
+                            if margin_x <= xx < margin_x + work_width and margin_y <= yy < margin_y + work_height:
+                                if pixels[xx, yy] != (255, 255, 255, 0):
+                                    hp[xx, yy] = luma(color_info["color"])  # фон остаётся 0
+                    placed += actual
+        return canvas, hint
     
     def _generate_variable_granule_size(self, min_size: int, max_size: int, variation: float, calibration: dict) -> int:
         """Генерирует вариативный размер гранулы на основе калиброванных параметров"""
@@ -295,6 +367,42 @@ class ColorGridControlNet:
                     pos_idx += 1
         
         return canvas
+
+    def _create_random_pattern_with_hint(self, colors, size):
+        width, height = size
+        canvas = Image.new('RGBA', size, (255, 255, 255, 0))
+        hint = Image.new('L', size, 0)
+        pixels = canvas.load()
+        hp = hint.load()
+        
+        margin_x = int(width * 0.025)
+        margin_y = int(height * 0.025)
+        work_width = width - 2 * margin_x
+        work_height = height - 2 * margin_y
+        
+        total_proportion = sum(color.get("proportion", 0) for color in colors)
+        color_pixels = {}
+        for color in colors:
+            proportion = color.get("proportion", 0) / max(1e-8, total_proportion)
+            color_rgb = self._name_to_rgb(color.get("name", "white"))
+            color_pixels[color_rgb] = int(proportion * work_width * work_height)
+        
+        all_positions = [(x + margin_x, y + margin_y) for x in range(work_width) for y in range(work_height)]
+        random.shuffle(all_positions)
+        
+        def luma(rgb):
+            r, g, b = rgb
+            return int(0.299 * r + 0.587 * g + 0.114 * b)
+        
+        pos_idx = 0
+        for color_rgb, pixel_count in color_pixels.items():
+            for _ in range(pixel_count):
+                if pos_idx < len(all_positions):
+                    x, y = all_positions[pos_idx]
+                    pixels[x, y] = color_rgb
+                    hp[x, y] = luma(color_rgb)
+                    pos_idx += 1
+        return canvas, hint
     
     def _create_grid_pattern(self, colors, size):
         """Создает сеточный паттерн с точечным распределением и пустыми полями по краям"""
@@ -336,6 +444,41 @@ class ColorGridControlNet:
                 attempts += 1
         
         return canvas
+
+    def _create_grid_pattern_with_hint(self, colors, size):
+        width, height = size
+        canvas = Image.new('RGBA', size, (255, 255, 255, 0))
+        hint = Image.new('L', size, 0)
+        pixels = canvas.load()
+        hp = hint.load()
+        
+        margin_x = int(width * 0.025)
+        margin_y = int(height * 0.025)
+        work_width = width - 2 * margin_x
+        work_height = height - 2 * margin_y
+        
+        total_proportion = sum(color.get("proportion", 0) for color in colors)
+        
+        def luma(rgb):
+            r, g, b = rgb
+            return int(0.299 * r + 0.587 * g + 0.114 * b)
+        
+        for color in colors:
+            proportion = color.get("proportion", 0) / max(1e-8, total_proportion)
+            color_rgb = self._name_to_rgb(color.get("name", "white"))
+            pixels_needed = int(proportion * work_width * work_height)
+            positions_placed = 0
+            attempts = 0
+            max_attempts = pixels_needed * 10
+            while positions_placed < pixels_needed and attempts < max_attempts:
+                x = random.randint(margin_x, margin_x + work_width - 1)
+                y = random.randint(margin_y, margin_y + work_height - 1)
+                if pixels[x, y] == (255, 255, 255, 0):
+                    pixels[x, y] = color_rgb
+                    hp[x, y] = luma(color_rgb)
+                    positions_placed += 1
+                attempts += 1
+        return canvas, hint
     
     def _create_radial_pattern(self, colors, size):
         """Создает радиальный паттерн с точечным распределением и пустыми полями по краям"""
@@ -389,6 +532,47 @@ class ColorGridControlNet:
                 attempts += 1
         
         return canvas
+
+    def _create_radial_pattern_with_hint(self, colors, size):
+        width, height = size
+        canvas = Image.new('RGBA', size, (255, 255, 255, 0))
+        hint = Image.new('L', size, 0)
+        pixels = canvas.load()
+        hp = hint.load()
+        
+        margin_x = int(width * 0.025)
+        margin_y = int(height * 0.025)
+        work_width = width - 2 * margin_x
+        work_height = height - 2 * margin_y
+        center_x = margin_x + work_width // 2
+        center_y = margin_y + work_height // 2
+        max_radius = min(work_width, work_height) // 2
+        total_proportion = sum(color.get("proportion", 0) for color in colors)
+        
+        def luma(rgb):
+            r, g, b = rgb
+            return int(0.299 * r + 0.587 * g + 0.114 * b)
+        
+        for color in colors:
+            proportion = color.get("proportion", 0) / max(1e-8, total_proportion)
+            color_rgb = self._name_to_rgb(color.get("name", "white"))
+            pixels_needed = int(proportion * work_width * work_height)
+            positions_placed = 0
+            attempts = 0
+            max_attempts = pixels_needed * 10
+            while positions_placed < pixels_needed and attempts < max_attempts:
+                angle = random.uniform(0, 2 * 3.14159)
+                radius = random.uniform(0, max_radius)
+                x = int(center_x + radius * math.cos(angle))
+                y = int(center_y + radius * math.sin(angle))
+                if (margin_x <= x < margin_x + work_width and 
+                    margin_y <= y < margin_y + work_height):
+                    if pixels[x, y] == (255, 255, 255, 0):
+                        pixels[x, y] = color_rgb
+                        hp[x, y] = luma(color_rgb)
+                        positions_placed += 1
+                attempts += 1
+        return canvas, hint
     
     def _name_to_rgb(self, color_name):
         """Преобразует название цвета в RGB через ColorManager"""
@@ -400,7 +584,12 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Единая версия модели для логов
-MODEL_VERSION = "v4.5.06"
+# Динамическое определение версии модели
+try:
+    from version_manager import get_current_version
+    MODEL_VERSION = get_current_version()
+except ImportError:
+    MODEL_VERSION = "v4.5.06"  # fallback
 
 # Переменные окружения для оптимизации
 os.environ["HF_HOME"] = "/tmp/hf_home"
@@ -493,30 +682,83 @@ class Predictor(BasePredictor):
             except Exception:
                 pass
         
-        # 4. Загрузка НАШИХ обученных LoRA (как в успешной модели v45)
-        logger.info("🔧 Загрузка НАШИХ LoRA адаптеров (метод v45)...")
-        lora_path = "/src/model_files/rubber-tile-lora-v4_sdxl_lora.safetensors"
+        # 4. Загрузка НАШИХ обученных LoRA (robust для разных версий diffusers)
+        logger.info("🔧 Загрузка НАШИХ LoRA адаптеров...")
+        lora_dir = "/src/model_files"
+        lora_weight_name = "rubber-tile-lora-v4_sdxl_lora.safetensors"
+        
+        # Проверяем, что LoRA файлы существуют и не являются Git LFS указателями
+        lora_file_path = f"{lora_dir}/{lora_weight_name}"
+        lora_file_exists = False
+        lora_file_valid = False
+        
         try:
-            # Используем метод v45: set_adapters + fuse_lora для максимальной эффективности
-            try:
-                # Совместимость с новыми версиями diffusers
-                self.pipe.set_adapters(["rubber-tile-lora-v4"], adapter_weights=[0.7])
-                self.pipe.fuse_lora()
-                logger.info("✅ LoRA адаптеры загружены через set_adapters + fuse_lora (метод v45)")
-            except Exception as e1:
-                logger.warning(f"⚠️ set_adapters не сработал: {e1}")
-                try:
-                    # Fallback: загружаем с именем адаптера
-                    self.pipe.load_lora_weights(lora_path, adapter_name="rt")
-                    logger.info("✅ LoRA адаптеры загружены через load_lora_weights (fallback)")
-                except Exception as e2:
-                    logger.warning(f"⚠️ load_lora_weights с adapter_name не сработал: {e2}")
-                    # Final fallback: простая загрузка
-                    self.pipe.load_lora_weights(lora_path)
-                    logger.info("✅ LoRA адаптеры загружены через load_lora_weights (final fallback)")
+            if os.path.exists(lora_file_path):
+                file_size = os.path.getsize(lora_file_path)
+                if file_size > 1000:  # Минимальный размер для реального safetensors файла
+                    with open(lora_file_path, 'rb') as f:
+                        header = f.read(20)
+                        if not header.startswith(b'version https://git-lfs.github.com/spec/v1'):
+                            lora_file_valid = True
+                            lora_file_exists = True
+                            logger.info(f"✅ LoRA файл найден и валиден: {lora_file_path} ({file_size:,} байт)")
+                        else:
+                            logger.warning(f"⚠️ LoRA файл является Git LFS указателем: {lora_file_path}")
+                else:
+                    logger.warning(f"⚠️ LoRA файл слишком мал: {lora_file_path} ({file_size} байт)")
+            else:
+                logger.warning(f"⚠️ LoRA файл не найден: {lora_file_path}")
         except Exception as e:
-            logger.error(f"❌ Критическая ошибка загрузки LoRA: {e}")
-            raise e
+            logger.warning(f"⚠️ Ошибка проверки LoRA файла: {e}")
+        
+        if not lora_file_valid:
+            logger.warning("⚠️ LoRA файлы недоступны. Модель будет работать без LoRA адаптеров.")
+            logger.info("💡 Для полной функциональности необходимо загрузить реальные LoRA файлы через Git LFS")
+        else:
+            try:
+                loaded = False
+                # Попытка 1: set_adapters + fuse_lora (если доступно)
+                try:
+                    if hasattr(self.pipe, "set_adapters"):
+                        self.pipe.set_adapters(["rubber-tile-lora-v4"], adapter_weights=[0.75])
+                        if hasattr(self.pipe, "fuse_lora"):
+                            self.pipe.fuse_lora()
+                        loaded = True
+                        logger.info("✅ LoRA подключена через set_adapters (+fuse_lora при наличии)")
+                except Exception as e1:
+                    logger.warning(f"⚠️ set_adapters недоступен или не сработал: {e1}")
+                
+                # Попытка 2: load_lora_weights из директории с указанием файла safetensors
+                if not loaded:
+                    try:
+                        if hasattr(self.pipe, "load_lora_weights"):
+                            self.pipe.load_lora_weights(lora_dir, weight_name=lora_weight_name)
+                            # При наличии, выполняем fuse_lora для ускорения
+                            if hasattr(self.pipe, "fuse_lora"):
+                                self.pipe.fuse_lora()
+                            loaded = True
+                            logger.info("✅ LoRA загружена через load_lora_weights(dir, weight_name=.safetensors)")
+                    except Exception as e2:
+                        logger.warning(f"⚠️ load_lora_weights(dir, weight_name) не сработал: {e2}")
+                
+                # Попытка 3: прямой путь к весам через load_lora_weights (на старых версиях иногда работает)
+                if not loaded:
+                    try:
+                        self.pipe.load_lora_weights(f"{lora_dir}/{lora_weight_name}")
+                        if hasattr(self.pipe, "fuse_lora"):
+                            self.pipe.fuse_lora()
+                        loaded = True
+                        logger.info("✅ LoRA загружена через load_lora_weights(file)")
+                    except Exception as e3:
+                        logger.warning(f"⚠️ load_lora_weights(file) не сработал: {e3}")
+                
+                if not loaded:
+                    logger.warning("⚠️ Не удалось загрузить LoRA адаптеры, но модель будет работать без них")
+                else:
+                    logger.info("✅ LoRA адаптеры успешно загружены")
+                    
+            except Exception as e:
+                logger.warning(f"⚠️ Ошибка загрузки LoRA: {e}. Модель будет работать без LoRA адаптеров.")
         
         # 5. ДЕТАЛЬНАЯ ДИАГНОСТИКА РАЗМЕРОВ SDXL
         logger.info("🔍 ДЕТАЛЬНАЯ ДИАГНОСТИКА РАЗМЕРОВ SDXL...")
@@ -543,147 +785,172 @@ class Predictor(BasePredictor):
         # 6. Загрузка НАШИХ обученных Textual Inversion (ИСПРАВЛЕНИЕ ПЕРЕПУТАННЫХ РАЗМЕРОВ)
         logger.info("🔤 Загрузка НАШИХ Textual Inversion (ИСПРАВЛЕНИЕ ПЕРЕПУТАННЫХ РАЗМЕРОВ)...")
         ti_path = "/src/model_files/rubber-tile-lora-v4_sdxl_embeddings.safetensors"
+        
+        # Проверяем, что Textual Inversion файл существует и не является Git LFS указателем
+        ti_file_valid = False
         try:
-            # Ручная загрузка dual-encoder Textual Inversion для SDXL
-            try:
-                from safetensors.torch import load_file
-                state_dict = load_file(ti_path)
-                logger.info("✅ Файл загружен через safetensors.load_file")
-            except ImportError:
-                logger.warning("⚠️ safetensors не найден, используем torch.load")
-                try:
-                    state_dict = torch.load(ti_path, map_location="cpu")
-                    logger.info("✅ Файл загружен через torch.load")
-                except Exception as e:
-                    logger.error(f"❌ Ошибка загрузки torch.load: {e}")
-                    raise e
-            except Exception as e:
-                logger.error(f"❌ Ошибка загрузки safetensors: {e}")
-                raise e
-            
-            # Проверяем структуру загруженного файла
-            if not isinstance(state_dict, dict):
-                logger.error("❌ Загруженный файл не является словарем")
-                raise ValueError("Invalid file format")
-            
-            logger.info(f"📊 Структура state_dict: {list(state_dict.keys())}")
-            
-            # ДЕТАЛЬНЫЙ АНАЛИЗ РАЗМЕРОВ ЭМБЕДДИНГОВ
-            logger.info("🔍 ДЕТАЛЬНЫЙ АНАЛИЗ РАЗМЕРОВ ЭМБЕДДИНГОВ:")
-            
-            if 'clip_g' in state_dict:
-                embeddings_0 = state_dict['clip_g']
-                logger.info(f"📊 clip_g (embeddings_0) размер: {embeddings_0.shape}")
-                logger.info(f"🔍 clip_g размерность 0: {embeddings_0.shape[0]}")
-                logger.info(f"🔍 clip_g размерность 1: {embeddings_0.shape[1]}")
-                
-                # Проверяем совместимость с text_encoder_2 (ИСПРАВЛЕНИЕ!)
-                emb_2_hidden_size = self.pipe.text_encoder_2.config.hidden_size
-                logger.info(f"🔍 text_encoder_2.config.hidden_size: {emb_2_hidden_size}")
-                logger.info(f"🔍 Совместимость clip_g с text_encoder_2: {embeddings_0.shape[1]} == {emb_2_hidden_size}")
-                
-            if 'clip_l' in state_dict:
-                embeddings_1 = state_dict['clip_l']
-                logger.info(f"📊 clip_l (embeddings_1) размер: {embeddings_1.shape}")
-                logger.info(f"🔍 clip_l размерность 0: {embeddings_1.shape[0]}")
-                logger.info(f"🔍 clip_l размерность 1: {embeddings_1.shape[1]}")
-                
-                # Проверяем совместимость с text_encoder (ИСПРАВЛЕНИЕ!)
-                emb_1_hidden_size = self.pipe.text_encoder.config.hidden_size
-                logger.info(f"🔍 text_encoder.config.hidden_size: {emb_1_hidden_size}")
-                logger.info(f"🔍 Совместимость clip_l с text_encoder: {embeddings_1.shape[1]} == {emb_1_hidden_size}")
-            
-            # Добавление новых токенов в токенизаторы
-            logger.info("🔤 Добавление новых токенов в токенизаторы...")
-            self.pipe.tokenizer.add_tokens(["<s0>", "<s1>"])
-            self.pipe.tokenizer_2.add_tokens(["<s0>", "<s1>"])
-            
-            # Получение ID токенов и проверка границ
-            token_ids_one = self.pipe.tokenizer.convert_tokens_to_ids(["<s0>", "<s1>"])
-            token_ids_two = self.pipe.tokenizer_2.convert_tokens_to_ids(["<s0>", "<s1>"])
-            
-            logger.info(f"🔤 ID токенов для tokenizer: {token_ids_one}")
-            logger.info(f"🔤 ID токенов для tokenizer_2: {token_ids_two}")
-            
-            # Проверка размеров embedding слоев ПОСЛЕ добавления токенов
-            logger.info("📊 АНАЛИЗ РАЗМЕРОВ ПОСЛЕ ДОБАВЛЕНИЯ ТОКЕНОВ:")
-            
-            emb_one_size = self.pipe.text_encoder.get_input_embeddings().weight.shape[0]
-            emb_two_size = self.pipe.text_encoder_2.get_input_embeddings().weight.shape[0]
-            
-            logger.info(f"📊 Размер embedding слоя text_encoder: {emb_one_size}")
-            logger.info(f"📊 Размер embedding слоя text_encoder_2: {emb_two_size}")
-            
-            # Проверка необходимости изменения размера
-            max_id_one = max(token_ids_one)
-            max_id_two = max(token_ids_two)
-            
-            if max_id_one >= emb_one_size:
-                logger.info(f"🔧 Изменение размера embedding слоя text_encoder с {emb_one_size} на {max_id_one + 1}")
-                self.pipe.text_encoder.resize_token_embeddings(len(self.pipe.tokenizer))
-                emb_one_size = self.pipe.text_encoder.get_input_embeddings().weight.shape[0]
-                logger.info(f"✅ Новый размер embedding слоя text_encoder: {emb_one_size}")
-            
-            if max_id_two >= emb_two_size:
-                logger.info(f"🔧 Изменение размера embedding слоя text_encoder_2 с {emb_two_size} на {max_id_two + 1}")
-                self.pipe.text_encoder_2.resize_token_embeddings(len(self.pipe.tokenizer_2))
-                emb_two_size = self.pipe.text_encoder_2.get_input_embeddings().weight.shape[0]
-                logger.info(f"✅ Новый размер embedding слоя text_encoder_2: {emb_two_size}")
-            
-            # ПОПЫТКА ЗАГРУЗКИ С ПРОВЕРКОЙ СОВМЕСТИМОСТИ (ИСПРАВЛЕНИЕ!)
-            logger.info("🔧 ПОПЫТКА ЗАГРУЗКИ ЭМБЕДДИНГОВ С ПРОВЕРКОЙ СОВМЕСТИМОСТИ (ИСПРАВЛЕНИЕ!):")
-            
-            # ИСПРАВЛЕНИЕ: Загружаем clip_g (1280) в text_encoder_2 (1280)
-            if 'clip_g' in state_dict:
-                embeddings_0 = state_dict['clip_g']
-                logger.info(f"📊 Размер embeddings_0 (clip_g): {embeddings_0.shape}")
-                
-                # Проверка совместимости размеров с text_encoder_2
-                emb_2_hidden_size = self.pipe.text_encoder_2.config.hidden_size
-                if embeddings_0.shape[1] == emb_2_hidden_size:
-                    logger.info(f"✅ clip_g совместим с text_encoder_2: {embeddings_0.shape[1]} == {emb_2_hidden_size}")
-                    if embeddings_0.shape[0] >= 2 and token_ids_two[0] < emb_two_size and token_ids_two[1] < emb_two_size:
-                        self.pipe.text_encoder_2.get_input_embeddings().weight.data[token_ids_two[0]] = embeddings_0[0]
-                        self.pipe.text_encoder_2.get_input_embeddings().weight.data[token_ids_two[1]] = embeddings_0[1]
-                        logger.info("✅ Эмбеддинги clip_g загружены в text_encoder_2 (ИСПРАВЛЕНИЕ!)")
-                    else:
-                        logger.error(f"❌ Несовместимость размеров: embeddings_0={embeddings_0.shape}, token_ids={token_ids_two}, emb_size={emb_two_size}")
-                        raise ValueError("Embedding size mismatch")
+            if os.path.exists(ti_path):
+                file_size = os.path.getsize(ti_path)
+                if file_size > 100:  # Минимальный размер для реального safetensors файла
+                    with open(ti_path, 'rb') as f:
+                        header = f.read(20)
+                        if not header.startswith(b'version https://git-lfs.github.com/spec/v1'):
+                            ti_file_valid = True
+                            logger.info(f"✅ Textual Inversion файл найден и валиден: {ti_path} ({file_size:,} байт)")
+                        else:
+                            logger.warning(f"⚠️ Textual Inversion файл является Git LFS указателем: {ti_path}")
                 else:
-                    logger.warning(f"⚠️ clip_g НЕ совместим с text_encoder_2: {embeddings_0.shape[1]} != {emb_2_hidden_size}")
-                    logger.warning(f"⚠️ Пропускаем загрузку clip_g в text_encoder_2")
+                    logger.warning(f"⚠️ Textual Inversion файл слишком мал: {ti_path} ({file_size} байт)")
             else:
-                logger.warning("⚠️ Ключ 'clip_g' не найден в state_dict")
-            
-            # ИСПРАВЛЕНИЕ: Загружаем clip_l (768) в text_encoder (768)
-            if 'clip_l' in state_dict:
-                embeddings_1 = state_dict['clip_l']
-                logger.info(f"📊 Размер embeddings_1 (clip_l): {embeddings_1.shape}")
-                
-                # Проверка совместимости размеров с text_encoder
-                emb_1_hidden_size = self.pipe.text_encoder.config.hidden_size
-                if embeddings_1.shape[1] == emb_1_hidden_size:
-                    logger.info(f"✅ clip_l совместим с text_encoder: {embeddings_1.shape[1]} == {emb_1_hidden_size}")
-                    if embeddings_1.shape[0] >= 2 and token_ids_one[0] < emb_one_size and token_ids_one[1] < emb_one_size:
-                        self.pipe.text_encoder.get_input_embeddings().weight.data[token_ids_one[0]] = embeddings_1[0]
-                        self.pipe.text_encoder.get_input_embeddings().weight.data[token_ids_one[1]] = embeddings_1[1]
-                        logger.info("✅ Эмбеддинги clip_l загружены в text_encoder (ИСПРАВЛЕНИЕ!)")
-                    else:
-                        logger.error(f"❌ Несовместимость размеров: embeddings_1={embeddings_1.shape}, token_ids={token_ids_one}, emb_size={emb_one_size}")
-                        raise ValueError("Embedding size mismatch")
-                else:
-                    logger.warning(f"⚠️ clip_l НЕ совместим с text_encoder: {embeddings_1.shape[1]} != {emb_1_hidden_size}")
-                    logger.warning(f"⚠️ Пропускаем загрузку clip_l в text_encoder")
-            else:
-                logger.warning("⚠️ Ключ 'clip_l' не найден в state_dict")
-            
-            logger.info("✅ Textual Inversion загрузка завершена (ИСПРАВЛЕНИЕ ПЕРЕПУТАННЫХ РАЗМЕРОВ)")
-            
+                logger.warning(f"⚠️ Textual Inversion файл не найден: {ti_path}")
         except Exception as e:
-            logger.error(f"❌ Критическая ошибка загрузки Textual Inversion: {e}")
-            logger.error(f"📊 Детали ошибки: {type(e).__name__}: {str(e)}")
-            logger.error("🔄 Продолжение без Textual Inversion (качество может быть снижено)")
-            # Продолжаем без Textual Inversion, если загрузка не удалась
+            logger.warning(f"⚠️ Ошибка проверки Textual Inversion файла: {e}")
+        
+        if not ti_file_valid:
+            logger.warning("⚠️ Textual Inversion файлы недоступны. Модель будет работать без Textual Inversion.")
+            logger.info("💡 Для полной функциональности необходимо загрузить реальные Textual Inversion файлы через Git LFS")
+        else:
+            try:
+                # Ручная загрузка dual-encoder Textual Inversion для SDXL
+                try:
+                    from safetensors.torch import load_file
+                    state_dict = load_file(ti_path)
+                    logger.info("✅ Файл загружен через safetensors.load_file")
+                except ImportError:
+                    logger.warning("⚠️ safetensors не найден, используем torch.load")
+                    try:
+                        state_dict = torch.load(ti_path, map_location="cpu")
+                        logger.info("✅ Файл загружен через torch.load")
+                    except Exception as e:
+                        logger.error(f"❌ Ошибка загрузки torch.load: {e}")
+                        raise e
+                except Exception as e:
+                    logger.error(f"❌ Ошибка загрузки safetensors: {e}")
+                    raise e
+                
+                # Проверяем структуру загруженного файла
+                if not isinstance(state_dict, dict):
+                    logger.error("❌ Загруженный файл не является словарем")
+                    raise ValueError("Invalid file format")
+                
+                logger.info(f"📊 Структура state_dict: {list(state_dict.keys())}")
+                
+                # ДЕТАЛЬНЫЙ АНАЛИЗ РАЗМЕРОВ ЭМБЕДДИНГОВ
+                logger.info("🔍 ДЕТАЛЬНЫЙ АНАЛИЗ РАЗМЕРОВ ЭМБЕДДИНГОВ:")
+                
+                if 'clip_g' in state_dict:
+                    embeddings_0 = state_dict['clip_g']
+                    logger.info(f"📊 clip_g (embeddings_0) размер: {embeddings_0.shape}")
+                    logger.info(f"🔍 clip_g размерность 0: {embeddings_0.shape[0]}")
+                    logger.info(f"🔍 clip_g размерность 1: {embeddings_0.shape[1]}")
+                    
+                    # Проверяем совместимость с text_encoder_2 (ИСПРАВЛЕНИЕ!)
+                    emb_2_hidden_size = self.pipe.text_encoder_2.config.hidden_size
+                    logger.info(f"🔍 text_encoder_2.config.hidden_size: {emb_2_hidden_size}")
+                    logger.info(f"🔍 Совместимость clip_g с text_encoder_2: {embeddings_0.shape[1]} == {emb_2_hidden_size}")
+                    
+                if 'clip_l' in state_dict:
+                    embeddings_1 = state_dict['clip_l']
+                    logger.info(f"📊 clip_l (embeddings_1) размер: {embeddings_1.shape}")
+                    logger.info(f"🔍 clip_l размерность 0: {embeddings_1.shape[0]}")
+                    logger.info(f"🔍 clip_l размерность 1: {embeddings_1.shape[1]}")
+                    
+                    # Проверяем совместимость с text_encoder (ИСПРАВЛЕНИЕ!)
+                    emb_1_hidden_size = self.pipe.text_encoder.config.hidden_size
+                    logger.info(f"🔍 text_encoder.config.hidden_size: {emb_1_hidden_size}")
+                    logger.info(f"🔍 Совместимость clip_l с text_encoder: {embeddings_1.shape[1]} == {emb_1_hidden_size}")
+                
+                # Добавление новых токенов в токенизаторы
+                logger.info("🔤 Добавление новых токенов в токенизаторы...")
+                self.pipe.tokenizer.add_tokens(["<s0>", "<s1>"])
+                self.pipe.tokenizer_2.add_tokens(["<s0>", "<s1>"])
+                
+                # Получение ID токенов и проверка границ
+                token_ids_one = self.pipe.tokenizer.convert_tokens_to_ids(["<s0>", "<s1>"])
+                token_ids_two = self.pipe.tokenizer_2.convert_tokens_to_ids(["<s0>", "<s1>"])
+                
+                logger.info(f"🔤 ID токенов для tokenizer: {token_ids_one}")
+                logger.info(f"🔤 ID токенов для tokenizer_2: {token_ids_two}")
+                
+                # Проверка размеров embedding слоев ПОСЛЕ добавления токенов
+                logger.info("📊 АНАЛИЗ РАЗМЕРОВ ПОСЛЕ ДОБАВЛЕНИЯ ТОКЕНОВ:")
+                
+                emb_one_size = self.pipe.text_encoder.get_input_embeddings().weight.shape[0]
+                emb_two_size = self.pipe.text_encoder_2.get_input_embeddings().weight.shape[0]
+                
+                logger.info(f"📊 Размер embedding слоя text_encoder: {emb_one_size}")
+                logger.info(f"📊 Размер embedding слоя text_encoder_2: {emb_two_size}")
+                
+                # Проверка необходимости изменения размера
+                max_id_one = max(token_ids_one)
+                max_id_two = max(token_ids_two)
+                
+                if max_id_one >= emb_one_size:
+                    logger.info(f"🔧 Изменение размера embedding слоя text_encoder с {emb_one_size} на {max_id_one + 1}")
+                    self.pipe.text_encoder.resize_token_embeddings(len(self.pipe.tokenizer))
+                    emb_one_size = self.pipe.text_encoder.get_input_embeddings().weight.shape[0]
+                    logger.info(f"✅ Новый размер embedding слоя text_encoder: {emb_one_size}")
+                
+                if max_id_two >= emb_two_size:
+                    logger.info(f"🔧 Изменение размера embedding слоя text_encoder_2 с {emb_two_size} на {max_id_two + 1}")
+                    self.pipe.text_encoder_2.resize_token_embeddings(len(self.pipe.tokenizer_2))
+                    emb_two_size = self.pipe.text_encoder_2.get_input_embeddings().weight.shape[0]
+                    logger.info(f"✅ Новый размер embedding слоя text_encoder_2: {emb_two_size}")
+                
+                # ПОПЫТКА ЗАГРУЗКИ С ПРОВЕРКОЙ СОВМЕСТИМОСТИ (ИСПРАВЛЕНИЕ!)
+                logger.info("🔧 ПОПЫТКА ЗАГРУЗКИ ЭМБЕДДИНГОВ С ПРОВЕРКОЙ СОВМЕСТИМОСТИ (ИСПРАВЛЕНИЕ!):")
+                
+                # ИСПРАВЛЕНИЕ: Загружаем clip_g (1280) в text_encoder_2 (1280)
+                if 'clip_g' in state_dict:
+                    embeddings_0 = state_dict['clip_g']
+                    logger.info(f"📊 Размер embeddings_0 (clip_g): {embeddings_0.shape}")
+                    
+                    # Проверка совместимости размеров с text_encoder_2
+                    emb_2_hidden_size = self.pipe.text_encoder_2.config.hidden_size
+                    if embeddings_0.shape[1] == emb_2_hidden_size:
+                        logger.info(f"✅ clip_g совместим с text_encoder_2: {embeddings_0.shape[1]} == {emb_2_hidden_size}")
+                        if embeddings_0.shape[0] >= 2 and token_ids_two[0] < emb_two_size and token_ids_two[1] < emb_two_size:
+                            self.pipe.text_encoder_2.get_input_embeddings().weight.data[token_ids_two[0]] = embeddings_0[0]
+                            self.pipe.text_encoder_2.get_input_embeddings().weight.data[token_ids_two[1]] = embeddings_0[1]
+                            logger.info("✅ Эмбеддинги clip_g загружены в text_encoder_2 (ИСПРАВЛЕНИЕ!)")
+                        else:
+                            logger.error(f"❌ Несовместимость размеров: embeddings_0={embeddings_0.shape}, token_ids={token_ids_two}, emb_size={emb_two_size}")
+                            raise ValueError("Embedding size mismatch")
+                    else:
+                        logger.warning(f"⚠️ clip_g НЕ совместим с text_encoder_2: {embeddings_0.shape[1]} != {emb_2_hidden_size}")
+                        logger.warning(f"⚠️ Пропускаем загрузку clip_g в text_encoder_2")
+                else:
+                    logger.warning("⚠️ Ключ 'clip_g' не найден в state_dict")
+                
+                # ИСПРАВЛЕНИЕ: Загружаем clip_l (768) в text_encoder (768)
+                if 'clip_l' in state_dict:
+                    embeddings_1 = state_dict['clip_l']
+                    logger.info(f"📊 Размер embeddings_1 (clip_l): {embeddings_1.shape}")
+                    
+                    # Проверка совместимости размеров с text_encoder
+                    emb_1_hidden_size = self.pipe.text_encoder.config.hidden_size
+                    if embeddings_1.shape[1] == emb_1_hidden_size:
+                        logger.info(f"✅ clip_l совместим с text_encoder: {embeddings_1.shape[1]} == {emb_1_hidden_size}")
+                        if embeddings_1.shape[0] >= 2 and token_ids_one[0] < emb_one_size and token_ids_one[1] < emb_one_size:
+                            self.pipe.text_encoder.get_input_embeddings().weight.data[token_ids_one[0]] = embeddings_1[0]
+                            self.pipe.text_encoder.get_input_embeddings().weight.data[token_ids_one[1]] = embeddings_1[1]
+                            logger.info("✅ Эмбеддинги clip_l загружены в text_encoder (ИСПРАВЛЕНИЕ!)")
+                        else:
+                            logger.error(f"❌ Несовместимость размеров: embeddings_1={embeddings_1.shape}, token_ids={token_ids_one}, emb_size={emb_one_size}")
+                            raise ValueError("Embedding size mismatch")
+                    else:
+                        logger.warning(f"⚠️ clip_l НЕ совместим с text_encoder: {embeddings_1.shape[1]} != {emb_1_hidden_size}")
+                        logger.warning(f"⚠️ Пропускаем загрузку clip_l в text_encoder")
+                else:
+                    logger.warning("⚠️ Ключ 'clip_l' не найден в state_dict")
+            
+                logger.info("✅ Textual Inversion загрузка завершена (ИСПРАВЛЕНИЕ ПЕРЕПУТАННЫХ РАЗМЕРОВ)")
+                
+            except Exception as e:
+                logger.error(f"❌ Критическая ошибка загрузки Textual Inversion: {e}")
+                logger.error(f"📊 Детали ошибки: {type(e).__name__}: {str(e)}")
+                logger.error("🔄 Продолжение без Textual Inversion (качество может быть снижено)")
+                # Продолжаем без Textual Inversion, если загрузка не удалась
         
         # 7. Настройка планировщика
         logger.info("⚙️ Настройка планировщика...")
@@ -713,6 +980,22 @@ class Predictor(BasePredictor):
         
         logger.info(f"🎉 Модель {MODEL_VERSION} успешно инициализирована!")
     
+    def _rgba_gray_hint(self, img: Image.Image) -> Image.Image:
+        """Конвертирует изображение в градации серого для ControlNet с учётом альфа-канала.
+        Прозрачные области становятся нулевым сигналом (0), непрозрачные сохраняют яркость.
+        """
+        try:
+            if img.mode == 'RGBA':
+                gray = img.convert('L')
+                alpha = img.split()[3]
+                hint = ImageChops.multiply(gray, alpha)
+            else:
+                hint = img.convert('L')
+            return hint.filter(ImageFilter.EDGE_ENHANCE)
+        except Exception:
+            # Fallback: обычная конвертация
+            return img.convert('L').filter(ImageFilter.EDGE_ENHANCE)
+
     def _build_prompt(self, colors: List[Dict[str, Any]], angle: int) -> str:
         """Построение полного промпта с использованием НАШИХ обученных токенов (как в v45)."""
         # Базовый промпт с НАШИМИ токенами активации (как в v45)
@@ -896,16 +1179,19 @@ class Predictor(BasePredictor):
             # Создаем усиленные токены цветов
             strengthened_prompt = prompt
             
-            for color_data in colors:
-                color_name = color_data["name"].lower()
-                proportion = color_data["proportion"]
+            for color_name in colors:
+                color_name = color_name.lower()
+                # Для простоты используем пропорцию 1.0 для всех цветов
+                proportion = 1.0
                 
                 # Создаем усиленные токены для каждого цвета
                 if color_name in ["red", "blue", "green", "yellow", "white", "black", "brown", "gray", "grey"]:
                     # Основные цвета - добавляем повторения и усиления
                     color_tokens = f"{color_name} {color_name} {color_name}"
-                    strengthened_prompt = strengthened_prompt.replace(f"{proportion*100:.0f}% {color_name}", 
-                                                                    f"{color_tokens} {proportion*100:.0f}% {color_name}")
+                    # Ищем паттерн с процентами и заменяем его
+                    import re
+                    pattern = r'(\d+%)?\s*' + re.escape(color_name)
+                    strengthened_prompt = re.sub(pattern, f"{color_tokens} \\1", strengthened_prompt)
                 
                 elif color_name in ["dkgreen", "ltgreen", "grngrn", "whtgrn"]:
                     # Специальные цвета - добавляем описания
@@ -918,8 +1204,9 @@ class Predictor(BasePredictor):
                     elif color_name == "whtgrn":
                         color_tokens = "white green white green"
                     
-                    strengthened_prompt = strengthened_prompt.replace(f"{proportion*100:.0f}% {color_name}", 
-                                                                    f"{color_tokens} {proportion*100:.0f}% {color_name}")
+                    # Ищем паттерн с процентами и заменяем его
+                    pattern = r'(\d+%)?\s*' + re.escape(color_name)
+                    strengthened_prompt = re.sub(pattern, f"{color_tokens} \\1", strengthened_prompt)
                 
                 elif color_name in ["pearl", "salmon", "orange", "pink", "violet", "turqse"]:
                     # Декоративные цвета - добавляем описания
@@ -936,8 +1223,9 @@ class Predictor(BasePredictor):
                     elif color_name == "turqse":
                         color_tokens = "turquoise blue turquoise blue"
                     
-                    strengthened_prompt = strengthened_prompt.replace(f"{proportion*100:.0f}% {color_name}", 
-                                                                    f"{color_tokens} {proportion*100:.0f}% {color_name}")
+                    # Ищем паттерн с процентами и заменяем его
+                    pattern = r'(\d+%)?\s*' + re.escape(color_name)
+                    strengthened_prompt = re.sub(pattern, f"{color_tokens} \\1", strengthened_prompt)
             
             logger.info(f"🔧 Усилены токены цветов в промпте")
             return strengthened_prompt
@@ -973,16 +1261,23 @@ class Predictor(BasePredictor):
             self.color_grid_stats["patterns_used"][pattern_type] += 1
             self.color_grid_stats["granule_sizes_used"][granule_size] += 1
             
-            # Создаем оптимизированный colormap
-            colormap = self.color_grid_adapter.create_optimized_colormap(
-                colors, size, pattern_type, granule_size
-            )
+            # Создаем оптимизированный colormap и готовый L-хинт (один проход)
+            try:
+                colormap, hint_l = self.color_grid_adapter.create_optimized_colormap_and_hint(
+                    colors, size, pattern_type, granule_size
+                )
+            except Exception:
+                # Совместимость со старыми реализациями
+                colormap = self.color_grid_adapter.create_optimized_colormap(
+                    colors, size, pattern_type, granule_size
+                )
+                hint_l = None
             
             logger.info(f"✅ Оптимизированный colormap создан: {colormap.size}")
             logger.info(f"📊 Статистика паттернов: {self.color_grid_stats['patterns_used']}")
             logger.info(f"📊 Статистика размеров гранул: {self.color_grid_stats['granule_sizes_used']}")
             
-            return colormap
+            return colormap if hint_l is None else (colormap, hint_l)
             
         except Exception as e:
             logger.error(f"❌ Ошибка создания оптимизированного colormap: {e}")
@@ -1061,7 +1356,8 @@ class Predictor(BasePredictor):
             
             if len(colormap_array.shape) == 3:
                 # RGB изображение
-                gray_pixels = np.all(colormap_array == [127, 127, 127], axis=2)
+                gray_color = np.array([127, 127, 127])
+                gray_pixels = np.all(colormap_array == gray_color, axis=2)
                 if np.all(gray_pixels):
                     logger.warning("⚠️ Colormap полностью серый - ошибка распознавания цветов")
                     return False
@@ -1122,6 +1418,7 @@ class Predictor(BasePredictor):
                 opaque_rgb = rgb_array[opaque_mask]
                 
             elif len(colormap_array.shape) == 3:  # RGB
+                # Для RGB изображения берем все пиксели
                 opaque_rgb = colormap_array.reshape(-1, 3)
             else:
                 logger.warning("⚠️ Неподдерживаемый формат ControlNet карты")
@@ -1332,44 +1629,8 @@ class Predictor(BasePredictor):
                 # cross_attention_kwargs={"scale": float(max(0.0, min(1.0, lora_scale)))}
             )
 
-            # Настройка callback для раннего превью с адаптивными параметрами
-            preview_path = "/tmp/preview.png"
-            preview_emitted = False
-            try_preview_step = max(1, int(adaptive_steps * 0.5))
-
-            def _decode_and_save_preview(current_latents: torch.FloatTensor) -> None:
-                nonlocal preview_emitted
-                if preview_emitted:
-                    return
-                try:
-                    scale = getattr(self.pipe.vae.config, "scaling_factor", 0.18215)
-                    with torch.no_grad():
-                        lat = current_latents.detach().to(self.device)
-                        image = self.pipe.vae.decode(lat / scale).sample
-                        image = (image / 2 + 0.5).clamp(0, 1)
-                        image = image[0].permute(1, 2, 0).cpu().numpy()
-                        image = (image * 255).round().astype("uint8")
-                        Image.fromarray(image).resize((512, 512), Image.Resampling.LANCZOS).save(preview_path)
-                    logger.info(f"🟡 PREVIEW_READY {preview_path}")
-                except Exception as e:
-                    logger.warning(f"⚠️ Не удалось сохранить промежуточный preview: {e}")
-
-            def _callback_on_step(step: int = None, timestep: int = None, **kwargs):
-                nonlocal preview_emitted
-                latents = kwargs.get("latents")
-                if latents is None and len(kwargs) == 0:
-                    # некоторые версии передают latents последним аргументом
-                    pass
-                if not preview_emitted and step is not None and step >= try_preview_step and latents is not None:
-                    _decode_and_save_preview(latents)
-                    try:
-                        # стримим превью немедленно
-                        yield_path = Path(preview_path)
-                        # Cog поддерживает генераторный вывод через yield
-                        # Внутри Cog: просто используем print маркер, GUI подтянет файл по окончании
-                    except Exception:
-                        pass
-                    preview_emitted = True
+            # ИСПРАВЛЕНИЕ: Убран неиспользуемый callback, который вызывал дублирование генерации
+            # Превью создается из финального изображения после генерации
 
             # МУЛЬТИМОДАЛЬНЫЙ CONTROLNET: Адаптивный выбор на основе сложности
             auto_controlnet = False
@@ -1413,8 +1674,8 @@ class Predictor(BasePredictor):
                     try:
                         if control_image is not None:
                             # Если пользователь предоставил контрольное изображение
-                            user_hint = Image.open(control_image).convert('L').resize((1024, 1024), Image.Resampling.LANCZOS)
-                            user_hint = user_hint.filter(ImageFilter.EDGE_ENHANCE)
+                            user_hint = Image.open(control_image)
+                            user_hint = self._rgba_gray_hint(user_hint).resize((1024, 1024), Image.Resampling.LANCZOS)
                             logger.info("✅ ControlNet использует пользовательское контрольное изображение")
                             
                             # Создаем дополнительные контрольные карты для мультимодальности
@@ -1422,8 +1683,11 @@ class Predictor(BasePredictor):
                             if selected_controlnets and len(selected_controlnets) > 1:
                                 # Добавляем автоматически созданные карты для дополнительных ControlNet
                                 for i in range(1, len(selected_controlnets)):
-                                    additional_hint = self._create_optimized_colormap(prompt, size=(1024, 1024), pattern_type=colormap, granule_size=granule_size)
-                                    additional_hint = additional_hint.convert('L').filter(ImageFilter.EDGE_ENHANCE)
+                                    add_result = self._create_optimized_colormap(prompt, size=(1024, 1024), pattern_type=colormap, granule_size=granule_size)
+                                    if isinstance(add_result, tuple):
+                                        additional_hint = add_result[1]
+                                    else:
+                                        additional_hint = self._rgba_gray_hint(add_result)
                                     control_images.append(additional_hint)
                         else:
                             # Автоматически создаем множественные контрольные карты для мультимодального ControlNet
@@ -1431,7 +1695,11 @@ class Predictor(BasePredictor):
                             control_images = []
                             
                             # Основная цветовая карта
-                            color_control_image = self._create_optimized_colormap(prompt, size=(1024, 1024), pattern_type=colormap, granule_size=granule_size)
+                            result_colormap = self._create_optimized_colormap(prompt, size=(1024, 1024), pattern_type=colormap, granule_size=granule_size)
+                            if isinstance(result_colormap, tuple):
+                                color_control_image, prepared_hint = result_colormap
+                            else:
+                                color_control_image, prepared_hint = result_colormap, None
                             
                             # Валидация colormap против промпта
                             if not self._validate_colormap_against_prompt(color_control_image, prompt):
@@ -1449,16 +1717,19 @@ class Predictor(BasePredictor):
                                     # Прерываем генерацию с ошибкой
                                     raise ControlNetValidationError("ControlNet карта не прошла валидацию после пересоздания")
                             
-                            # Преобразуем в grayscale для ControlNet
-                            main_hint = color_control_image.convert('L')
-                            main_hint = main_hint.filter(ImageFilter.EDGE_ENHANCE)
+                            # Используем готовый L-хинт, если он создан, иначе преобразуем
+                            main_hint = prepared_hint if prepared_hint is not None else self._rgba_gray_hint(color_control_image)
                             control_images.append(main_hint)
                             
                             # Создаем дополнительные контрольные карты для мультимодальности
                             if selected_controlnets and len(selected_controlnets) > 1:
                                 for i in range(1, len(selected_controlnets)):
                                     additional_hint = self._create_optimized_colormap(prompt, size=(1024, 1024), pattern_type=colormap, granule_size=granule_size)
-                                    additional_hint = additional_hint.convert('L').filter(ImageFilter.EDGE_ENHANCE)
+                                    # Если генератор вернул пару (rgba, l), используем l, иначе преобразуем
+                                    if isinstance(additional_hint, tuple):
+                                        additional_hint = additional_hint[1]
+                                    else:
+                                        additional_hint = self._rgba_gray_hint(additional_hint)
                                     control_images.append(additional_hint)
                         
                         # Применяем мультимодальный ControlNet
@@ -1499,7 +1770,11 @@ class Predictor(BasePredictor):
             final_image = result.images[0]
             logger.info(f"📊 Размер сгенерированного изображения: {final_image.size}")
             
-            # Превью уже построены из середины финального прохода (если удалось)
+            # ИСПРАВЛЕНИЕ: Создаем превью из финального изображения
+            preview_path = "/tmp/preview.png"
+            preview_image = final_image.resize((512, 512), Image.Resampling.LANCZOS)
+            preview_image.save(preview_path)
+            logger.info(f"🟡 PREVIEW_READY {preview_path}")
             
             # Сохранение файлов
             final_path = "/tmp/final.png"
@@ -1511,7 +1786,11 @@ class Predictor(BasePredictor):
             colormap_path = "/tmp/colormap.png"
             try:
                 # Используем наш оптимизированный Color Grid Adapter
-                colormap_image = self._create_optimized_colormap(prompt, size=(1024, 1024), pattern_type=colormap, granule_size=granule_size)
+                result_colormap = self._create_optimized_colormap(prompt, size=(1024, 1024), pattern_type=colormap, granule_size=granule_size)
+                if isinstance(result_colormap, tuple):
+                    colormap_image, _prepared_hint = result_colormap
+                else:
+                    colormap_image = result_colormap
                 
                 # Валидация colormap против промпта
                 if not self._validate_colormap_against_prompt(colormap_image, prompt):
@@ -1584,7 +1863,8 @@ class Predictor(BasePredictor):
             logger.info(f"   - Популярный паттерн: {stats['most_used_pattern']}")
             logger.info(f"   - Популярный размер гранул: {stats['most_used_granule_size']}")
             
-            # Возвращаем файлы в правильном порядке: final, colormap, legend
+            # Возвращаем файлы в правильном порядке: preview, final, colormap, legend
+            yield Path(preview_path)
             yield Path(final_path)
             yield Path(colormap_path)
             yield Path(legend_path)

@@ -1,0 +1,321 @@
+{
+  "session_info": {
+    "session_id": "session_v4.5.10_143937bc_20250913_154431",
+    "start_time": "2025-09-13T15:44:31.641843",
+    "version": "v4.5.10",
+    "hash_id": "143937bc"
+  },
+  "statistics": {
+    "total_logs": 84,
+    "warnings": 2,
+    "errors": 3,
+    "version_issues": 0,
+    "preset_errors": 0,
+    "session_start": "2025-09-13T15:44:31.641843",
+    "version": "v4.5.10",
+    "hash_id": "143937bc"
+  },
+  "recent_logs": [
+    {
+      "timestamp": "2025-09-13T15:44:39.383230",
+      "content": "🔄 Папка создана: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_154439",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_154431"
+    },
+    {
+      "timestamp": "2025-09-13T15:44:39.383737",
+      "content": "🔄 _current_run_dir установлен: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_154439",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_154431"
+    },
+    {
+      "timestamp": "2025-09-13T15:44:39.384302",
+      "content": "🔐 Создаем папку с хешем: 143937bc",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_154431"
+    },
+    {
+      "timestamp": "2025-09-13T15:44:39.384782",
+      "content": "📁 Создана папка: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_154439",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_154431"
+    },
+    {
+      "timestamp": "2025-09-13T15:44:39.385261",
+      "content": "🔐 Хеш версии: 143937bc",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_154431"
+    },
+    {
+      "timestamp": "2025-09-13T15:44:39.385847",
+      "content": "🔍 Базовая папка: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_154431"
+    },
+    {
+      "timestamp": "2025-09-13T15:44:39.386449",
+      "content": "🔍 Полный путь: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_154439",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_154431"
+    },
+    {
+      "timestamp": "2025-09-13T15:44:39.387016",
+      "content": "✅ Папка успешно создана и существует",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_154431"
+    },
+    {
+      "timestamp": "2025-09-13T15:46:10.730778",
+      "content": "⚠️ Ошибка обновления статуса: ConnectTimeout: _ssl.c:983: The handshake operation timed out",
+      "type": "error",
+      "session_id": "session_v4.5.10_143937bc_20250913_154431"
+    },
+    {
+      "timestamp": "2025-09-13T15:46:10.731325",
+      "content": "🔄 Продолжаем работу после ошибки...",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_154431"
+    },
+    {
+      "timestamp": "2025-09-13T15:46:41.725049",
+      "content": "INFO:coglet:prediction started: id=qbjzaf9dr5rgc0cs8cdt2hn100\nWARNING unknown input field ignored: description",
+      "type": "warning",
+      "session_id": "session_v4.5.10_143937bc_20250913_154431"
+    },
+    {
+      "timestamp": "2025-09-13T15:46:41.725611",
+      "content": "✅ Startup phase completed. Proceeding to completion...",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_154431"
+    },
+    {
+      "timestamp": "2025-09-13T15:46:48.409663",
+      "content": "INFO:predict:🚀 STARTUP_SNAPSHOT_START\nINFO:predict:🧭 MODEL_START v4.5.07 | device=cuda | diffusers=0.21.4 | torch=2.1.0+cu121\nINFO:predict:📊 GPU: Tesla T4\nINFO:predict:💾 GPU Memory: 14.6 GB\nINFO:predict:🔧 SDXL Base: unknown\nINFO:predict:🎨 LoRA: unknown (rank: 32)\nINFO:predict:🔤 TI: unknown (tokens: <s0><s1>)\nINFO:predict:⚙️ Scheduler: DPMSolverMultistepScheduler\nINFO:predict:🎭 VAE: AutoencoderKL\nINFO:predict:🎯 Prompt: ohwx_rubber_tile <s0><s1> 100% red rubber tile\nINFO:predict:🚫 Negative Prompt: blurry, low quality, distorted\nINFO:predict:🎲 Seed: 12345\nINFO:predict:📊 Steps: 25 (базовый)\nINFO:predict:🎚️ Guidance: 7.5 (базовый)\nINFO:predict:🎨 Colormap: random\nINFO:predict:🔧 Granule Size: medium\nINFO:predict:🎨 Адаптивные параметры будут рассчитаны на основе количества цветов\nINFO:predict:🚀 STARTUP_SNAPSHOT_END\nINFO:predict:🎨 Начало генерации изображения...\nINFO:predict:📝 Входной промпт: ohwx_rubber_tile <s0><s1> 100% red rubber tile\nINFO:predict:🚫 Входной негативный промпт: blurry, low quality, distorted\nINFO:predict:🎲 Входной сид: 12345\nINFO:predict:🔧 Усилены токены цветов в промпте\nINFO:predict:🎨 Генерация изображения...\nINFO:predict:📝 Полный промпт: ohwx_rubber_tile <s0><s1> 100% red rubber tile, photorealistic rubber tile, high quality, detailed texture, professional photography, sharp focus\nINFO:predict:🔧 Усиленный промпт: ohwx_rubber_tile <s0><s1> red red red 100% rubber tile, photorealistic rubber tile, high quality, detailed texture, professional photography, sharp focus\nINFO:predict:🚫 Финальный негативный промпт: blurry, low quality, distorted\nINFO:predict:🎲 Финальный сид: 12345\nINFO:predict:🔧 Устройство: cuda\nINFO:predict:🎨 Анализ сложности промпта для адаптивных параметров...\nINFO:predict:🎨 Обнаружено цветов в промпте: 1\nINFO:predict:🎯 Адаптивные параметры для 1 цвета: steps=20, guidance=7.0\nINFO:predict:🚀 Запуск pipeline для генерации с адаптивными параметрами...\nINFO:predict:🚀 Финальный сегмент: единый проход без callback\n\n  0%|          | 0/25 [00:00<?, ?it/s]\n  4%|▍         | 1/25 [00:03<01:28,  3.68s/it]\n  8%|▊         | 2/25 [00:04<00:47,  2.06s/it]\n 12%|█▏        | 3/25 [00:05<00:34,  1.56s/it]\n 16%|█▌        | 4/25 [00:06<00:27,  1.32s/it]",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_154431"
+    },
+    {
+      "timestamp": "2025-09-13T15:46:53.896926",
+      "content": "20%|██        | 5/25 [00:07<00:23,  1.19s/it]\n 24%|██▍       | 6/25 [00:08<00:21,  1.11s/it]\n 28%|██▊       | 7/25 [00:09<00:19,  1.07s/it]\n 32%|███▏      | 8/25 [00:10<00:17,  1.04s/it]\n 36%|███▌      | 9/25 [00:11<00:16,  1.02s/it]\n 40%|████      | 10/25 [00:12<00:15,  1.01s/it]",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_154431"
+    },
+    {
+      "timestamp": "2025-09-13T15:47:00.280141",
+      "content": "44%|████▍     | 11/25 [00:13<00:14,  1.00s/it]\n 48%|████▊     | 12/25 [00:14<00:12,  1.00it/s]\n 52%|█████▏    | 13/25 [00:15<00:11,  1.00it/s]\n 56%|█████▌    | 14/25 [00:16<00:10,  1.00it/s]\n 60%|██████    | 15/25 [00:17<00:09,  1.00it/s]\n 64%|██████▍   | 16/25 [00:18<00:08,  1.00it/s]",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_154431"
+    },
+    {
+      "timestamp": "2025-09-13T15:47:06.671337",
+      "content": "68%|██████▊   | 17/25 [00:19<00:07,  1.00it/s]\n 72%|███████▏  | 18/25 [00:20<00:07,  1.00s/it]\n 76%|███████▌  | 19/25 [00:21<00:06,  1.01s/it]\n 80%|████████  | 20/25 [00:22<00:05,  1.01s/it]\n 84%|████████▍ | 21/25 [00:23<00:04,  1.02s/it]\n 88%|████████▊ | 22/25 [00:24<00:03,  1.02s/it]",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_154431"
+    },
+    {
+      "timestamp": "2025-09-13T15:47:13.345291",
+      "content": "92%|█████████▏| 23/25 [00:25<00:02,  1.03s/it]\n 96%|█████████▌| 24/25 [00:26<00:01,  1.03s/it]",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_154431"
+    },
+    {
+      "timestamp": "2025-09-13T15:47:44.340315",
+      "content": "100%|██████████| 25/25 [00:27<00:00,  1.04s/it]\n100%|██████████| 25/25 [00:27<00:00,  1.10s/it]\nINFO:predict:✅ Финальная генерация завершена",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_154431"
+    },
+    {
+      "timestamp": "2025-09-13T15:47:49.811545",
+      "content": "INFO:predict:📊 Размер сгенерированного изображения: (1024, 1024)\nINFO:predict:🟡 PREVIEW_READY /tmp/preview.png\nINFO:predict:✅ FINAL_READY /tmp/final.png\nINFO:predict:✅ Найден цвет: 100.0% RED\nINFO:predict:🎨 Итого найдено цветов: 1\nINFO:predict:🎨 Создание colormap: 1 цветов, паттерн: random, гранулы: medium\nINFO:predict:✅ Оптимизированный colormap создан: (1024, 1024)\nINFO:predict:📊 Статистика паттернов: {'random': 1, 'grid': 0, 'radial': 0, 'granular': 0}\nINFO:predict:📊 Статистика размеров гранул: {'small': 0, 'medium': 1, 'large': 0}\nERROR:predict:❌ Ошибка валидации colormap: operands could not be broadcast together with shapes (1024,1024,4) (3,) \nWARNING:predict:⚠️ Colormap не соответствует промпту, пересоздаем...\nINFO:predict:🔧 Принудительная пересборка colormap...\nINFO:predict:✅ Colormap пересобран для цветов: ['red']",
+      "type": "error",
+      "session_id": "session_v4.5.10_143937bc_20250913_154431"
+    },
+    {
+      "timestamp": "2025-09-13T15:47:56.498716",
+      "content": "INFO:predict:🎨 ОПТИМИЗИРОВАННЫЙ COLORMAP_READY /tmp/colormap.png\nINFO:predict:📊 Размер colormap: (1024, 1024)\nINFO:predict:📋 ЛЕГЕНДА_READY /tmp/legend.png\nINFO:predict:🧹 Память очищена\nINFO:predict:📄 JSON_READY /tmp/generation_data.json\nINFO:predict:✅ Изображение успешно сгенерировано!\nINFO:predict:📊 Color Grid Adapter статистика:\nINFO:predict:   - Всего генераций: 1\nINFO:predict:   - ControlNet использован: 0 (0.0%)\nINFO:predict:   - Популярный паттерн: random\nINFO:predict:   - Популярный размер гранул: medium\nINFO:coglet:prediction completed: id=qbjzaf9dr5rgc0cs8cdt2hn100",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_154431"
+    },
+    {
+      "timestamp": "2025-09-13T15:47:56.499364",
+      "content": "🔄 Загрузка изображения 0: https://replicate.delivery/czjl/txOb5xpTBtojBNRjD9lvIWpccqex1WhEKfvQVgQ6GhP1nxUVA/preview.png",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_154431"
+    },
+    {
+      "timestamp": "2025-09-13T15:47:57.413729",
+      "content": "✅ Изображение сохранено: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_154439/out_0.png",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_154431"
+    },
+    {
+      "timestamp": "2025-09-13T15:47:57.414386",
+      "content": "🔄 Загрузка изображения 1: https://replicate.delivery/czjl/IYTKHU5KwpotP9m1YfpXOEEPlcWMDfkBVy9tpl3UPrP1nxUVA/final.png",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_154431"
+    },
+    {
+      "timestamp": "2025-09-13T15:47:58.327900",
+      "content": "✅ Изображение сохранено: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_154439/out_1.png",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_154431"
+    },
+    {
+      "timestamp": "2025-09-13T15:47:58.328645",
+      "content": "🔄 Загрузка изображения 2: https://replicate.delivery/czjl/BIwRJBUFcIKsER8ha0NUxGObXw2YHTpHWTk3OTMwd4W9ZMVF/colormap.png",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_154431"
+    },
+    {
+      "timestamp": "2025-09-13T15:47:58.938591",
+      "content": "✅ Изображение сохранено: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_154439/out_2.png",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_154431"
+    },
+    {
+      "timestamp": "2025-09-13T15:47:58.939254",
+      "content": "🔄 Загрузка изображения 3: https://replicate.delivery/czjl/zfpuebCvWEpK2UTGzjywi37LeKryhklrZYQ0Rp2KLHurPjpqA/legend.png",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_154431"
+    },
+    {
+      "timestamp": "2025-09-13T15:47:59.541432",
+      "content": "✅ Изображение сохранено: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_154439/out_3.png",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_154431"
+    },
+    {
+      "timestamp": "2025-09-13T15:47:59.542154",
+      "content": "=== Final status: succeeded",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_154431"
+    },
+    {
+      "timestamp": "2025-09-13T15:47:59.542686",
+      "content": "📊 Логирование модели завершено",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_154431"
+    },
+    {
+      "timestamp": "2025-09-13T15:47:59.543200",
+      "content": "[\n  \"https://replicate.delivery/czjl/txOb5xpTBtojBNRjD9lvIWpccqex1WhEKfvQVgQ6GhP1nxUVA/preview.png\",\n  \"https://replicate.delivery/czjl/IYTKHU5KwpotP9m1YfpXOEEPlcWMDfkBVy9tpl3UPrP1nxUVA/final.png\",\n  \"https://replicate.delivery/czjl/BIwRJBUFcIKsER8ha0NUxGObXw2YHTpHWTk3OTMwd4W9ZMVF/colormap.png\",\n  \"https://replicate.delivery/czjl/zfpuebCvWEpK2UTGzjywi37LeKryhklrZYQ0Rp2KLHurPjpqA/legend.png\"\n]",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_154431"
+    },
+    {
+      "timestamp": "2025-09-13T15:47:59.543676",
+      "content": "🔄 _save_outputs вызван",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_154431"
+    },
+    {
+      "timestamp": "2025-09-13T15:47:59.544218",
+      "content": "💾 Сохраняем результаты в папку: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_154439",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_154431"
+    },
+    {
+      "timestamp": "2025-09-13T15:47:59.544840",
+      "content": "🔐 ПРИНУДИТЕЛЬНО используем хеш: 89fdd926",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_154431"
+    },
+    {
+      "timestamp": "2025-09-13T15:47:59.545324",
+      "content": "✅ Используем подготовленную папку: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_154439",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_154431"
+    },
+    {
+      "timestamp": "2025-09-13T15:47:59.545964",
+      "content": "🔄 Начинаем обработку 4 выходных файлов...",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_154431"
+    },
+    {
+      "timestamp": "2025-09-13T15:47:59.546449",
+      "content": "📁 Папка для сохранения: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_154439",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_154431"
+    },
+    {
+      "timestamp": "2025-09-13T15:47:59.852834",
+      "content": "📥 Скачан файл 0: out_0.png",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_154431"
+    },
+    {
+      "timestamp": "2025-09-13T15:48:00.759458",
+      "content": "📥 Скачан файл 1: out_1.png",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_154431"
+    },
+    {
+      "timestamp": "2025-09-13T15:48:01.061125",
+      "content": "📥 Скачан файл 2: out_2.png",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_154431"
+    },
+    {
+      "timestamp": "2025-09-13T15:48:01.364299",
+      "content": "📥 Скачан файл 3: out_3.png",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_154431"
+    },
+    {
+      "timestamp": "2025-09-13T15:48:01.364880",
+      "content": "📁 Найдено файлов для переименования: 4",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_154431"
+    },
+    {
+      "timestamp": "2025-09-13T15:48:01.365424",
+      "content": "📝 Промпт для именования: '100pct_red_rubber_tile'",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_154431"
+    },
+    {
+      "timestamp": "2025-09-13T15:48:01.365913",
+      "content": "⏰ Временная метка из папки: 20250913_154439",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_154431"
+    },
+    {
+      "timestamp": "2025-09-13T15:48:01.366384",
+      "content": "🔐 Используем хеш из App: 143937bc",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_154431"
+    },
+    {
+      "timestamp": "2025-09-13T15:48:01.366869",
+      "content": "✅ FINAL saved as: 20250913_154439_100pct_red_rubber_tile_final_143937bc.png",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_154431"
+    },
+    {
+      "timestamp": "2025-09-13T15:48:01.367382",
+      "content": "📁 Путь: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_154439/20250913_154439_100pct_red_rubber_tile_final_143937bc.png",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_154431"
+    },
+    {
+      "timestamp": "2025-09-13T15:48:01.367885",
+      "content": "🎨 COLORMAP saved as: 20250913_154439_RED_colormap_143937bc.png",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_154431"
+    },
+    {
+      "timestamp": "2025-09-13T15:48:01.368380",
+      "content": "📁 Путь: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_154439/20250913_154439_RED_colormap_143937bc.png",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_154431"
+    },
+    {
+      "timestamp": "2025-09-13T15:48:01.368876",
+      "content": "[GUI] Done.",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_154431"
+    }
+  ],
+  "analysis_timestamp": "2025-09-13T16:18:05.661107"
+}

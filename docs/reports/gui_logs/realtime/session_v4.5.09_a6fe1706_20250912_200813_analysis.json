@@ -1,0 +1,55 @@
+{
+  "session_info": {
+    "session_id": "session_v4.5.09_a6fe1706_20250912_200813",
+    "start_time": "2025-09-12 20:08:13",
+    "end_time": "2025-09-12 20:08:13",
+    "duration": "0:00:00",
+    "version": "v4.5.09",
+    "hash_id": "a6fe1706"
+  },
+  "statistics": {
+    "total_logs": 7,
+    "warnings": 0,
+    "errors": 0,
+    "version_issues": 0,
+    "preset_errors": 0
+  },
+  "all_logs": [
+    {
+      "timestamp": "2025-09-12 20:08:13",
+      "content": "🔄 Версия обновлена: v4.5.09",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-09-12 20:08:13",
+      "content": "✅ Новый хеш (гибридный): a6fe1706",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-09-12 20:08:13",
+      "content": "📁 Загружены пресеты из: test_inputs_v4.5.09_docs_sync.json",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-09-12 20:08:13",
+      "content": "🔍 Валидация пресетов для новой версии...",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-09-12 20:08:13",
+      "content": "📊 Результат валидации: 15/15 пресетов корректны",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-09-12 20:08:13",
+      "content": "✅ Логи перемещены из временной папки",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-09-12 20:08:13",
+      "content": "📁 Логи GUI: /home/papaandrey/plitka-pro-project/replicate_runs/a6fe1706/gui_logs",
+      "type": "info"
+    }
+  ],
+  "analysis_timestamp": "2025-09-12T20:26:09.097391"
+}

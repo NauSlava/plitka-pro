@@ -1,0 +1,92 @@
+{
+  "v4.5.10_Request_01_LoRA_Fix_Validation": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 100% red rubber tile",
+    "negative_prompt": "blurry, low quality, distorted",
+    "seed": 12345,
+    "description": "Запрос для валидации исправления загрузки LoRA"
+  },
+  "v4.5.10_Request_02_Duo_Colors_Stability": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 60% red, 40% blue rubber tile",
+    "negative_prompt": "blurry, low quality, distorted",
+    "seed": 54321,
+    "description": "Запрос для проверки стабильности дуо-цветов"
+  },
+  "v4.5.10_Request_03_Tri_Colors_Textual_Inversion": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 50% red, 30% blue, 20% yellow rubber tile",
+    "negative_prompt": "blurry, low quality, distorted",
+    "seed": 98765,
+    "description": "Запрос для проверки Textual Inversion эмбеддингов"
+  },
+  "v4.5.10_Request_04_Quad_Colors_Safetensors": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 40% red, 30% blue, 20% yellow, 10% green rubber tile",
+    "negative_prompt": "blurry, low quality, distorted",
+    "seed": 11111,
+    "description": "Запрос для проверки safetensors файлов"
+  },
+  "v4.5.10_Request_05_White_Mono_Git_LFS": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 100% white rubber tile",
+    "negative_prompt": "blurry, low quality, distorted",
+    "seed": 22222,
+    "description": "Запрос для проверки обработки Git LFS указателей"
+  },
+  "v4.5.10_Request_06_Black_Mono_Graceful_Fallback": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 100% black rubber tile",
+    "negative_prompt": "blurry, low quality, distorted",
+    "seed": 33333,
+    "description": "Запрос для проверки graceful fallback"
+  },
+  "v4.5.10_Request_07_Blue_Mono_Error_Handling": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 100% blue rubber tile",
+    "negative_prompt": "blurry, low quality, distorted",
+    "seed": 44444,
+    "description": "Запрос для проверки обработки ошибок"
+  },
+  "v4.5.10_Request_08_Red_Blue_Duo_Model_Size": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 70% red, 30% blue rubber tile",
+    "negative_prompt": "blurry, low quality, distorted",
+    "seed": 55555,
+    "description": "Запрос для проверки размера модели (27GB)"
+  },
+  "v4.5.10_Request_09_Yellow_Green_Duo_Digest": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 60% yellow, 40% green rubber tile",
+    "negative_prompt": "blurry, low quality, distorted",
+    "seed": 66666,
+    "description": "Запрос для проверки digest образа"
+  },
+  "v4.5.10_Request_10_Red_Yellow_Blue_Tri_Deployment": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 40% red, 40% yellow, 20% blue rubber tile",
+    "negative_prompt": "blurry, low quality, distorted",
+    "seed": 77777,
+    "description": "Запрос для проверки развертывания на Replicate"
+  },
+  "v4.5.10_Request_11_All_Colors_Quad_LoRA_Weight": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 25% red, 25% blue, 25% yellow, 25% green rubber tile",
+    "negative_prompt": "blurry, low quality, distorted",
+    "seed": 88888,
+    "description": "Запрос для проверки веса LoRA (0.75)"
+  },
+  "v4.5.10_Request_12_Red_Blue_Tokens_Validation": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 50% red, 50% blue rubber tile",
+    "negative_prompt": "blurry, low quality, distorted",
+    "seed": 99999,
+    "description": "Запрос для проверки токенов <s0><s1>"
+  },
+  "v4.5.10_Request_13_White_Black_Duo_Hybrid": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 80% white, 20% black rubber tile",
+    "negative_prompt": "blurry, low quality, distorted",
+    "seed": 10101,
+    "description": "Запрос для проверки гибридной архитектуры"
+  },
+  "v4.5.10_Request_14_Red_Green_Duo_Recovery": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 60% red, 40% green rubber tile",
+    "negative_prompt": "blurry, low quality, distorted",
+    "seed": 20202,
+    "description": "Запрос для проверки восстановления после ошибок"
+  },
+  "v4.5.10_Request_15_Blue_Yellow_Duo_Production": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 70% blue, 30% yellow rubber tile",
+    "negative_prompt": "blurry, low quality, distorted",
+    "seed": 30303,
+    "description": "Запрос для проверки готовности к продакшену"
+  }
+}

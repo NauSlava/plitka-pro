@@ -1,0 +1,55 @@
+{
+  "session_info": {
+    "session_id": "session_v4.5.09_a6fe1706_20250912_202320",
+    "start_time": "2025-09-12 20:23:20",
+    "end_time": "2025-09-12 20:23:26",
+    "duration": "0:00:06",
+    "version": "v4.5.09",
+    "hash_id": "a6fe1706"
+  },
+  "statistics": {
+    "total_logs": 7,
+    "warnings": 0,
+    "errors": 0,
+    "version_issues": 0,
+    "preset_errors": 0
+  },
+  "all_logs": [
+    {
+      "timestamp": "2025-09-12 20:23:20",
+      "content": "🔄 Версия обновлена: v4.5.09",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-09-12 20:23:20",
+      "content": "✅ Новый хеш (гибридный): a6fe1706",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-09-12 20:23:20",
+      "content": "✅ Логи перемещены из временной папки",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-09-12 20:23:20",
+      "content": "📁 Логи GUI: /home/papaandrey/plitka-pro-project/replicate_runs/a6fe1706/gui_logs",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-09-12 20:23:23",
+      "content": "📋 Выбран пресет: v4.5.09_Test_02_Duo_Colors_Docs_Sync ✅",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-09-12 20:23:24",
+      "content": "📋 Выбран пресет: v4.5.09_Test_01_Mono_Red_Stability ✅",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-09-12 20:23:26",
+      "content": "🔄 on_start() вызван",
+      "type": "info"
+    }
+  ],
+  "analysis_timestamp": "2025-09-12T20:26:09.096704"
+}

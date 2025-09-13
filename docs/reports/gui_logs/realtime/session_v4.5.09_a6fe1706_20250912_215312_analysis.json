@@ -1,0 +1,61 @@
+{
+  "session_info": {
+    "session_id": "session_v4.5.09_a6fe1706_20250912_215312",
+    "start_time": "2025-09-12T21:53:12.959822",
+    "end_time": "2025-09-12T21:53:23.421480",
+    "duration": "0:00:10.461672",
+    "version": "v4.5.09",
+    "hash_id": "a6fe1706"
+  },
+  "statistics": {
+    "total_logs": 6,
+    "warnings": 0,
+    "errors": 0,
+    "version_issues": 0,
+    "preset_errors": 0,
+    "session_start": "2025-09-12T21:53:12.959822",
+    "version": "v4.5.09",
+    "hash_id": "a6fe1706",
+    "session_end": "2025-09-12T21:53:23.421480",
+    "total_duration": "0:00:10.461672"
+  },
+  "all_logs": [
+    {
+      "timestamp": "2025-09-12T21:53:12.960380",
+      "content": "🔄 Версия обновлена: v4.5.09",
+      "type": "info",
+      "session_id": "session_v4.5.09_a6fe1706_20250912_215312"
+    },
+    {
+      "timestamp": "2025-09-12T21:53:12.961001",
+      "content": "✅ Новый хеш (гибридный): a6fe1706",
+      "type": "info",
+      "session_id": "session_v4.5.09_a6fe1706_20250912_215312"
+    },
+    {
+      "timestamp": "2025-09-12T21:53:12.965033",
+      "content": "✅ Логи перемещены из временной папки",
+      "type": "info",
+      "session_id": "session_v4.5.09_a6fe1706_20250912_215312"
+    },
+    {
+      "timestamp": "2025-09-12T21:53:12.965747",
+      "content": "📁 Логи GUI: /home/papaandrey/plitka-pro-project/replicate_runs/a6fe1706/gui_logs",
+      "type": "info",
+      "session_id": "session_v4.5.09_a6fe1706_20250912_215312"
+    },
+    {
+      "timestamp": "2025-09-12T21:53:14.807972",
+      "content": "📋 Выбран пресет: v4.5.09_Test_01_Mono_Red_Stability ✅",
+      "type": "info",
+      "session_id": "session_v4.5.09_a6fe1706_20250912_215312"
+    },
+    {
+      "timestamp": "2025-09-12T21:53:17.145259",
+      "content": "🔄 on_start() вызван",
+      "type": "info",
+      "session_id": "session_v4.5.09_a6fe1706_20250912_215312"
+    }
+  ],
+  "analysis_timestamp": "2025-09-12T21:53:23.421499"
+}

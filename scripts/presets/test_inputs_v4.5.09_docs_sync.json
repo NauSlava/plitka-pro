@@ -1,0 +1,167 @@
+{
+  "v4.5.09_Test_01_Mono_Red_Stability": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 100% red rubber tile",
+    "negative_prompt": "blurry, low quality, distorted",
+    "seed": 12345,
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "colormap": "random",
+    "granule_size": "medium",
+    "use_controlnet": false,
+    "description": "Тест моно-цвета (красный) для проверки стабильности после рефакторинга"
+  },
+  "v4.5.09_Test_02_Duo_Colors_Docs_Sync": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 60% red, 40% blue rubber tile",
+    "negative_prompt": "blurry, low quality, distorted",
+    "seed": 54321,
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "colormap": "grid",
+    "granule_size": "medium",
+    "use_controlnet": false,
+    "description": "Тест дуо-цветов для проверки синхронизации документации"
+  },
+  "v4.5.09_Test_03_Tri_Colors_Scripts_Cleanup": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 50% red, 30% blue, 20% yellow rubber tile",
+    "negative_prompt": "blurry, low quality, distorted",
+    "seed": 98765,
+    "num_inference_steps": 30,
+    "guidance_scale": 8.0,
+    "colormap": "radial",
+    "granule_size": "large",
+    "use_controlnet": false,
+    "description": "Тест три-цветов для проверки работы после очистки скриптов"
+  },
+  "v4.5.09_Test_04_Quad_Colors_Structure_Refactor": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 40% red, 30% blue, 20% yellow, 10% green rubber tile",
+    "negative_prompt": "blurry, low quality, distorted",
+    "seed": 11111,
+    "num_inference_steps": 35,
+    "guidance_scale": 8.5,
+    "colormap": "granular",
+    "granule_size": "small",
+    "use_controlnet": false,
+    "description": "Тест четырех цветов для проверки рефакторинга структуры"
+  },
+  "v4.5.09_Test_05_Preview_Generation_Clean": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 70% red, 30% blue rubber tile, random pattern",
+    "negative_prompt": "blurry, low quality, distorted",
+    "seed": 22222,
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "colormap": "random",
+    "granule_size": "medium",
+    "use_controlnet": false,
+    "description": "Тест создания превью из финального изображения"
+  },
+  "v4.5.09_Test_06_ProgressBar_Stable": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 80% white, 20% black rubber tile",
+    "negative_prompt": "blurry, low quality, distorted",
+    "seed": 33333,
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "colormap": "grid",
+    "granule_size": "medium",
+    "use_controlnet": false,
+    "description": "Тест для проверки стабильности прогресс-бара"
+  },
+  "v4.5.09_Test_07_Logs_Clean_Structure": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 50% red, 50% blue rubber tile, shuffled colors",
+    "negative_prompt": "blurry, low quality, distorted",
+    "seed": 44444,
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "colormap": "random",
+    "granule_size": "medium",
+    "use_controlnet": false,
+    "description": "Тест для проверки чистых логов после рефакторинга"
+  },
+  "v4.5.09_Test_08_Time_Measurement_Accurate": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 100% blue rubber tile",
+    "negative_prompt": "blurry, low quality, distorted",
+    "seed": 55555,
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "colormap": "radial",
+    "granule_size": "medium",
+    "use_controlnet": false,
+    "description": "Тест для точного измерения времени генерации"
+  },
+  "v4.5.09_Test_09_Colormap_Validation_Stable": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 60% red, 40% blue rubber tile",
+    "negative_prompt": "blurry, low quality, distorted",
+    "seed": 66666,
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "colormap": "granular",
+    "granule_size": "large",
+    "use_controlnet": false,
+    "description": "Тест валидации colormap после рефакторинга"
+  },
+  "v4.5.09_Test_10_Architecture_Stability_Final": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 30% red, 30% blue, 20% yellow, 20% green rubber tile, random pattern, shuffled colors",
+    "negative_prompt": "blurry, low quality, distorted",
+    "seed": 77777,
+    "num_inference_steps": 35,
+    "guidance_scale": 8.5,
+    "colormap": "random",
+    "granule_size": "medium",
+    "use_controlnet": false,
+    "description": "Комплексный тест стабильности архитектуры после всех изменений"
+  },
+  "v4.5.09_Test_11_Edge_Case_Empty_Prompt": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 100% white rubber tile",
+    "negative_prompt": "",
+    "seed": 88888,
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "colormap": "grid",
+    "granule_size": "medium",
+    "use_controlnet": false,
+    "description": "Тест граничного случая с пустым негативным промптом"
+  },
+  "v4.5.09_Test_12_Edge_Case_Random_Seed": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 100% black rubber tile",
+    "negative_prompt": "blurry, low quality, distorted",
+    "seed": -1,
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "colormap": "radial",
+    "granule_size": "medium",
+    "use_controlnet": false,
+    "description": "Тест граничного случая с seed=-1 (случайный сид)"
+  },
+  "v4.5.09_Test_13_Performance_Stress_Clean": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 25% red, 25% blue, 25% yellow, 25% green rubber tile, random pattern, shuffled colors",
+    "negative_prompt": "blurry, low quality, distorted, organized",
+    "seed": 99999,
+    "num_inference_steps": 35,
+    "guidance_scale": 8.5,
+    "colormap": "granular",
+    "granule_size": "small",
+    "use_controlnet": false,
+    "description": "Стресс-тест производительности после очистки структуры"
+  },
+  "v4.5.09_Test_14_Regression_Previous_Version": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 40% red, 40% blue, 20% green rubber tile, random pattern, shuffled colors",
+    "negative_prompt": "missing red, missing blue, missing green, blurry, low quality, organized",
+    "seed": 404,
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "colormap": "granular",
+    "granule_size": "medium",
+    "use_controlnet": false,
+    "description": "Регрессионный тест - сравнение с v4.5.08"
+  },
+  "v4.5.09_Test_15_Final_Validation_Complete": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 50% red, 50% blue rubber tile, random pattern",
+    "negative_prompt": "blurry, low quality, distorted",
+    "seed": 123456,
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "colormap": "random",
+    "granule_size": "medium",
+    "use_controlnet": false,
+    "description": "Финальная валидация всех изменений v4.5.09"
+  }
+}

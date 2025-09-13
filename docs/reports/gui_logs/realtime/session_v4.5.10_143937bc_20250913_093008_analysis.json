@@ -1,0 +1,321 @@
+{
+  "session_info": {
+    "session_id": "session_v4.5.10_143937bc_20250913_093008",
+    "start_time": "2025-09-13T09:30:08.967694",
+    "version": "v4.5.10",
+    "hash_id": "143937bc"
+  },
+  "statistics": {
+    "total_logs": 296,
+    "warnings": 16,
+    "errors": 14,
+    "version_issues": 0,
+    "preset_errors": 0,
+    "session_start": "2025-09-13T09:30:08.967694",
+    "version": "v4.5.10",
+    "hash_id": "143937bc"
+  },
+  "recent_logs": [
+    {
+      "timestamp": "2025-09-13T09:56:14.877923",
+      "content": "🔄 _current_run_dir установлен: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_095614",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_093008"
+    },
+    {
+      "timestamp": "2025-09-13T09:56:14.878532",
+      "content": "🔐 Создаем папку с хешем: 143937bc",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_093008"
+    },
+    {
+      "timestamp": "2025-09-13T09:56:14.879372",
+      "content": "📁 Создана папка: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_095614",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_093008"
+    },
+    {
+      "timestamp": "2025-09-13T09:56:14.880465",
+      "content": "🔐 Хеш версии: 143937bc",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_093008"
+    },
+    {
+      "timestamp": "2025-09-13T09:56:14.881707",
+      "content": "🔍 Базовая папка: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_093008"
+    },
+    {
+      "timestamp": "2025-09-13T09:56:14.882962",
+      "content": "🔍 Полный путь: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_095614",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_093008"
+    },
+    {
+      "timestamp": "2025-09-13T09:56:14.884253",
+      "content": "✅ Папка успешно создана и существует",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_093008"
+    },
+    {
+      "timestamp": "2025-09-13T09:56:15.188271",
+      "content": "INFO:coglet:prediction started: id=7qv930hmehrga0cs87eazftab4\nWARNING unknown input field ignored: description",
+      "type": "warning",
+      "session_id": "session_v4.5.10_143937bc_20250913_093008"
+    },
+    {
+      "timestamp": "2025-09-13T09:56:15.188865",
+      "content": "✅ Startup phase completed. Proceeding to completion...",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_093008"
+    },
+    {
+      "timestamp": "2025-09-13T09:56:34.509432",
+      "content": "INFO:predict:🚀 STARTUP_SNAPSHOT_START\nINFO:predict:🧭 MODEL_START v4.5.07 | device=cuda | diffusers=0.21.4 | torch=2.1.0+cu121\nINFO:predict:📊 GPU: Tesla T4\nINFO:predict:💾 GPU Memory: 14.6 GB\nINFO:predict:🔧 SDXL Base: unknown\nINFO:predict:🎨 LoRA: unknown (rank: 32)\nINFO:predict:🔤 TI: unknown (tokens: <s0><s1>)\nINFO:predict:⚙️ Scheduler: DPMSolverMultistepScheduler\nINFO:predict:🎭 VAE: AutoencoderKL\nINFO:predict:🎯 Prompt: ohwx_rubber_tile <s0><s1> 70% red, 30% blue rubber tile, random pattern\nINFO:predict:🚫 Negative Prompt: blurry, low quality, distorted\nINFO:predict:🎲 Seed: 22222\nINFO:predict:📊 Steps: 25 (базовый)\nINFO:predict:🎚️ Guidance: 7.5 (базовый)\nINFO:predict:🎨 Colormap: random\nINFO:predict:🔧 Granule Size: medium\nINFO:predict:🎨 Адаптивные параметры будут рассчитаны на основе количества цветов\nINFO:predict:🚀 STARTUP_SNAPSHOT_END\nINFO:predict:🎨 Начало генерации изображения...\nINFO:predict:📝 Входной промпт: ohwx_rubber_tile <s0><s1> 70% red, 30% blue rubber tile, random pattern\nINFO:predict:🚫 Входной негативный промпт: blurry, low quality, distorted\nINFO:predict:🎲 Входной сид: 22222\nINFO:predict:🔧 Усилены токены цветов в промпте\nINFO:predict:🎨 Генерация изображения...\nINFO:predict:📝 Полный промпт: ohwx_rubber_tile <s0><s1> 70% red, 30% blue rubber tile, random pattern, photorealistic rubber tile, high quality, detailed texture, professional photography, sharp focus\nINFO:predict:🔧 Усиленный промпт: ohwx_rubber_tile <s0><s1> red red red 70%, blue blue blue 30% rubber tile, random pattern, photorealistic rubber tile, high quality, detailed texture, professional photography, sharp focus\nINFO:predict:🚫 Финальный негативный промпт: blurry, low quality, distorted\nINFO:predict:🎲 Финальный сид: 22222\nINFO:predict:🔧 Устройство: cuda\nINFO:predict:🎨 Анализ сложности промпта для адаптивных параметров...\nINFO:predict:🎨 Обнаружено цветов в промпте: 2\nINFO:predict:🎯 Адаптивные параметры для 2 цветов: steps=25, guidance=7.5\nINFO:predict:🚀 Запуск pipeline для генерации с адаптивными параметрами...\nINFO:predict:🎯 Автоматически включаем мультимодальный ControlNet для 2 цветов: ['t2i_color']\nINFO:predict:🎨 Создание множественных контрольных карт для мультимодального ControlNet\nINFO:predict:✅ Найден цвет: 70.0% RED\nINFO:predict:✅ Найден цвет: 30.0% BLUE\nINFO:predict:🎨 Итого найдено цветов: 2\nINFO:predict:🎨 Создание colormap: 2 цветов, паттерн: granular, гранулы: medium\nINFO:predict:✅ Оптимизированный colormap создан: (1024, 1024)\nINFO:predict:📊 Статистика паттернов: {'random': 0, 'grid': 2, 'radial': 2, 'granular': 3}\nINFO:predict:📊 Статистика размеров гранул: {'small': 2, 'medium': 3, 'large': 2}\nERROR:predict:❌ Ошибка валидации colormap: operands could not be broadcast together with shapes (1024,1024,4) (3,) \nWARNING:predict:⚠️ Colormap не соответствует промпту, пересоздаем...\nINFO:predict:🔧 Принудительная пересборка colormap...\nINFO:predict:✅ Colormap пересобран для цветов: ['red', 'blue']",
+      "type": "error",
+      "session_id": "session_v4.5.10_143937bc_20250913_093008"
+    },
+    {
+      "timestamp": "2025-09-13T09:56:40.816624",
+      "content": "ERROR:predict:❌ Ошибка валидации ControlNet карты: cannot reshape array of size 4194304 into shape (3)\nWARNING:predict:⚠️ ControlNet карта не прошла валидацию, пересоздаем...\nINFO:predict:🔧 Принудительная пересборка colormap...\nINFO:predict:✅ Colormap пересобран для цветов: ['red', 'blue']\nERROR:predict:❌ Ошибка валидации ControlNet карты: cannot reshape array of size 4194304 into shape (3)\nERROR:predict:❌ Критическая ошибка: ControlNet карта не может быть создана корректно\nWARNING:predict:⚠️ Ошибка подготовки мультимодального ControlNet: ControlNet карта не прошла валидацию после пересоздания\nINFO:predict:✅ ControlNet активирован с fallback картой (умеренное влияние)\nINFO:predict:🚀 Финальный сегмент: единый проход без callback\n\n  0%|          | 0/25 [00:00<?, ?it/s]\n  4%|▍         | 1/25 [00:01<00:35,  1.49s/it]",
+      "type": "error",
+      "session_id": "session_v4.5.10_143937bc_20250913_093008"
+    },
+    {
+      "timestamp": "2025-09-13T09:56:47.150989",
+      "content": "8%|▊         | 2/25 [00:02<00:33,  1.47s/it]\n 12%|█▏        | 3/25 [00:04<00:32,  1.47s/it]\n 16%|█▌        | 4/25 [00:05<00:31,  1.48s/it]\n 20%|██        | 5/25 [00:07<00:29,  1.49s/it]",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_093008"
+    },
+    {
+      "timestamp": "2025-09-13T09:56:54.104993",
+      "content": "24%|██▍       | 6/25 [00:08<00:28,  1.50s/it]\n 28%|██▊       | 7/25 [00:10<00:27,  1.51s/it]\n 32%|███▏      | 8/25 [00:12<00:25,  1.53s/it]\n 36%|███▌      | 9/25 [00:13<00:24,  1.54s/it]",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_093008"
+    },
+    {
+      "timestamp": "2025-09-13T09:57:00.440059",
+      "content": "40%|████      | 10/25 [00:15<00:23,  1.55s/it]\n 44%|████▍     | 11/25 [00:16<00:21,  1.57s/it]\n 48%|████▊     | 12/25 [00:18<00:20,  1.58s/it]\n 52%|█████▏    | 13/25 [00:20<00:19,  1.59s/it]",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_093008"
+    },
+    {
+      "timestamp": "2025-09-13T09:57:06.204440",
+      "content": "56%|█████▌    | 14/25 [00:21<00:17,  1.61s/it]\n 60%|██████    | 15/25 [00:23<00:16,  1.62s/it]\n 64%|██████▍   | 16/25 [00:24<00:14,  1.63s/it]\n 68%|██████▊   | 17/25 [00:26<00:13,  1.64s/it]",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_093008"
+    },
+    {
+      "timestamp": "2025-09-13T09:57:12.587748",
+      "content": "72%|███████▏  | 18/25 [00:28<00:11,  1.65s/it]\n 76%|███████▌  | 19/25 [00:30<00:09,  1.66s/it]\n 80%|████████  | 20/25 [00:31<00:08,  1.67s/it]\n 84%|████████▍ | 21/25 [00:33<00:06,  1.68s/it]",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_093008"
+    },
+    {
+      "timestamp": "2025-09-13T09:57:18.945763",
+      "content": "88%|████████▊ | 22/25 [00:35<00:05,  1.68s/it]\n 92%|█████████▏| 23/25 [00:36<00:03,  1.68s/it]\n 96%|█████████▌| 24/25 [00:38<00:01,  1.68s/it]",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_093008"
+    },
+    {
+      "timestamp": "2025-09-13T09:57:25.308103",
+      "content": "100%|██████████| 25/25 [00:40<00:00,  1.68s/it]\n100%|██████████| 25/25 [00:40<00:00,  1.60s/it]\nINFO:predict:✅ Финальная генерация завершена",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_093008"
+    },
+    {
+      "timestamp": "2025-09-13T09:57:37.452780",
+      "content": "INFO:predict:📊 Размер сгенерированного изображения: (1024, 1024)\nINFO:predict:🟡 PREVIEW_READY /tmp/preview.png\nINFO:predict:✅ FINAL_READY /tmp/final.png\nINFO:predict:✅ Найден цвет: 70.0% RED\nINFO:predict:✅ Найден цвет: 30.0% BLUE\nINFO:predict:🎨 Итого найдено цветов: 2\nINFO:predict:🎨 Создание colormap: 2 цветов, паттерн: granular, гранулы: medium\nINFO:predict:✅ Оптимизированный colormap создан: (1024, 1024)",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_093008"
+    },
+    {
+      "timestamp": "2025-09-13T09:57:43.804452",
+      "content": "INFO:predict:📊 Статистика паттернов: {'random': 0, 'grid': 2, 'radial': 2, 'granular': 4}\nINFO:predict:📊 Статистика размеров гранул: {'small': 2, 'medium': 4, 'large': 2}\nERROR:predict:❌ Ошибка валидации colormap: operands could not be broadcast together with shapes (1024,1024,4) (3,) \nWARNING:predict:⚠️ Colormap не соответствует промпту, пересоздаем...\nINFO:predict:🔧 Принудительная пересборка colormap...\nINFO:predict:✅ Colormap пересобран для цветов: ['red', 'blue']\nINFO:predict:🎨 ОПТИМИЗИРОВАННЫЙ COLORMAP_READY /tmp/colormap.png\nINFO:predict:📊 Размер colormap: (1024, 1024)\nINFO:predict:📋 ЛЕГЕНДА_READY /tmp/legend.png\nINFO:predict:🧹 Память очищена\nINFO:predict:📄 JSON_READY /tmp/generation_data.json\nINFO:predict:✅ Изображение успешно сгенерировано!\nINFO:predict:📊 Color Grid Adapter статистика:\nINFO:predict:   - Всего генераций: 4\nINFO:predict:   - ControlNet использован: 4 (100.0%)\nINFO:predict:   - Популярный паттерн: granular\nINFO:predict:   - Популярный размер гранул: medium\nINFO:coglet:prediction completed: id=7qv930hmehrga0cs87eazftab4",
+      "type": "error",
+      "session_id": "session_v4.5.10_143937bc_20250913_093008"
+    },
+    {
+      "timestamp": "2025-09-13T09:57:43.805019",
+      "content": "🔄 Загрузка изображения 0: https://replicate.delivery/czjl/APyGgXSkq9reQyWSMuhWlBpR5FsL1TZAxL0fR24e5fDSejlqC/preview.png",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_093008"
+    },
+    {
+      "timestamp": "2025-09-13T09:57:44.412077",
+      "content": "✅ Изображение сохранено: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_095614/out_0.png",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_093008"
+    },
+    {
+      "timestamp": "2025-09-13T09:57:44.412651",
+      "content": "🔄 Загрузка изображения 1: https://replicate.delivery/czjl/47IyXCmTKS4KO1PtOFkIZwbEPwei4SEbwlDv4MOK4BPyPWqKA/final.png",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_093008"
+    },
+    {
+      "timestamp": "2025-09-13T09:57:45.318484",
+      "content": "✅ Изображение сохранено: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_095614/out_1.png",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_093008"
+    },
+    {
+      "timestamp": "2025-09-13T09:57:45.319103",
+      "content": "🔄 Загрузка изображения 2: https://replicate.delivery/czjl/O0G1dDa6lHoeBifnKlFGbD4ZRffLB8raBiu0ZTa9XvaRejlqC/colormap.png",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_093008"
+    },
+    {
+      "timestamp": "2025-09-13T09:57:46.229834",
+      "content": "✅ Изображение сохранено: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_095614/out_2.png",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_093008"
+    },
+    {
+      "timestamp": "2025-09-13T09:57:46.230451",
+      "content": "🔄 Загрузка изображения 3: https://replicate.delivery/czjl/eYqnYhwqvUVegk1njgUez92Ym68fLBw6urvvexpaY9Kk8jlqC/legend.png",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_093008"
+    },
+    {
+      "timestamp": "2025-09-13T09:57:46.836718",
+      "content": "✅ Изображение сохранено: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_095614/out_3.png",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_093008"
+    },
+    {
+      "timestamp": "2025-09-13T09:57:46.837508",
+      "content": "=== Final status: succeeded",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_093008"
+    },
+    {
+      "timestamp": "2025-09-13T09:57:46.838135",
+      "content": "📊 Логирование модели завершено",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_093008"
+    },
+    {
+      "timestamp": "2025-09-13T09:57:46.838801",
+      "content": "[\n  \"https://replicate.delivery/czjl/APyGgXSkq9reQyWSMuhWlBpR5FsL1TZAxL0fR24e5fDSejlqC/preview.png\",\n  \"https://replicate.delivery/czjl/47IyXCmTKS4KO1PtOFkIZwbEPwei4SEbwlDv4MOK4BPyPWqKA/final.png\",\n  \"https://replicate.delivery/czjl/O0G1dDa6lHoeBifnKlFGbD4ZRffLB8raBiu0ZTa9XvaRejlqC/colormap.png\",\n  \"https://replicate.delivery/czjl/eYqnYhwqvUVegk1njgUez92Ym68fLBw6urvvexpaY9Kk8jlqC/legend.png\"\n]",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_093008"
+    },
+    {
+      "timestamp": "2025-09-13T09:57:46.839372",
+      "content": "🔄 _save_outputs вызван",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_093008"
+    },
+    {
+      "timestamp": "2025-09-13T09:57:46.839975",
+      "content": "💾 Сохраняем результаты в папку: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_095614",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_093008"
+    },
+    {
+      "timestamp": "2025-09-13T09:57:46.840503",
+      "content": "🔐 ПРИНУДИТЕЛЬНО используем хеш: 89fdd926",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_093008"
+    },
+    {
+      "timestamp": "2025-09-13T09:57:46.841051",
+      "content": "✅ Используем подготовленную папку: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_095614",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_093008"
+    },
+    {
+      "timestamp": "2025-09-13T09:57:46.841561",
+      "content": "🔄 Начинаем обработку 4 выходных файлов...",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_093008"
+    },
+    {
+      "timestamp": "2025-09-13T09:57:46.842060",
+      "content": "📁 Папка для сохранения: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_095614",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_093008"
+    },
+    {
+      "timestamp": "2025-09-13T09:57:47.149014",
+      "content": "📥 Скачан файл 0: out_0.png",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_093008"
+    },
+    {
+      "timestamp": "2025-09-13T09:57:48.367145",
+      "content": "📥 Скачан файл 1: out_1.png",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_093008"
+    },
+    {
+      "timestamp": "2025-09-13T09:57:48.976142",
+      "content": "📥 Скачан файл 2: out_2.png",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_093008"
+    },
+    {
+      "timestamp": "2025-09-13T09:57:49.278419",
+      "content": "📥 Скачан файл 3: out_3.png",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_093008"
+    },
+    {
+      "timestamp": "2025-09-13T09:57:49.279011",
+      "content": "📁 Найдено файлов для переименования: 4",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_093008"
+    },
+    {
+      "timestamp": "2025-09-13T09:57:49.279574",
+      "content": "📝 Промпт для именования: '70pct_red_30pct_blue_rubber_tile_random_pattern'",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_093008"
+    },
+    {
+      "timestamp": "2025-09-13T09:57:49.280179",
+      "content": "⏰ Временная метка из папки: 20250913_095614",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_093008"
+    },
+    {
+      "timestamp": "2025-09-13T09:57:49.280658",
+      "content": "🔐 Используем хеш из App: 143937bc",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_093008"
+    },
+    {
+      "timestamp": "2025-09-13T09:57:49.281144",
+      "content": "✅ FINAL saved as: 20250913_095614_70pct_red_30pct_blue_rubber_tile_random_pattern_final_143937bc.png",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_093008"
+    },
+    {
+      "timestamp": "2025-09-13T09:57:49.281665",
+      "content": "📁 Путь: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_095614/20250913_095614_70pct_red_30pct_blue_rubber_tile_random_pattern_final_143937bc.png",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_093008"
+    },
+    {
+      "timestamp": "2025-09-13T09:57:49.282229",
+      "content": "🎨 COLORMAP saved as: 20250913_095614_RED_BLUE_colormap_143937bc.png",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_093008"
+    },
+    {
+      "timestamp": "2025-09-13T09:57:49.282721",
+      "content": "📁 Путь: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/run_20250913_095614/20250913_095614_RED_BLUE_colormap_143937bc.png",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_093008"
+    },
+    {
+      "timestamp": "2025-09-13T09:57:49.283217",
+      "content": "[GUI] Done.",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_093008"
+    }
+  ],
+  "analysis_timestamp": "2025-09-13T11:54:07.960164"
+}

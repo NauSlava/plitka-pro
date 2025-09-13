@@ -35,8 +35,8 @@
   },
 
   "🔴🔵🔵 TRIO COLOR - CONTROLNET METHODS": {
-    "prompt": "ohwx_rubber_tile <s0><s1> 40% red, 30% blue, 30% dkgreen rubber tile, radial pattern, natural distribution",
-    "negative_prompt": "missing red, missing blue, missing dkgreen, blurry, low quality, circular bands",
+    "prompt": "ohwx_rubber_tile <s0><s1> 40% red, 30% blue, 30% green rubber tile, radial pattern, natural distribution",
+    "negative_prompt": "missing red, missing blue, missing green, blurry, low quality, circular bands",
     "num_inference_steps": 30,
     "guidance_scale": 8.0,
     "seed": 456,
@@ -46,8 +46,8 @@
   },
 
   "🌈 MULTI COLOR - COMPLEX CONTROLNET": {
-    "prompt": "ohwx_rubber_tile <s0><s1> 30% red, 30% blue, 20% dkgreen, 20% yellow rubber tile, granular pattern, realistic granules",
-    "negative_prompt": "missing red, missing blue, missing dkgreen, missing yellow, blurry, low quality, solid areas",
+    "prompt": "ohwx_rubber_tile <s0><s1> 30% red, 30% blue, 20% green, 20% yellow rubber tile, granular pattern, realistic granules",
+    "negative_prompt": "missing red, missing blue, missing green, missing yellow, blurry, low quality, solid areas",
     "num_inference_steps": 35,
     "guidance_scale": 8.5,
     "seed": 789,
@@ -79,7 +79,7 @@
   },
 
   "🔧 CONTROLNET COLOR_GRID TEST": {
-    "prompt": "ohwx_rubber_tile <s0><s1> 50% dkgreen, 50% yellow rubber tile, grid pattern, structured layout",
+    "prompt": "ohwx_rubber_tile <s0><s1> 50% green, 50% yellow rubber tile, grid pattern, structured layout",
     "negative_prompt": "missing green, missing yellow, blurry, low quality, unstructured",
     "num_inference_steps": 30,
     "guidance_scale": 8.0,
@@ -90,8 +90,8 @@
   },
 
   "🔧 CONTROLNET SHUFFLE TEST": {
-    "prompt": "ohwx_rubber_tile <s0><s1> 40% red, 40% blue, 20% grsgrn rubber tile, random pattern, shuffled colors",
-    "negative_prompt": "missing red, missing blue, missing grsgrn, blurry, low quality, organized",
+    "prompt": "ohwx_rubber_tile <s0><s1> 40% red, 40% blue, 20% green rubber tile, random pattern, shuffled colors",
+    "negative_prompt": "missing red, missing blue, missing green, blurry, low quality, organized",
     "num_inference_steps": 30,
     "guidance_scale": 8.0,
     "seed": 404,
@@ -145,7 +145,7 @@
   },
 
   "🎯 HIGH QUALITY PRODUCTION": {
-    "prompt": "ohwx_rubber_tile <s0><s1> 30% red, 30% blue, 20% dkgreen, 20% yellow rubber tile, high quality, production ready, realistic texture",
+    "prompt": "ohwx_rubber_tile <s0><s1> 30% red, 30% blue, 20% green, 20% yellow rubber tile, high quality, production ready, realistic texture",
     "negative_prompt": "missing red, missing blue, missing green, missing yellow, blurry, low quality, artifacts, unrealistic",
     "num_inference_steps": 40,
     "guidance_scale": 9.0,
@@ -167,7 +167,7 @@
   },
 
   "🎯 EDGE CASE - MAXIMUM COLORS": {
-    "prompt": "ohwx_rubber_tile <s0><s1> 25% red, 25% blue, 25% dkgreen, 25% yellow rubber tile, complex pattern, realistic texture",
+    "prompt": "ohwx_rubber_tile <s0><s1> 25% red, 25% blue, 25% green, 25% yellow rubber tile, complex pattern, realistic texture",
     "negative_prompt": "missing red, missing blue, missing green, missing yellow, blurry, low quality, chaotic",
     "num_inference_steps": 40,
     "guidance_scale": 9.0,

@@ -1,0 +1,25 @@
+# GUI Dependencies для Plitka Pro v4.5.09
+# Зависимости для GUI тестера
+
+# Основные зависимости для работы с Replicate API
+replicate>=1.0.0
+
+# GUI библиотека
+tkinter  # Встроена в Python
+
+# Обработка изображений
+Pillow>=10.0.0
+
+# HTTP запросы
+requests>=2.30.0
+
+# YAML конфигурация
+PyYAML>=6.0
+
+# Дополнительные утилиты
+pathlib  # Встроена в Python 3.4+
+json     # Встроена в Python
+datetime # Встроена в Python
+os       # Встроена в Python
+sys      # Встроена в Python
+re       # Встроена в Python

@@ -1,0 +1,45 @@
+[
+  {
+    "name": "00 - sanity mono red",
+    "prompt": "ohwx_rubber_tile <s0><s1>, 100% RED",
+    "colormap": "granular",
+    "granule_size": "medium",
+    "use_controlnet": true
+  },
+  {
+    "name": "01 - duo 60r40w",
+    "prompt": "ohwx_rubber_tile <s0><s1>, 60% RED, 40% WHITE",
+    "colormap": "granular",
+    "granule_size": "medium",
+    "use_controlnet": true
+  },
+  {
+    "name": "02 - trio 40b30y30whtgrn",
+    "prompt": "ohwx_rubber_tile <s0><s1>, 40% BLUE, 30% YELLOW, 30% WHTGRN",
+    "colormap": "granular",
+    "granule_size": "medium",
+    "use_controlnet": true
+  },
+  {
+    "name": "03 - quad 30r30b20whtgrn20y",
+    "prompt": "ohwx_rubber_tile <s0><s1>, 30% RED, 30% BLUE, 20% WHTGRN, 20% YELLOW",
+    "colormap": "granular",
+    "granule_size": "medium",
+    "use_controlnet": true
+  },
+  {
+    "name": "04 - grid 50r50b",
+    "prompt": "ohwx_rubber_tile <s0><s1>, 50% RED, 50% BLUE",
+    "colormap": "grid",
+    "granule_size": "medium",
+    "use_controlnet": true
+  },
+  {
+    "name": "05 - radial 50r50b",
+    "prompt": "ohwx_rubber_tile <s0><s1>, 50% RED, 50% BLUE",
+    "colormap": "radial",
+    "granule_size": "medium",
+    "use_controlnet": true
+  }
+]
+

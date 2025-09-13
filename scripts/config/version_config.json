@@ -1,0 +1,61 @@
+{
+  "version_mappings": {
+  "v4.5.10": {
+    "replicate_hash": "143937bc",
+    "full_hash": "sha256:143937bcbd00359172e19854757bc9ba27cf3cbbcb9186422b30a50aa3390f76",
+    "description": "LoRA Loading Fix - Critical error 'invalid load key, v' resolved",
+    "published_date": "2025-09-12",
+    "status": "latest",
+    "presets_file": "test_inputs_v4.5.10_lora_fix.json",
+    "gui_presets_file": "gui_presets_v4.5.10.json",
+    "size": "27GB",
+    "url": "https://replicate.com/nauslava/plitka-pro-project:v4.5.10"
+  },
+  "v4.5.09": {
+    "replicate_hash": "a6fe1706",
+    "full_hash": "sha256:a6fe1706c37b9af01ce09ed5347202d58a55393a265b33c9c39b9cc1439f35e2",
+    "description": "Docs sync + scripts cleanup; structure refactoring - DISABLED due to LoRA loading error",
+    "published_date": "2025-09-12",
+    "status": "disabled",
+    "presets_file": "test_inputs_v4.5.09_docs_sync.json",
+    "error": "RuntimeError: Не удалось подключить LoRA адаптеры ни одним из поддерживаемых способов"
+  },
+  "v4.5.08": {
+    "replicate_hash": "70531a09",
+    "full_hash": "sha256:70531a0979ee92220664af2ae42d9c0a3c8f14bf9affd129323e4af912f93a1a",
+    "description": "Direct L hint from colormap; single-pass hint generation",
+    "published_date": "2025-09-12",
+    "status": "stable",
+    "presets_file": "test_inputs_v4.5.07_duplication_fix.json"
+  },
+  "v4.5.07": {
+    "replicate_hash": "6dd286d4",
+    "full_hash": "6dd286d4bf36baeef4e5afd5d28191ad23793ea50c687104780cc8a56cd84a63",
+    "description": "Dynamic Version System + Generation Duplication Fix",
+    "published_date": "2025-01-12",
+    "status": "stable"
+  },
+    "v4.5.06": {
+      "replicate_hash": "bec53bf1",
+      "full_hash": "bec53bf13782135b5fa392a761885dedd0a3ce7d3839a73e3c84e11aae8004f3",
+      "description": "Critical Fixes & Organic Granules",
+      "published_date": "2025-09-07",
+      "status": "latest",
+      "presets_file": "test_inputs_v4.5.06_critical_fixes.json"
+    },
+    "v4.5.01": {
+      "replicate_hash": "32cbff02",
+      "full_hash": "32cbff024118a62304c89c1d5246664b37652e308d024d82e35d10b316d881a5",
+      "description": "Мультимодальный ControlNet + Адаптивный выбор ControlNet",
+      "published_date": "2025-09-04",
+      "status": "stable"
+    }
+  },
+  "default_version": "v4.5.10",
+  "fallback_strategy": {
+    "primary": "replicate_api",
+    "secondary": "version_config",
+    "tertiary": "docker_images"
+  },
+  "replicate_model": "nauslava/plitka-pro-project"
+}

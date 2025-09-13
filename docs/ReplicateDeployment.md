@@ -13,7 +13,7 @@
 ```bash
 # Убедитесь, что код готов к развертыванию
 git add .
-git commit -m "Ready for Replicate deployment v4.1.4"
+git commit -m "Ready for Replicate deployment v4.5.10"
 ```
 
 #### Шаг 2: Создание модели на Replicate

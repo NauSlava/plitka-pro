@@ -1,0 +1,34 @@
+# cog.yaml
+# Version: v4.5 - RUBBER TILE GENERATION MODEL
+# Description: Модель для генерации изображений резиновой плитки с использованием НАШЕЙ обученной модели
+# Changes:
+# - Использование НАШИХ LoRA адаптеров (rubber-tile-lora-v4_sdxl_lora.safetensors)
+# - Использование НАШИХ Textual Inversion (rubber-tile-lora-v4_sdxl_embeddings.safetensors)
+# - Простой API интерфейс для WEB-приложений
+# - Оптимизированные настройки для максимального качества
+
+build:
+  gpu: true
+  cuda: "12.4"
+  python_version: "3.11"
+  python_requirements: "requirements.txt"
+  system_packages:
+    - "libgl1-mesa-glx"
+    - "libglib2.0-0"
+  cog_runtime: true
+
+predict: "predict.py:Predictor"
+
+image: "r8.im/nauslava/rubber-tile-lora-v45:latest"
+
+# Переменные окружения для оптимизации
+env:
+  HF_HOME: "/tmp/hf_home"
+  HF_DATASETS_CACHE: "/tmp/hf_datasets_cache"
+  HF_MODELS_CACHE: "/tmp/hf_models_cache"
+  TRANSFORMERS_CACHE_MIGRATION_DISABLE: "1"
+  HF_HUB_CACHE_MIGRATION_DISABLE: "1"
+  HF_HUB_DISABLE_TELEMETRY: "1"
+  HF_HUB_DISABLE_PROGRESS_BARS: "1"
+  TRANSFORMERS_VERBOSITY: "error"
+  TOKENIZERS_PARALLELISM: "false"

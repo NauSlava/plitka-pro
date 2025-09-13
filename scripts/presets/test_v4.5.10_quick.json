@@ -1,0 +1,57 @@
+{
+  "v4.5.10_Quick_Test_01_LoRA_Fix": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 100% red rubber tile",
+    "negative_prompt": "blurry, low quality, distorted",
+    "seed": 12345,
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "colormap": "random",
+    "granule_size": "medium",
+    "use_controlnet": false,
+    "description": "Быстрый тест исправления загрузки LoRA"
+  },
+  "v4.5.10_Quick_Test_02_Duo_Colors": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 60% red, 40% blue rubber tile",
+    "negative_prompt": "blurry, low quality, distorted",
+    "seed": 54321,
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "colormap": "grid",
+    "granule_size": "medium",
+    "use_controlnet": false,
+    "description": "Быстрый тест дуо-цветов"
+  },
+  "v4.5.10_Quick_Test_03_Tri_Colors": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 50% red, 30% blue, 20% yellow rubber tile",
+    "negative_prompt": "blurry, low quality, distorted",
+    "seed": 98765,
+    "num_inference_steps": 30,
+    "guidance_scale": 8.0,
+    "colormap": "radial",
+    "granule_size": "large",
+    "use_controlnet": false,
+    "description": "Быстрый тест три-цветов"
+  },
+  "v4.5.10_Quick_Test_04_Quad_Colors": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 40% red, 30% blue, 20% yellow, 10% green rubber tile",
+    "negative_prompt": "blurry, low quality, distorted",
+    "seed": 11111,
+    "num_inference_steps": 35,
+    "guidance_scale": 8.5,
+    "colormap": "granular",
+    "granule_size": "small",
+    "use_controlnet": false,
+    "description": "Быстрый тест четырех цветов"
+  },
+  "v4.5.10_Quick_Test_05_White_Mono": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 100% white rubber tile",
+    "negative_prompt": "blurry, low quality, distorted",
+    "seed": 22222,
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "colormap": "grid",
+    "granule_size": "medium",
+    "use_controlnet": false,
+    "description": "Быстрый тест белого моно-цвета"
+  }
+}

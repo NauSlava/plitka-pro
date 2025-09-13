@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-MODEL_REF="nauslava/plitka-pro-project:v4.4.39"
+# По умолчанию можно переопределить через переменную окружения MODEL_REF
+# Обновлено под актуальную версию v4.5.10 (LoRA Loading Fix)
+MODEL_REF="${MODEL_REF:-nauslava/plitka-pro-project:v4.5.10}"
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 VENV_DIR="${VENV_DIR:-$PROJECT_ROOT/.venv}"
@@ -31,6 +33,6 @@ if [ -z "${REPLICATE_API_TOKEN:-}" ]; then
   echo "WARNING: REPLICATE_API_TOKEN is not set. Export it before running." >&2
 fi
 
-exec "$VENV_DIR/bin/python" "$SCRIPT_DIR/replicate_test.py" --model "$MODEL_REF" "$@"
+exec "$VENV_DIR/bin/python" "$SCRIPT_DIR/cli/replicate_test.py" --model "$MODEL_REF" "$@"
 
 

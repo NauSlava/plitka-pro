@@ -33,6 +33,6 @@ if [ -z "${REPLICATE_API_TOKEN:-}" ]; then
   echo "WARNING: REPLICATE_API_TOKEN is not set. Export it before running." >&2
 fi
 
-exec "$VENV_DIR/bin/python" "$SCRIPT_DIR/replicate_gui.py"
+exec "$VENV_DIR/bin/python" "$SCRIPT_DIR/gui/replicate_gui.py"
 
 

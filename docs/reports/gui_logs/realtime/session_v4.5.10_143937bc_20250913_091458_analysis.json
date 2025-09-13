@@ -1,0 +1,67 @@
+{
+  "session_info": {
+    "session_id": "session_v4.5.10_143937bc_20250913_091458",
+    "start_time": "2025-09-13T09:14:58.088147",
+    "end_time": "2025-09-13T09:15:11.895782",
+    "duration": "0:00:13.807651",
+    "version": "v4.5.10",
+    "hash_id": "143937bc"
+  },
+  "statistics": {
+    "total_logs": 7,
+    "warnings": 0,
+    "errors": 0,
+    "version_issues": 1,
+    "preset_errors": 0,
+    "session_start": "2025-09-13T09:14:58.088147",
+    "version": "v4.5.10",
+    "hash_id": "143937bc",
+    "session_end": "2025-09-13T09:15:11.895782",
+    "total_duration": "0:00:13.807651"
+  },
+  "all_logs": [
+    {
+      "timestamp": "2025-09-13T09:14:58.088808",
+      "content": "🔄 Версия обновлена: v4.5.10",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_091458"
+    },
+    {
+      "timestamp": "2025-09-13T09:14:58.089438",
+      "content": "✅ Новый хеш (гибридный): 143937bc",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_091458"
+    },
+    {
+      "timestamp": "2025-09-13T09:14:58.089880",
+      "content": "⚠️ Версия v4.5.10 не найдена, используем v4.5.06",
+      "type": "version_issue",
+      "session_id": "session_v4.5.10_143937bc_20250913_091458"
+    },
+    {
+      "timestamp": "2025-09-13T09:14:58.090147",
+      "content": "⚠️ Файл пресетов для версии v4.5.06 не найден, используем базовый",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_091458"
+    },
+    {
+      "timestamp": "2025-09-13T09:14:58.091956",
+      "content": "✅ Логи перемещены из временной папки",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_091458"
+    },
+    {
+      "timestamp": "2025-09-13T09:14:58.092392",
+      "content": "📁 Логи GUI: /home/papaandrey/plitka-pro-project/replicate_runs/143937bc/gui_logs",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_091458"
+    },
+    {
+      "timestamp": "2025-09-13T09:15:04.896729",
+      "content": "📋 Выбран пресет: 🔴 MONO COLOR - BASIC FUNCTIONALITY ✅",
+      "type": "info",
+      "session_id": "session_v4.5.10_143937bc_20250913_091458"
+    }
+  ],
+  "analysis_timestamp": "2025-09-13T09:15:11.895844"
+}

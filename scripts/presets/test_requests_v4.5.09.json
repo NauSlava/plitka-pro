@@ -1,0 +1,112 @@
+{
+  "v4.5.09_Request_01_Basic_Mono": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 100% red rubber tile",
+    "negative_prompt": "blurry, low quality, distorted",
+    "seed": 42,
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "colormap": "random",
+    "granule_size": "medium",
+    "use_controlnet": false,
+    "description": "Базовый запрос моно-цвета для проверки стабильности"
+  },
+  "v4.5.09_Request_02_Duo_Colors_Grid": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 50% red, 50% blue rubber tile",
+    "negative_prompt": "blurry, low quality, distorted",
+    "seed": 123,
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "colormap": "grid",
+    "granule_size": "medium",
+    "use_controlnet": false,
+    "description": "Запрос дуо-цветов с сеткой для проверки синхронизации"
+  },
+  "v4.5.09_Request_03_Tri_Colors_Radial": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 40% red, 35% blue, 25% yellow rubber tile",
+    "negative_prompt": "blurry, low quality, distorted",
+    "seed": 456,
+    "num_inference_steps": 30,
+    "guidance_scale": 8.0,
+    "colormap": "radial",
+    "granule_size": "large",
+    "use_controlnet": false,
+    "description": "Запрос три-цветов с радиальным паттерном"
+  },
+  "v4.5.09_Request_04_Quad_Colors_Granular": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 30% red, 30% blue, 20% yellow, 20% green rubber tile",
+    "negative_prompt": "blurry, low quality, distorted",
+    "seed": 789,
+    "num_inference_steps": 35,
+    "guidance_scale": 8.5,
+    "colormap": "granular",
+    "granule_size": "small",
+    "use_controlnet": false,
+    "description": "Запрос четырех цветов с гранулярным паттерном"
+  },
+  "v4.5.09_Request_05_Complex_Pattern": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 60% red, 40% blue rubber tile, random pattern, shuffled colors",
+    "negative_prompt": "blurry, low quality, distorted, organized",
+    "seed": 101112,
+    "num_inference_steps": 30,
+    "guidance_scale": 8.0,
+    "colormap": "random",
+    "granule_size": "medium",
+    "use_controlnet": false,
+    "description": "Запрос сложного паттерна для проверки стабильности"
+  },
+  "v4.5.09_Request_06_Edge_Case_Empty_Negative": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 100% white rubber tile",
+    "negative_prompt": "",
+    "seed": 131415,
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "colormap": "grid",
+    "granule_size": "medium",
+    "use_controlnet": false,
+    "description": "Запрос с пустым негативным промптом"
+  },
+  "v4.5.09_Request_07_Edge_Case_Random_Seed": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 100% black rubber tile",
+    "negative_prompt": "blurry, low quality, distorted",
+    "seed": -1,
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "colormap": "radial",
+    "granule_size": "medium",
+    "use_controlnet": false,
+    "description": "Запрос со случайным сидом"
+  },
+  "v4.5.09_Request_08_Performance_Test": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 25% red, 25% blue, 25% yellow, 25% green rubber tile, random pattern, shuffled colors",
+    "negative_prompt": "blurry, low quality, distorted, organized",
+    "seed": 161718,
+    "num_inference_steps": 35,
+    "guidance_scale": 8.5,
+    "colormap": "granular",
+    "granule_size": "small",
+    "use_controlnet": false,
+    "description": "Запрос для тестирования производительности"
+  },
+  "v4.5.09_Request_09_Regression_Test": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 40% red, 40% blue, 20% green rubber tile, random pattern, shuffled colors",
+    "negative_prompt": "missing red, missing blue, missing green, blurry, low quality, organized",
+    "seed": 192021,
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "colormap": "granular",
+    "granule_size": "medium",
+    "use_controlnet": false,
+    "description": "Регрессионный тест для сравнения с предыдущей версией"
+  },
+  "v4.5.09_Request_10_Final_Validation": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 50% red, 50% blue rubber tile, random pattern",
+    "negative_prompt": "blurry, low quality, distorted",
+    "seed": 222324,
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "colormap": "random",
+    "granule_size": "medium",
+    "use_controlnet": false,
+    "description": "Финальный запрос для валидации всех изменений"
+  }
+}

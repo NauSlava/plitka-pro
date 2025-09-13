@@ -1,0 +1,122 @@
+[
+  {
+    "name": "00 - LoRA Fix Test - Mono Red",
+    "prompt": "ohwx_rubber_tile <s0><s1> 100% red rubber tile",
+    "colormap": "random",
+    "granule_size": "medium",
+    "use_controlnet": false,
+    "description": "Тест исправления LoRA - моно красный"
+  },
+  {
+    "name": "01 - LoRA Fix Test - Mono Blue",
+    "prompt": "ohwx_rubber_tile <s0><s1> 100% blue rubber tile",
+    "colormap": "grid",
+    "granule_size": "medium",
+    "use_controlnet": false,
+    "description": "Тест исправления LoRA - моно синий"
+  },
+  {
+    "name": "02 - LoRA Fix Test - Mono White",
+    "prompt": "ohwx_rubber_tile <s0><s1> 100% white rubber tile",
+    "colormap": "radial",
+    "granule_size": "medium",
+    "use_controlnet": false,
+    "description": "Тест исправления LoRA - моно белый"
+  },
+  {
+    "name": "03 - LoRA Fix Test - Mono Black",
+    "prompt": "ohwx_rubber_tile <s0><s1> 100% black rubber tile",
+    "colormap": "granular",
+    "granule_size": "medium",
+    "use_controlnet": false,
+    "description": "Тест исправления LoRA - моно черный"
+  },
+  {
+    "name": "04 - LoRA Fix Test - Duo Red Blue",
+    "prompt": "ohwx_rubber_tile <s0><s1> 60% red, 40% blue rubber tile",
+    "colormap": "random",
+    "granule_size": "medium",
+    "use_controlnet": false,
+    "description": "Тест исправления LoRA - дуо красный+синий"
+  },
+  {
+    "name": "05 - LoRA Fix Test - Duo White Black",
+    "prompt": "ohwx_rubber_tile <s0><s1> 80% white, 20% black rubber tile",
+    "colormap": "grid",
+    "granule_size": "medium",
+    "use_controlnet": false,
+    "description": "Тест исправления LoRA - дуо белый+черный"
+  },
+  {
+    "name": "06 - LoRA Fix Test - Tri Colors",
+    "prompt": "ohwx_rubber_tile <s0><s1> 50% red, 30% blue, 20% yellow rubber tile",
+    "colormap": "radial",
+    "granule_size": "large",
+    "use_controlnet": false,
+    "description": "Тест исправления LoRA - три цвета"
+  },
+  {
+    "name": "07 - LoRA Fix Test - Quad Colors",
+    "prompt": "ohwx_rubber_tile <s0><s1> 40% red, 30% blue, 20% yellow, 10% green rubber tile",
+    "colormap": "granular",
+    "granule_size": "small",
+    "use_controlnet": false,
+    "description": "Тест исправления LoRA - четыре цвета"
+  },
+  {
+    "name": "08 - LoRA Fix Test - Random Pattern",
+    "prompt": "ohwx_rubber_tile <s0><s1> 70% red, 30% blue rubber tile, random pattern",
+    "colormap": "random",
+    "granule_size": "medium",
+    "use_controlnet": false,
+    "description": "Тест исправления LoRA - случайный паттерн"
+  },
+  {
+    "name": "09 - LoRA Fix Test - Shuffled Colors",
+    "prompt": "ohwx_rubber_tile <s0><s1> 50% red, 50% blue rubber tile, shuffled colors",
+    "colormap": "random",
+    "granule_size": "medium",
+    "use_controlnet": false,
+    "description": "Тест исправления LoRA - перемешанные цвета"
+  },
+  {
+    "name": "10 - LoRA Fix Test - Stress Test",
+    "prompt": "ohwx_rubber_tile <s0><s1> 25% red, 25% blue, 25% yellow, 25% green rubber tile, random pattern, shuffled colors",
+    "colormap": "granular",
+    "granule_size": "small",
+    "use_controlnet": false,
+    "description": "Стресс-тест исправления LoRA"
+  },
+  {
+    "name": "11 - LoRA Fix Test - Empty Negative",
+    "prompt": "ohwx_rubber_tile <s0><s1> 100% white rubber tile",
+    "colormap": "grid",
+    "granule_size": "medium",
+    "use_controlnet": false,
+    "description": "Тест с пустым негативным промптом"
+  },
+  {
+    "name": "12 - LoRA Fix Test - Random Seed",
+    "prompt": "ohwx_rubber_tile <s0><s1> 100% black rubber tile",
+    "colormap": "radial",
+    "granule_size": "medium",
+    "use_controlnet": false,
+    "description": "Тест со случайным сидом"
+  },
+  {
+    "name": "13 - LoRA Fix Test - Regression",
+    "prompt": "ohwx_rubber_tile <s0><s1> 40% red, 40% blue, 20% green rubber tile, random pattern, shuffled colors",
+    "colormap": "granular",
+    "granule_size": "medium",
+    "use_controlnet": false,
+    "description": "Регрессионный тест с v4.5.09"
+  },
+  {
+    "name": "14 - LoRA Fix Test - Final Validation",
+    "prompt": "ohwx_rubber_tile <s0><s1> 50% red, 50% blue rubber tile, random pattern",
+    "colormap": "random",
+    "granule_size": "medium",
+    "use_controlnet": false,
+    "description": "Финальная валидация исправления LoRA"
+  }
+]

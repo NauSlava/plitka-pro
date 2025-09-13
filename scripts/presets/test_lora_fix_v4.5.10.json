@@ -1,0 +1,167 @@
+{
+  "v4.5.10_LoRA_Fix_Test_01_Basic_Red": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 100% red rubber tile",
+    "negative_prompt": "blurry, low quality, distorted",
+    "seed": 12345,
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "colormap": "random",
+    "granule_size": "medium",
+    "use_controlnet": false,
+    "description": "Базовый тест красного цвета для проверки исправления LoRA"
+  },
+  "v4.5.10_LoRA_Fix_Test_02_Basic_Blue": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 100% blue rubber tile",
+    "negative_prompt": "blurry, low quality, distorted",
+    "seed": 54321,
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "colormap": "grid",
+    "granule_size": "medium",
+    "use_controlnet": false,
+    "description": "Базовый тест синего цвета для проверки исправления LoRA"
+  },
+  "v4.5.10_LoRA_Fix_Test_03_Basic_White": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 100% white rubber tile",
+    "negative_prompt": "blurry, low quality, distorted",
+    "seed": 98765,
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "colormap": "radial",
+    "granule_size": "medium",
+    "use_controlnet": false,
+    "description": "Базовый тест белого цвета для проверки исправления LoRA"
+  },
+  "v4.5.10_LoRA_Fix_Test_04_Basic_Black": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 100% black rubber tile",
+    "negative_prompt": "blurry, low quality, distorted",
+    "seed": 11111,
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "colormap": "granular",
+    "granule_size": "medium",
+    "use_controlnet": false,
+    "description": "Базовый тест черного цвета для проверки исправления LoRA"
+  },
+  "v4.5.10_LoRA_Fix_Test_05_Duo_Red_Blue": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 60% red, 40% blue rubber tile",
+    "negative_prompt": "blurry, low quality, distorted",
+    "seed": 22222,
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "colormap": "random",
+    "granule_size": "medium",
+    "use_controlnet": false,
+    "description": "Тест дуо-цветов (красный + синий) для проверки исправления LoRA"
+  },
+  "v4.5.10_LoRA_Fix_Test_06_Duo_White_Black": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 80% white, 20% black rubber tile",
+    "negative_prompt": "blurry, low quality, distorted",
+    "seed": 33333,
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "colormap": "grid",
+    "granule_size": "medium",
+    "use_controlnet": false,
+    "description": "Тест дуо-цветов (белый + черный) для проверки исправления LoRA"
+  },
+  "v4.5.10_LoRA_Fix_Test_07_Tri_Colors": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 50% red, 30% blue, 20% yellow rubber tile",
+    "negative_prompt": "blurry, low quality, distorted",
+    "seed": 44444,
+    "num_inference_steps": 30,
+    "guidance_scale": 8.0,
+    "colormap": "radial",
+    "granule_size": "large",
+    "use_controlnet": false,
+    "description": "Тест три-цветов для проверки исправления LoRA"
+  },
+  "v4.5.10_LoRA_Fix_Test_08_Quad_Colors": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 40% red, 30% blue, 20% yellow, 10% green rubber tile",
+    "negative_prompt": "blurry, low quality, distorted",
+    "seed": 55555,
+    "num_inference_steps": 35,
+    "guidance_scale": 8.5,
+    "colormap": "granular",
+    "granule_size": "small",
+    "use_controlnet": false,
+    "description": "Тест четырех цветов для проверки исправления LoRA"
+  },
+  "v4.5.10_LoRA_Fix_Test_09_Random_Pattern": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 70% red, 30% blue rubber tile, random pattern",
+    "negative_prompt": "blurry, low quality, distorted",
+    "seed": 66666,
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "colormap": "random",
+    "granule_size": "medium",
+    "use_controlnet": false,
+    "description": "Тест случайного паттерна для проверки исправления LoRA"
+  },
+  "v4.5.10_LoRA_Fix_Test_10_Shuffled_Colors": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 50% red, 50% blue rubber tile, shuffled colors",
+    "negative_prompt": "blurry, low quality, distorted",
+    "seed": 77777,
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "colormap": "random",
+    "granule_size": "medium",
+    "use_controlnet": false,
+    "description": "Тест перемешанных цветов для проверки исправления LoRA"
+  },
+  "v4.5.10_LoRA_Fix_Test_11_Empty_Negative": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 100% white rubber tile",
+    "negative_prompt": "",
+    "seed": 88888,
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "colormap": "grid",
+    "granule_size": "medium",
+    "use_controlnet": false,
+    "description": "Тест с пустым негативным промптом для проверки исправления LoRA"
+  },
+  "v4.5.10_LoRA_Fix_Test_12_Random_Seed": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 100% black rubber tile",
+    "negative_prompt": "blurry, low quality, distorted",
+    "seed": -1,
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "colormap": "radial",
+    "granule_size": "medium",
+    "use_controlnet": false,
+    "description": "Тест со случайным сидом для проверки исправления LoRA"
+  },
+  "v4.5.10_LoRA_Fix_Test_13_Stress_Test": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 25% red, 25% blue, 25% yellow, 25% green rubber tile, random pattern, shuffled colors",
+    "negative_prompt": "blurry, low quality, distorted, organized",
+    "seed": 99999,
+    "num_inference_steps": 35,
+    "guidance_scale": 8.5,
+    "colormap": "granular",
+    "granule_size": "small",
+    "use_controlnet": false,
+    "description": "Стресс-тест для проверки исправления LoRA"
+  },
+  "v4.5.10_LoRA_Fix_Test_14_Regression_Test": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 40% red, 40% blue, 20% green rubber tile, random pattern, shuffled colors",
+    "negative_prompt": "missing red, missing blue, missing green, blurry, low quality, organized",
+    "seed": 404,
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "colormap": "granular",
+    "granule_size": "medium",
+    "use_controlnet": false,
+    "description": "Регрессионный тест для проверки исправления LoRA"
+  },
+  "v4.5.10_LoRA_Fix_Test_15_Final_Validation": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 50% red, 50% blue rubber tile, random pattern",
+    "negative_prompt": "blurry, low quality, distorted",
+    "seed": 123456,
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "colormap": "random",
+    "granule_size": "medium",
+    "use_controlnet": false,
+    "description": "Финальная валидация исправления LoRA v4.5.10"
+  }
+}

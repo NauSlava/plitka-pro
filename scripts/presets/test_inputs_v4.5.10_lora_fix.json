@@ -1,0 +1,222 @@
+{
+  "v4.5.10_Test_01_LoRA_Loading_Fix_Mono": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 100% red rubber tile",
+    "negative_prompt": "blurry, low quality, distorted",
+    "seed": 12345,
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "colormap": "random",
+    "granule_size": "medium",
+    "use_controlnet": false,
+    "description": "Тест моно-цвета для проверки исправления загрузки LoRA адаптеров"
+  },
+  "v4.5.10_Test_02_LoRA_Stability_Duo": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 60% red, 40% blue rubber tile",
+    "negative_prompt": "blurry, low quality, distorted",
+    "seed": 54321,
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "colormap": "grid",
+    "granule_size": "medium",
+    "use_controlnet": false,
+    "description": "Тест дуо-цветов для проверки стабильности LoRA после исправления"
+  },
+  "v4.5.10_Test_03_Textual_Inversion_Loading": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 50% red, 30% blue, 20% yellow rubber tile",
+    "negative_prompt": "blurry, low quality, distorted",
+    "seed": 98765,
+    "num_inference_steps": 30,
+    "guidance_scale": 8.0,
+    "colormap": "radial",
+    "granule_size": "large",
+    "use_controlnet": false,
+    "description": "Тест три-цветов для проверки загрузки Textual Inversion эмбеддингов"
+  },
+  "v4.5.10_Test_04_Safetensors_Validation": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 40% red, 30% blue, 20% yellow, 10% green rubber tile",
+    "negative_prompt": "blurry, low quality, distorted",
+    "seed": 11111,
+    "num_inference_steps": 35,
+    "guidance_scale": 8.5,
+    "colormap": "granular",
+    "granule_size": "small",
+    "use_controlnet": false,
+    "description": "Тест четырех цветов для проверки валидации safetensors файлов"
+  },
+  "v4.5.10_Test_05_Git_LFS_Pointer_Check": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 70% red, 30% blue rubber tile, random pattern",
+    "negative_prompt": "blurry, low quality, distorted",
+    "seed": 22222,
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "colormap": "random",
+    "granule_size": "medium",
+    "use_controlnet": false,
+    "description": "Тест для проверки обработки Git LFS указателей"
+  },
+  "v4.5.10_Test_06_Graceful_Fallback": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 80% white, 20% black rubber tile",
+    "negative_prompt": "blurry, low quality, distorted",
+    "seed": 33333,
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "colormap": "grid",
+    "granule_size": "medium",
+    "use_controlnet": false,
+    "description": "Тест graceful fallback при отсутствии LoRA файлов"
+  },
+  "v4.5.10_Test_07_Error_Handling_Improved": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 50% red, 50% blue rubber tile, shuffled colors",
+    "negative_prompt": "blurry, low quality, distorted",
+    "seed": 44444,
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "colormap": "random",
+    "granule_size": "medium",
+    "use_controlnet": false,
+    "description": "Тест улучшенной обработки ошибок загрузки модели"
+  },
+  "v4.5.10_Test_08_Model_Size_Validation": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 100% blue rubber tile",
+    "negative_prompt": "blurry, low quality, distorted",
+    "seed": 55555,
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "colormap": "radial",
+    "granule_size": "medium",
+    "use_controlnet": false,
+    "description": "Тест для проверки размера модели (27GB) и корректной загрузки"
+  },
+  "v4.5.10_Test_09_Digest_Verification": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 60% red, 40% blue rubber tile",
+    "negative_prompt": "blurry, low quality, distorted",
+    "seed": 66666,
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "colormap": "granular",
+    "granule_size": "large",
+    "use_controlnet": false,
+    "description": "Тест для проверки digest образа и целостности файлов"
+  },
+  "v4.5.10_Test_10_Replicate_Deployment": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 30% red, 30% blue, 20% yellow, 20% green rubber tile, random pattern, shuffled colors",
+    "negative_prompt": "blurry, low quality, distorted",
+    "seed": 77777,
+    "num_inference_steps": 35,
+    "guidance_scale": 8.5,
+    "colormap": "random",
+    "granule_size": "medium",
+    "use_controlnet": false,
+    "description": "Тест развертывания на Replicate после исправления LoRA"
+  },
+  "v4.5.10_Test_11_Edge_Case_Empty_Negative": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 100% white rubber tile",
+    "negative_prompt": "",
+    "seed": 88888,
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "colormap": "grid",
+    "granule_size": "medium",
+    "use_controlnet": false,
+    "description": "Тест граничного случая с пустым негативным промптом"
+  },
+  "v4.5.10_Test_12_Edge_Case_Random_Seed": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 100% black rubber tile",
+    "negative_prompt": "blurry, low quality, distorted",
+    "seed": -1,
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "colormap": "radial",
+    "granule_size": "medium",
+    "use_controlnet": false,
+    "description": "Тест граничного случая с seed=-1 (случайный сид)"
+  },
+  "v4.5.10_Test_13_Performance_Stress_LoRA": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 25% red, 25% blue, 25% yellow, 25% green rubber tile, random pattern, shuffled colors",
+    "negative_prompt": "blurry, low quality, distorted, organized",
+    "seed": 99999,
+    "num_inference_steps": 35,
+    "guidance_scale": 8.5,
+    "colormap": "granular",
+    "granule_size": "small",
+    "use_controlnet": false,
+    "description": "Стресс-тест производительности с LoRA адаптерами"
+  },
+  "v4.5.10_Test_14_Regression_v4.5.09": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 40% red, 40% blue, 20% green rubber tile, random pattern, shuffled colors",
+    "negative_prompt": "missing red, missing blue, missing green, blurry, low quality, organized",
+    "seed": 404,
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "colormap": "granular",
+    "granule_size": "medium",
+    "use_controlnet": false,
+    "description": "Регрессионный тест - сравнение с v4.5.09"
+  },
+  "v4.5.10_Test_15_Final_Validation_LoRA_Fix": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 50% red, 50% blue rubber tile, random pattern",
+    "negative_prompt": "blurry, low quality, distorted",
+    "seed": 123456,
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "colormap": "random",
+    "granule_size": "medium",
+    "use_controlnet": false,
+    "description": "Финальная валидация исправления загрузки LoRA v4.5.10"
+  },
+  "v4.5.10_Test_16_LoRA_Weight_Optimal": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 70% red, 30% blue rubber tile, optimal LoRA weight",
+    "negative_prompt": "blurry, low quality, distorted",
+    "seed": 78901,
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "colormap": "grid",
+    "granule_size": "medium",
+    "use_controlnet": false,
+    "description": "Тест оптимального веса LoRA (0.75) для максимального качества"
+  },
+  "v4.5.10_Test_17_Textual_Inversion_Tokens": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 60% red, 40% blue rubber tile, TI tokens validation",
+    "negative_prompt": "blurry, low quality, distorted",
+    "seed": 23456,
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "colormap": "radial",
+    "granule_size": "medium",
+    "use_controlnet": false,
+    "description": "Тест валидации Textual Inversion токенов <s0><s1>"
+  },
+  "v4.5.10_Test_18_Model_Architecture_Hybrid": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 50% red, 30% blue, 20% yellow rubber tile, hybrid model test",
+    "negative_prompt": "blurry, low quality, distorted",
+    "seed": 34567,
+    "num_inference_steps": 30,
+    "guidance_scale": 8.0,
+    "colormap": "granular",
+    "granule_size": "large",
+    "use_controlnet": false,
+    "description": "Тест гибридной архитектуры LoRA + Textual Inversion"
+  },
+  "v4.5.10_Test_19_Error_Recovery_Robust": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 80% white, 20% black rubber tile, error recovery test",
+    "negative_prompt": "blurry, low quality, distorted",
+    "seed": 45678,
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "colormap": "random",
+    "granule_size": "medium",
+    "use_controlnet": false,
+    "description": "Тест устойчивости к ошибкам и восстановления"
+  },
+  "v4.5.10_Test_20_Production_Ready_Final": {
+    "prompt": "ohwx_rubber_tile <s0><s1> 40% red, 30% blue, 20% yellow, 10% green rubber tile, production ready",
+    "negative_prompt": "blurry, low quality, distorted, organized",
+    "seed": 56789,
+    "num_inference_steps": 35,
+    "guidance_scale": 8.5,
+    "colormap": "granular",
+    "granule_size": "medium",
+    "use_controlnet": false,
+    "description": "Финальный тест готовности к продакшену v4.5.10"
+  }
+}

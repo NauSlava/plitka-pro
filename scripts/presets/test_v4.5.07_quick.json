@@ -1,0 +1,28 @@
+[
+  {
+    "name": "v4.5.07_Quick_Test_Mono_Red",
+    "description": "Быстрый тест моно-цвета для проверки исправлений v4.5.07",
+    "prompt": "100% red rubber tile",
+    "negative_prompt": "blurry, low quality, distorted",
+    "seed": 42,
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "colormap": "random",
+    "granule_size": "medium",
+    "use_controlnet": false,
+    "test_purpose": "Быстрая проверка времени генерации (~26 сек вместо 52)"
+  },
+  {
+    "name": "v4.5.07_Quick_Test_Duo_Colors",
+    "description": "Быстрый тест дуо-цветов для проверки отсутствия зависания",
+    "prompt": "50% red, 50% blue rubber tile",
+    "negative_prompt": "blurry, low quality, distorted",
+    "seed": 123,
+    "num_inference_steps": 25,
+    "guidance_scale": 7.5,
+    "colormap": "grid",
+    "granule_size": "medium",
+    "use_controlnet": false,
+    "test_purpose": "Проверка отсутствия зависания на предпоследнем шаге"
+  }
+]
