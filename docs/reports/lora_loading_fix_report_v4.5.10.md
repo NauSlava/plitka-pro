@@ -91,7 +91,7 @@ model_files/rubber-tile-lora-v4_sdxl_lora.safetensors: data
 
 - `cog.yaml`: версия обновлена на v4.5.10
 - Образ: `r8.im/nauslava/plitka-pro-project:v4.5.10`
-- URL: https://replicate.com/nauslava/plitka-pro-project:v4.5.10
+- URL: https://replicate.com/nauslava/plitka-pro-project@sha256:143937bcbd00359172e19854757bc9ba27cf3cbbcb9186422b30a50aa3390f76
 
 ## 🎯 Результат
 
@@ -115,13 +115,13 @@ model_files/rubber-tile-lora-v4_sdxl_lora.safetensors: data
 1. **✅ Сборка образа:** `cog build` - УСПЕШНО
 2. **✅ Публикация:** `cog push r8.im/nauslava/plitka-pro-project:v4.5.10` - УСПЕШНО
 3. **✅ Образ создан:** 27GB, digest: `sha256:143937bcbd00359172e19854757bc9ba27cf3cbbcb9186422b30a50aa3390f76`
-4. **✅ Модель доступна:** https://replicate.com/nauslava/plitka-pro-project:v4.5.10
+4. **✅ Модель доступна:** https://replicate.com/nauslava/plitka-pro-project@sha256:143937bcbd00359172e19854757bc9ba27cf3cbbcb9186422b30a50aa3390f76
 
 ## 🎯 Финальные результаты
 
 ### ✅ Успешная публикация
 - **Образ:** `r8.im/nauslava/plitka-pro-project:v4.5.10`
-- **URL:** https://replicate.com/nauslava/plitka-pro-project:v4.5.10
+- **URL:** https://replicate.com/nauslava/plitka-pro-project@sha256:143937bcbd00359172e19854757bc9ba27cf3cbbcb9186422b30a50aa3390f76
 - **Размер:** 27GB
 - **Digest:** `sha256:143937bcbd00359172e19854757bc9ba27cf3cbbcb9186422b30a50aa3390f76`
 - **Статус:** ✅ УСПЕШНО ОПУБЛИКОВАНО

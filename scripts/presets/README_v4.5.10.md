@@ -142,4 +142,4 @@ MODEL_REF=nauslava/plitka-pro-project:v4.5.10 ./scripts/replicate_test.sh
 **Версия:** v4.5.10  
 **Дата создания:** 12 сентября 2025  
 **Статус:** ✅ Готово к тестированию  
-**URL модели:** https://replicate.com/nauslava/plitka-pro-project:v4.5.10
+**URL модели:** https://replicate.com/nauslava/plitka-pro-project@sha256:143937bcbd00359172e19854757bc9ba27cf3cbbcb9186422b30a50aa3390f76

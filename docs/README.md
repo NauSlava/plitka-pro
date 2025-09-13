@@ -5,7 +5,7 @@
 **Статус:** ✅ ОПУБЛИКОВАНО И ГОТОВО К ТЕСТИРОВАНИЮ  
 **Дата:** 12 сентября 2025  
 **Платформа:** Replicate.com  
-**URL:** https://replicate.com/nauslava/plitka-pro-project:v4.5.10  
+**URL:** https://replicate.com/nauslava/plitka-pro-project@sha256:143937bcbd00359172e19854757bc9ba27cf3cbbcb9186422b30a50aa3390f76  
 **Размер:** 27GB  
 **Digest:** `sha256:143937bcbd00359172e19854757bc9ba27cf3cbbcb9186422b30a50aa3390f76`
 

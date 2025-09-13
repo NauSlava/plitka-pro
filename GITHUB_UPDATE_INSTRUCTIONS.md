@@ -12,7 +12,7 @@
 **Новое:** `🏗️ Plitka Pro v4.5.10 - AI model for generating photorealistic rubber tile images from colored crumbs using SDXL + LoRA + Textual Inversion + ControlNet. Published on Replicate with critical LoRA loading fixes.`
 
 ### **3. Добавить Homepage:**
-**Поле "Website":** `https://replicate.com/nauslava/plitka-pro-project:v4.5.10`
+**Поле "Website":** `https://replicate.com/nauslava/plitka-pro-project@sha256:143937bcbd00359172e19854757bc9ba27cf3cbbcb9186422b30a50aa3390f76`
 
 ### **4. Добавить темы (Topics):**
 В разделе **"Topics"** добавить следующие теги:
@@ -48,5 +48,5 @@ diffusers
 
 ## **🔗 Полезные ссылки:**
 - **Репозиторий:** https://github.com/NauSlava/plitka-pro
-- **Replicate:** https://replicate.com/nauslava/plitka-pro-project:v4.5.10
+- **Replicate:** https://replicate.com/nauslava/plitka-pro-project@sha256:143937bcbd00359172e19854757bc9ba27cf3cbbcb9186422b30a50aa3390f76
 - **Настройки:** https://github.com/NauSlava/plitka-pro/settings

@@ -8,7 +8,7 @@
 - **Причина**: LoRA файлы были Git LFS указателями, а не реальными safetensors файлами
 - **Решение**: Загружены правильные safetensors файлы (102MB LoRA + 8KB TI)
 - **Результат**: Модель корректно загружает LoRA и Textual Inversion
-- **URL**: https://replicate.com/nauslava/plitka-pro-project:v4.5.10
+- **URL**: https://replicate.com/nauslava/plitka-pro-project@sha256:143937bcbd00359172e19854757bc9ba27cf3cbbcb9186422b30a50aa3390f76
 
 ⚠️ **НО:** Выявлена потенциальная проблема совместимости базовой модели (см. отчет v4.5.10_compatibility_analysis_report.md)
 

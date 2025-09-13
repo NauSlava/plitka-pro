@@ -1,16 +1,16 @@
 # 🏗️ Plitka Pro Project
 
-[![Replicate](https://img.shields.io/badge/Replicate-Published-brightgreen)](https://replicate.com/nauslava/plitka-pro-project:v4.5.10)
+[![Replicate](https://img.shields.io/badge/Replicate-Published-brightgreen)](https://replicate.com/nauslava/plitka-pro-project@sha256:143937bcbd00359172e19854757bc9ba27cf3cbbcb9186422b30a50aa3390f76)
 [![Version](https://img.shields.io/badge/Version-v4.5.10-blue)](https://github.com/NauSlava/plitka-pro/releases/tag/v4.5.10)
-[![Status](https://img.shields.io/badge/Status-Ready%20for%20Testing-success)](https://replicate.com/nauslava/plitka-pro-project:v4.5.10)
-[![Size](https://img.shields.io/badge/Size-27GB-orange)](https://replicate.com/nauslava/plitka-pro-project:v4.5.10)
+[![Status](https://img.shields.io/badge/Status-Ready%20for%20Testing-success)](https://replicate.com/nauslava/plitka-pro-project@sha256:143937bcbd00359172e19854757bc9ba27cf3cbbcb9186422b30a50aa3390f76)
+[![Size](https://img.shields.io/badge/Size-27GB-orange)](https://replicate.com/nauslava/plitka-pro-project@sha256:143937bcbd00359172e19854757bc9ba27cf3cbbcb9186422b30a50aa3390f76)
 
 ## **📊 Статус проекта: ОПУБЛИКОВАНО - ГОТОВО К ТЕСТИРОВАНИЮ**
 
 **Версия:** v4.5.10 (LoRA Loading Fix)  
 **Дата:** 12 сентября 2025  
 **Платформа:** Replicate.com  
-**URL:** https://replicate.com/nauslava/plitka-pro-project:v4.5.10  
+**URL:** https://replicate.com/nauslava/plitka-pro-project@sha256:143937bcbd00359172e19854757bc9ba27cf3cbbcb9186422b30a50aa3390f76  
 **Размер:** 27GB  
 **Digest:** `sha256:143937bcbd00359172e19854757bc9ba27cf3cbbcb9186422b30a50aa3390f76`
 

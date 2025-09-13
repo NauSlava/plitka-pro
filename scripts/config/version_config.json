@@ -9,7 +9,7 @@
     "presets_file": "test_inputs_v4.5.10_lora_fix.json",
     "gui_presets_file": "gui_presets_v4.5.10.json",
     "size": "27GB",
-    "url": "https://replicate.com/nauslava/plitka-pro-project:v4.5.10"
+    "url": "https://replicate.com/nauslava/plitka-pro-project@sha256:143937bcbd00359172e19854757bc9ba27cf3cbbcb9186422b30a50aa3390f76"
   },
   "v4.5.09": {
     "replicate_hash": "a6fe1706",

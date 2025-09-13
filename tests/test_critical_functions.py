@@ -105,3 +105,5 @@ class TestEndToEnd:
         # This test will be implemented as we refactor error handling
         # Expected: Graceful error handling without crashes
         pass
+
+
